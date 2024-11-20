@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group = 'io.ballerina'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.ballerinalang:ballerina-lang:${ballerinaLangVersion}"
+    implementation "org.ballerinalang:ballerina-parser:${ballerinaLangVersion}"
+    implementation "org.ballerinalang:formatter-core:${ballerinaLangVersion}"
+    implementation "org.ballerinalang:ballerina-cli:${ballerinaLangVersion}"
+    implementation "org.ballerinalang:ballerina-tools-api:${ballerinaLangVersion}"
+    implementation "org.ballerinalang:ballerina-runtime:${ballerinaLangVersion}"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.1")
+    implementation "org.apache.ws.commons.schema:XmlSchema:${apacheXmlSchemaVersion}"
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.testng:testng:7.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
