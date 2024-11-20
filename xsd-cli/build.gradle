@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+description = "Ballerina - XSD-Tools CLI"
+
+configurations.all {
+    resolutionStrategy.preferProjectModules()
+}
+
+dependencies {
+    implementation 'org.ballerinalang:ballerina-cli:2201.10.0'
+    implementation 'info.picocli:picocli:4.0.1'
+    implementation project(path: ':xsd-core')
+}
+
+build.dependsOn ":xsd-core:build"
