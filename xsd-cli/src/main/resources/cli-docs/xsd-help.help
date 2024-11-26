@@ -1,0 +1,21 @@
+NAME
+       bal xsd - Generate Ballerina types from a XSD file.
+
+SYNOPSIS
+       bal xsd <source-file-path> [-o | --output] <destination-file-path>
+
+DESCRIPTION
+       The 'bal xsd' command is used to generate records for a given XSD file.
+
+OPTIONS
+       <source-file-path>
+           Path to the XSD file. This is a mandatory input.
+
+       -o, --output <output path>
+           Location of the generated Ballerina source code. If this path is not
+           specified, the output will be written to the same directory from
+           which the command is run.
+
+EXAMPLE
+       Generate records and parser functions for a given EDI schema.
+           $ bal xsd schema.xsd -o modules/records.bal
