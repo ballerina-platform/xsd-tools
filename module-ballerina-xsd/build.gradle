@@ -95,10 +95,10 @@ tasks.register('copyDependenciesToLib', Copy) {
     from configurations.copyJars
 
     into "$project.projectDir/lib"
-    from "../xsd-cli/build/libs/xsd-cli-${project.version}.jar"
+    from "../xsd-core/build/libs/xsd-core-${project.version}.jar"
 
     into "$project.projectDir/lib"
-    from "../xsd-core/build/libs/xsd-core-${project.version}.jar"
+    from "../xsd-cli/build/libs/xsd-cli-${project.version}.jar"
 
     include "*.jar"
 
@@ -128,6 +128,7 @@ tasks.register('clean', Delete) {
 
 tasks.register('build') {
     dependsOn ":xsd-cli:build"
+    dependsOn ":xsd-core:build"
     dependsOn copyDependenciesToLib
     dependsOn unpackJballerinaTools
     dependsOn updateTomlFiles
@@ -137,6 +138,7 @@ tasks.register('build') {
 
 tasks.register('test') {
     dependsOn ":xsd-cli:build"
+    dependsOn ":xsd-core:build"
     dependsOn copyDependenciesToLib
     dependsOn unpackJballerinaTools
     dependsOn updateTomlFiles
@@ -145,6 +147,7 @@ tasks.register('test') {
 }
 
 copyDependenciesToLib.dependsOn ":xsd-cli:build"
+copyDependenciesToLib.dependsOn ":xsd-core:build"
 ballerinaBuild.dependsOn copyDependenciesToLib
 ballerinaBuild.dependsOn unpackJballerinaTools
 ballerinaBuild.dependsOn updateTomlFiles
