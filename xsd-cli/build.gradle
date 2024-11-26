@@ -12,6 +12,8 @@ dependencies {
     implementation 'org.ballerinalang:ballerina-cli:2201.10.0'
     implementation 'info.picocli:picocli:4.0.1'
     implementation project(path: ':xsd-core')
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.testng:testng:7.7.0'
 }
 
 build.dependsOn ":xsd-core:build"
