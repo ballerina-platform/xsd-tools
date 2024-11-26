@@ -27,7 +27,7 @@ public class XsdCmd implements BLauncherCmd {
     private String inputPath;
 
     @CommandLine.Option(names = {"-o", "--output"}, description = "Generating the types from the XSD file")
-    private String outputPath;
+    private String outputPath = "types.bal";
 
     public XsdCmd() {
         this.outStream = System.err;
