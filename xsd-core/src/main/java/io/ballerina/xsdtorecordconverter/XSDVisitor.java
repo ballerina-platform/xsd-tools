@@ -334,8 +334,10 @@ public class XSDVisitor implements IXSDVisitor {
                 } else {
                     builder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
                     builder.append(nameNode.getNodeValue()).append(WHITESPACE);
+                    builder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES);
                     Node typeNode = simpleTypeNode.getAttributes().getNamedItem(BASE);
-                    builder.append(deriveType(typeNode)).append(SEMICOLON);
+                    builder.append(deriveType(typeNode)).append(WHITESPACE).append("\\#content").append(SEMICOLON);
+                    builder.append(CLOSE_BRACES).append(SEMICOLON);
                 }
             }
         }
@@ -371,7 +373,9 @@ public class XSDVisitor implements IXSDVisitor {
                 } else {
                     builder.append(nameNode.getNodeValue()).append(WHITESPACE);
                 }
-                builder.append(typeGenerator(typeName));
+                builder.append(WHITESPACE).append(RECORD).append(OPEN_BRACES);
+                builder.append(typeGenerator(typeName)).append(WHITESPACE).append("\\#content").append(SEMICOLON);
+                builder.append(CLOSE_BRACES);
             } else {
                 builder.append(SyntaxKind.ANYDATA_KEYWORD.stringValue());
             }

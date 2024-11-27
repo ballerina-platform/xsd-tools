@@ -15,4 +15,6 @@ public type Employee record {
     PersonBase PersonBase;
 };
 
-public type Employee123 Employee;
+public type Employee123 record {
+    Employee \#content;
+};
