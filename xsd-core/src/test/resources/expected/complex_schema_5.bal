@@ -1,4 +1,6 @@
-public type Document123 Document;
+public type Document123 record {
+    Document \#content;
+};
 
 public enum AddressType2Code {
     ADDR, PBOX, HOME, BIZZ, MLTO, DLVY
@@ -9,9 +11,13 @@ public type AddressType3Choice record {
     GenericIdentification30 Prtry?;
 };
 
-public type AnyBICDec2014Identifier string;
+public type AnyBICDec2014Identifier record {
+    string \#content;
+};
 
-public type BICFIDec2014Identifier string;
+public type BICFIDec2014Identifier record {
+    string \#content;
+};
 
 public type BranchAndFinancialInstitutionIdentification8 record {
     FinancialInstitutionIdentification23 FinInstnId;
@@ -64,7 +70,9 @@ public type Contact13 record {
     PreferredContactMethod2Code PrefrdMtd?;
 };
 
-public type CountryCode string;
+public type CountryCode record {
+    string \#content;
+};
 
 public type DateAndPlaceOfBirth1 record {
     ISODate BirthDt;
@@ -84,15 +92,25 @@ public type DuplicateV07 record {
     SupplementaryData1[] SplmtryData?;
 };
 
-public type Exact4AlphaNumericText string;
+public type Exact4AlphaNumericText record {
+    string \#content;
+};
 
-public type ExternalClearingSystemIdentification1Code string;
+public type ExternalClearingSystemIdentification1Code record {
+    string \#content;
+};
 
-public type ExternalFinancialInstitutionIdentification1Code string;
+public type ExternalFinancialInstitutionIdentification1Code record {
+    string \#content;
+};
 
-public type ExternalOrganisationIdentification1Code string;
+public type ExternalOrganisationIdentification1Code record {
+    string \#content;
+};
 
-public type ExternalPersonIdentification1Code string;
+public type ExternalPersonIdentification1Code record {
+    string \#content;
+};
 
 public type FinancialIdentificationSchemeName1Choice record {
     ExternalFinancialInstitutionIdentification1Code Cd?;
@@ -132,29 +150,53 @@ public type GenericPersonIdentification2 record {
     Max35Text Issr?;
 };
 
-public type ISODate string;
+public type ISODate record {
+    string \#content;
+};
 
-public type ISODateTime string;
+public type ISODateTime record {
+    string \#content;
+};
 
-public type LEIIdentifier string;
+public type LEIIdentifier record {
+    string \#content;
+};
 
-public type Max128Text string;
+public type Max128Text record {
+    string \#content;
+};
 
-public type Max140Text string;
+public type Max140Text record {
+    string \#content;
+};
 
-public type Max16Text string;
+public type Max16Text record {
+    string \#content;
+};
 
-public type Max2048Text string;
+public type Max2048Text record {
+    string \#content;
+};
 
-public type Max256Text string;
+public type Max256Text record {
+    string \#content;
+};
 
-public type Max350Text string;
+public type Max350Text record {
+    string \#content;
+};
 
-public type Max35Text string;
+public type Max35Text record {
+    string \#content;
+};
 
-public type Max4Text string;
+public type Max4Text record {
+    string \#content;
+};
 
-public type Max70Text string;
+public type Max70Text record {
+    string \#content;
+};
 
 public enum NamePrefix2Code {
     DOCT, MADM, MISS, MIST, MIKS
@@ -204,7 +246,9 @@ public type PersonIdentificationSchemeName1Choice record {
     Max35Text Prtry?;
 };
 
-public type PhoneNumber string;
+public type PhoneNumber record {
+    string \#content;
+};
 
 public type PostalAddress27 record {
     AddressType3Choice AdrTp?;
@@ -251,4 +295,6 @@ public type SupplementaryData1 record {
 public type SupplementaryDataEnvelope1 record {
 };
 
-public type YesNoIndicator boolean;
+public type YesNoIndicator record {
+    boolean \#content;
+};

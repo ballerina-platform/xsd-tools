@@ -56,13 +56,13 @@ public class XSDToRecordTest {
         Assert.assertEquals(result, expectedValue);
     }
 
-//    @org.junit.jupiter.api.Test
-//    void testXsdSchema() throws IOException {
-//        String sourceFile = "complex_schema_1.xsd";
-//        String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
-//        String result = XSDToRecord.convert(xmlFileContent);
+    @org.junit.jupiter.api.Test
+    void testXsdSchema() throws IOException {
+        String sourceFile = "simple_type_with_restrictions.xml";
+        String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
+        String result = XSDToRecord.convert(xmlFileContent);
 //        Path destinationFile = Paths.get(sourceFile.replace(".xsd", ".bal"));
 //        Files.writeString(destinationFile, result);
-//        System.out.println(result);
-//    }
+        System.out.println(result);
+    }
 }

@@ -3,4 +3,6 @@ public type Person record {
     string address;
 };
 
-public type person Person;
+public type person record {
+    Person \#content;
+};

@@ -1,6 +1,8 @@
 import ballerina/data.xmldata;
 
-public type Document123 Document;
+public type Document123 record {
+    Document \#content;
+};
 
 public type AccountIdentification4Choice record {
     IBAN2007Identifier IBAN?;
@@ -13,7 +15,7 @@ public type AccountSchemeName1Choice record {
 };
 
 public type ActiveOrHistoricCurrencyAndAmount_SimpleType record {
-    decimal ActiveOrHistoricCurrencyAndAmount_SimpleType;
+    decimal \#content;
     @xmldata:Attribute
     ActiveOrHistoricCurrencyCode Ccy;
 };
@@ -22,7 +24,9 @@ public type ActiveOrHistoricCurrencyAndAmount record {
     ActiveOrHistoricCurrencyAndAmount_SimpleType ActiveOrHistoricCurrencyAndAmount_SimpleType;
 };
 
-public type ActiveOrHistoricCurrencyCode string;
+public type ActiveOrHistoricCurrencyCode record {
+    string \#content;
+};
 
 public enum AddressType2Code {
     ADDR, PBOX, HOME, BIZZ, MLTO, DLVY
@@ -53,9 +57,13 @@ public type AmountType4Choice record {
     EquivalentAmount2 EqvtAmt?;
 };
 
-public type AnyBICDec2014Identifier string;
+public type AnyBICDec2014Identifier record {
+    string \#content;
+};
 
-public type BICFIDec2014Identifier string;
+public type BICFIDec2014Identifier record {
+    string \#content;
+};
 
 public type BranchAndFinancialInstitutionIdentification8 record {
     FinancialInstitutionIdentification23 FinInstnId;
@@ -145,7 +153,9 @@ public type ControlData1 record {
     DecimalNumber CtrlSum?;
 };
 
-public type CountryCode string;
+public type CountryCode record {
+    string \#content;
+};
 
 public enum CreditDebitCode {
     CRDT, DBIT
@@ -205,7 +215,9 @@ public type DateType2Choice record {
     Max35Text Prtry?;
 };
 
-public type DecimalNumber decimal;
+public type DecimalNumber record {
+    decimal \#content;
+};
 
 public type Document record {
     FIToFIPaymentCancellationRequestV11 FIToFIPmtCxlReq;
@@ -265,49 +277,93 @@ public type EquivalentAmount2 record {
     ActiveOrHistoricCurrencyCode CcyOfTrf;
 };
 
-public type Exact2NumericText string;
+public type Exact2NumericText record {
+    string \#content;
+};
 
-public type Exact4AlphaNumericText string;
+public type Exact4AlphaNumericText record {
+    string \#content;
+};
 
-public type ExternalAccountIdentification1Code string;
+public type ExternalAccountIdentification1Code record {
+    string \#content;
+};
 
-public type ExternalCancellationReason1Code string;
+public type ExternalCancellationReason1Code record {
+    string \#content;
+};
 
-public type ExternalCashAccountType1Code string;
+public type ExternalCashAccountType1Code record {
+    string \#content;
+};
 
-public type ExternalCashClearingSystem1Code string;
+public type ExternalCashClearingSystem1Code record {
+    string \#content;
+};
 
-public type ExternalCategoryPurpose1Code string;
+public type ExternalCategoryPurpose1Code record {
+    string \#content;
+};
 
-public type ExternalClearingSystemIdentification1Code string;
+public type ExternalClearingSystemIdentification1Code record {
+    string \#content;
+};
 
-public type ExternalCreditorReferenceType1Code string;
+public type ExternalCreditorReferenceType1Code record {
+    string \#content;
+};
 
-public type ExternalDateType1Code string;
+public type ExternalDateType1Code record {
+    string \#content;
+};
 
-public type ExternalDocumentAmountType1Code string;
+public type ExternalDocumentAmountType1Code record {
+    string \#content;
+};
 
-public type ExternalDocumentLineType1Code string;
+public type ExternalDocumentLineType1Code record {
+    string \#content;
+};
 
-public type ExternalDocumentType1Code string;
+public type ExternalDocumentType1Code record {
+    string \#content;
+};
 
-public type ExternalFinancialInstitutionIdentification1Code string;
+public type ExternalFinancialInstitutionIdentification1Code record {
+    string \#content;
+};
 
-public type ExternalGarnishmentType1Code string;
+public type ExternalGarnishmentType1Code record {
+    string \#content;
+};
 
-public type ExternalLocalInstrument1Code string;
+public type ExternalLocalInstrument1Code record {
+    string \#content;
+};
 
-public type ExternalMandateSetupReason1Code string;
+public type ExternalMandateSetupReason1Code record {
+    string \#content;
+};
 
-public type ExternalOrganisationIdentification1Code string;
+public type ExternalOrganisationIdentification1Code record {
+    string \#content;
+};
 
-public type ExternalPersonIdentification1Code string;
+public type ExternalPersonIdentification1Code record {
+    string \#content;
+};
 
-public type ExternalProxyAccountType1Code string;
+public type ExternalProxyAccountType1Code record {
+    string \#content;
+};
 
-public type ExternalPurpose1Code string;
+public type ExternalPurpose1Code record {
+    string \#content;
+};
 
-public type ExternalServiceLevel1Code string;
+public type ExternalServiceLevel1Code record {
+    string \#content;
+};
 
 public type FIToFIPaymentCancellationRequestV11 record {
     CaseAssignment6 Assgnmt;
@@ -402,17 +458,29 @@ public type GenericPersonIdentification2 record {
     Max35Text Issr?;
 };
 
-public type GroupCancellationIndicator boolean;
+public type GroupCancellationIndicator record {
+    boolean \#content;
+};
 
-public type IBAN2007Identifier string;
+public type IBAN2007Identifier record {
+    string \#content;
+};
 
-public type ISODate string;
+public type ISODate record {
+    string \#content;
+};
 
-public type ISODateTime string;
+public type ISODateTime record {
+    string \#content;
+};
 
-public type ISOYear string;
+public type ISOYear record {
+    string \#content;
+};
 
-public type LEIIdentifier string;
+public type LEIIdentifier record {
+    string \#content;
+};
 
 public type LocalInstrument2Choice record {
     ExternalLocalInstrument1Code Cd?;
@@ -458,39 +526,69 @@ public type MandateTypeInformation2 record {
     MandateClassification1Choice Clssfctn?;
 };
 
-public type Max1025Text string;
+public type Max1025Text record {
+    string \#content;
+};
 
-public type Max105Text string;
+public type Max105Text record {
+    string \#content;
+};
 
-public type Max10KBinary byte[];
+public type Max10KBinary record {
+    byte[] \#content;
+};
 
-public type Max128Text string;
+public type Max128Text record {
+    string \#content;
+};
 
-public type Max140Text string;
+public type Max140Text record {
+    string \#content;
+};
 
-public type Max15NumericText string;
+public type Max15NumericText record {
+    string \#content;
+};
 
-public type Max16Text string;
+public type Max16Text record {
+    string \#content;
+};
 
-public type Max2048Text string;
+public type Max2048Text record {
+    string \#content;
+};
 
-public type Max256Text string;
+public type Max256Text record {
+    string \#content;
+};
 
-public type Max34Text string;
+public type Max34Text record {
+    string \#content;
+};
 
-public type Max350Text string;
+public type Max350Text record {
+    string \#content;
+};
 
-public type Max35Text string;
+public type Max35Text record {
+    string \#content;
+};
 
-public type Max4Text string;
+public type Max4Text record {
+    string \#content;
+};
 
-public type Max70Text string;
+public type Max70Text record {
+    string \#content;
+};
 
 public enum NamePrefix2Code {
     DOCT, MADM, MISS, MIST, MIKS
 };
 
-public type Number decimal;
+public type Number record {
+    decimal \#content;
+};
 
 public type OrganisationIdentification39 record {
     AnyBICDec2014Identifier AnyBIC?;
@@ -606,7 +704,9 @@ public type PaymentTypeInformation27 record {
     CategoryPurpose1Choice CtgyPurp?;
 };
 
-public type PercentageRate decimal;
+public type PercentageRate record {
+    decimal \#content;
+};
 
 public type PersonIdentification18 record {
     DateAndPlaceOfBirth1 DtAndPlcOfBirth?;
@@ -618,7 +718,9 @@ public type PersonIdentificationSchemeName1Choice record {
     Max35Text Prtry?;
 };
 
-public type PhoneNumber string;
+public type PhoneNumber record {
+    string \#content;
+};
 
 public type PostalAddress27 record {
     AddressType3Choice AdrTp?;
@@ -791,13 +893,19 @@ public enum TaxRecordPeriod1Code {
     MM01, MM02, MM03, MM04, MM05, MM06, MM07, MM08, MM09, MM10, MM11, MM12, QTR1, QTR2, QTR3, QTR4, HLF1, HLF2
 };
 
-public type TrueFalseIndicator boolean;
+public type TrueFalseIndicator record {
+    boolean \#content;
+};
 
-public type UUIDv4Identifier string;
+public type UUIDv4Identifier record {
+    string \#content;
+};
 
 public type UnderlyingTransaction34 record {
     OriginalGroupHeader21 OrgnlGrpInfAndCxl?;
     PaymentTransaction155[] TxInf?;
 };
 
-public type YesNoIndicator boolean;
+public type YesNoIndicator record {
+    boolean \#content;
+};

@@ -1,3 +1,7 @@
-public type Age decimal;
+public type Age record {
+    decimal \#content;
+};
 
-public type age Age;
+public type age record {
+    Age \#content;
+};

@@ -4,7 +4,12 @@ import io.ballerina.xsdtorecordconverter.XSDToRecord;
 import picocli.CommandLine;
 import io.ballerina.cli.BLauncherCmd;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,7 +42,9 @@ public class XsdCmd implements BLauncherCmd {
     @Override
     public void execute() {
         if (this.helpFlag) {
-            System.out.println("This is help");
+            StringBuilder stringBuilder = new StringBuilder();
+            printLongDesc(stringBuilder);
+            System.out.println(stringBuilder);
             return;
         }
         if (inputPath == null || inputPath.isBlank()) {
@@ -45,11 +52,9 @@ public class XsdCmd implements BLauncherCmd {
             exitOnError();
             return;
         }
-
         try {
             String xmlFileContent = Files.readString(Path.of(inputPath));
             String result = XSDToRecord.convert(xmlFileContent);
-
             Path destinationFile = Paths.get(outputPath);
             Files.writeString(destinationFile, result);
             System.out.println("Processing completed. Output written to " + outputPath);
@@ -57,7 +62,6 @@ public class XsdCmd implements BLauncherCmd {
             outStream.println("Error: " + e.getLocalizedMessage());
             exitOnError();
         }
-        // implementation logic goes here
     }
 
     @Override
@@ -66,9 +70,22 @@ public class XsdCmd implements BLauncherCmd {
     }
 
     @Override
-    public void printLongDesc(StringBuilder out) {
-        // The value of the stringBuilder will be printed
-        // in bal help openapi cmd
+    public void printLongDesc(StringBuilder outStream) {
+        Class<?> clazz = XsdCmd.class;
+        ClassLoader classLoader = clazz.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream("cli-docs/xsd-help.help");
+        if (inputStream != null) {
+            try (InputStreamReader inputStreamREader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                 BufferedReader br = new BufferedReader(inputStreamREader)) {
+                String content = br.readLine();
+                outStream.append(content);
+                while ((content = br.readLine()) != null) {
+                    outStream.append('\n').append(content);
+                }
+            } catch (IOException e) {
+                outStream.append("Helper text is not available.");
+            }
+        }
     }
 
     @Override

@@ -1,1 +1,3 @@
-public type Name string;
+public type Name record {
+    string \#content;
+};
