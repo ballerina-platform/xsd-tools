@@ -73,14 +73,4 @@ public class XSDToRecordTest {
         String expectedValue = Files.readString(expected);
         Assert.assertEquals(result, expectedValue);
     }
-
-    @org.junit.jupiter.api.Test
-    void testXsdSchema() throws IOException {
-        String sourceFile = "elements_with_choice.xml";
-        String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
-        String result = XSDToRecord.convert(xmlFileContent);
-        Path destinationFile = Paths.get(sourceFile.replace(".xsd", ".bal"));
-        Files.writeString(destinationFile, result);
-        System.out.println(result);
-    }
 }
