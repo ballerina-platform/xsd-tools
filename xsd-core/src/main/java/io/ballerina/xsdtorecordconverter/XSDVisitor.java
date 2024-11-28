@@ -286,8 +286,7 @@ public class XSDVisitor implements IXSDVisitor {
         for (int i = 0; i < node.getChildNodes().getLength(); i++) {
             Node element = node.getChildNodes().item(i);
             addNamespace(element);
-            if (element.getNodeType() == Node.ELEMENT_NODE) {
-                builder.append(visitAttribute(element));
+            if (element.getNodeType() == Node.ELEMENT_NODE) {builder.append(visitAttribute(element));
             }
         }
         return builder.toString();
