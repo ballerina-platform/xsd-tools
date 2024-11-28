@@ -26,10 +26,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class XsdCmdTest {
 
@@ -41,7 +39,7 @@ public class XsdCmdTest {
         System.setErr(new PrintStream(errContent));
 
         XsdCmd xsdCmd = new XsdCmd();
-        String[] args = {"-i", "src/test/resources/complex_schema_1.xsd", "-o", "src/test/resources/complex_schema_1" +
+        String[] args = {"src/test/resources/complex_schema_1.xsd", "-o", "src/test/resources/complex_schema_1" +
                 ".bal"};
         new CommandLine(xsdCmd).parseArgs(args);
         xsdCmd.execute();
