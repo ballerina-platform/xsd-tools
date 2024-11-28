@@ -5,14 +5,14 @@ public type PersonBase record {
     int id;
     @xmldata:Attribute
     string name;
-    @xmldata:Attribute
-    int age?;
-    @xmldata:Attribute
-    string position?;
 };
 
 public type Employee record {
     PersonBase PersonBase;
+    @xmldata:Attribute
+    int age?;
+    @xmldata:Attribute
+    string position?;
 };
 
 public type Employee123 record {

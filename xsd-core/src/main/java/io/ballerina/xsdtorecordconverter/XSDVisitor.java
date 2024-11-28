@@ -239,14 +239,14 @@ public class XSDVisitor implements IXSDVisitor {
             Node element = node.getChildNodes().item(i);
             if (element.getNodeType() == Node.ELEMENT_NODE) {
                 if (element.getLocalName().equals(EXTENSION)) {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
+//                    StringBuilder stringBuilder = new StringBuilder();
+//                    stringBuilder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
                     String base = element.getAttributes().getNamedItem(BASE).getNodeValue();
                     builder.append(base).append(WHITESPACE).append(base).append(SEMICOLON);
-                    stringBuilder.append(base).append(OPEN_BRACES);
-                    stringBuilder.append(visitExtension(element));
-                    stringBuilder.append(CLOSE_BRACES).append(SEMICOLON);
-                    extensions.put(base, stringBuilder.toString());
+//                    stringBuilder.append(base).append(OPEN_BRACES);
+                    builder.append(visitExtension(element));
+//                    builder.append(CLOSE_BRACES).append(SEMICOLON);
+//                    extensions.put(base, stringBuilder.toString());
                 }
             }
         }
