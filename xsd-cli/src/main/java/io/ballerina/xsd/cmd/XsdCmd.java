@@ -31,6 +31,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Main class to implement "xsd" command for ballerina.
@@ -46,8 +48,8 @@ public class XsdCmd implements BLauncherCmd {
     @CommandLine.Option(names = {"-h", "--help"}, hidden = true)
     private boolean helpFlag;
 
-    @CommandLine.Option(names = {"-i", "--input"}, description = "Input the XSD file")
-    private String inputPath;
+    @CommandLine.Parameters(description = "Program arguments")
+    private final List<String> argList = new ArrayList<>();
 
     @CommandLine.Option(names = {"-o", "--output"}, description = "Generating the types from the XSD file")
     private String outputPath = "types.bal";
@@ -65,13 +67,13 @@ public class XsdCmd implements BLauncherCmd {
             System.out.println(stringBuilder);
             return;
         }
-        if (inputPath == null || inputPath.isBlank()) {
-            outStream.println("error");
+        if (argList.isEmpty()) {
+            outStream.println("Missing input xsd file");
             exitOnError();
             return;
         }
         try {
-            String xmlFileContent = Files.readString(Path.of(inputPath));
+            String xmlFileContent = Files.readString(Path.of(argList.get(0)));
             String result = XSDToRecord.convert(xmlFileContent);
             Path destinationFile = Paths.get(outputPath);
             Files.writeString(destinationFile, result);
