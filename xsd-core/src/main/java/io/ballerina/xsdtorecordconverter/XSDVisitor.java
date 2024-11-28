@@ -87,8 +87,10 @@ public class XSDVisitor implements IXSDVisitor {
     public static final String BYTE_ARRAY = "byte[]";
     public static final String BALLERINA_XML_DATA_MODULE = "ballerina/data.xmldata";
     public static final String ATTRIBUTE_ANNOTATION = "@xmldata:Attribute";
+    public static final String XMLDATA_NAMESPACE = "@xmldata:Namespace";
     public static final String TYPE_NAME_SUFFIX = "123";
-
+    public static final String PREFIX = "prefix";
+    public static final String URI = "uri";
     private final ArrayList<String> imports = new ArrayList<>();
     private final LinkedHashMap<String, String> extensions = new LinkedHashMap<>();
 
@@ -107,8 +109,11 @@ public class XSDVisitor implements IXSDVisitor {
     public String addNamespace(Node node) {
         this.addImports(BALLERINA_XML_DATA_MODULE);
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("@xmldata:Namespace {prefix: \"").append(node.getPrefix()).append("\"");
-        stringBuilder.append(", uri: \"").append(node.getNamespaceURI()).append("\"").append(CLOSE_BRACES);
+        stringBuilder.append(XMLDATA_NAMESPACE).append(WHITESPACE).append(OPEN_BRACES);
+        stringBuilder.append(PREFIX).append(COLON).append(QUOTATION_MARK);
+        stringBuilder.append(node.getPrefix()).append(QUOTATION_MARK).append(COMMA);
+        stringBuilder.append(URI).append(COLON).append(QUOTATION_MARK);
+        stringBuilder.append(node.getNamespaceURI()).append(QUOTATION_MARK).append(CLOSE_BRACES);
         return stringBuilder.toString();
     }
 
