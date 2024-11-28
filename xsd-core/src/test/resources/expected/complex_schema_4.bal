@@ -16,12 +16,12 @@ public type AccountSchemeName1Choice record {
 
 public type ActiveOrHistoricCurrencyAndAmount_SimpleType record {
     decimal \#content;
-    @xmldata:Attribute
-    ActiveOrHistoricCurrencyCode Ccy;
 };
 
 public type ActiveOrHistoricCurrencyAndAmount record {
     ActiveOrHistoricCurrencyAndAmount_SimpleType ActiveOrHistoricCurrencyAndAmount_SimpleType;
+    @xmldata:Attribute
+    ActiveOrHistoricCurrencyCode Ccy;
 };
 
 public type ActiveOrHistoricCurrencyCode record {
