@@ -78,11 +78,7 @@ public class XSDToRecord {
                             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(type);
                             String name = rootElement
                                     .getChildNodes().item(i).getAttributes().getNamedItem(NAME).getNodeValue();
-                            if (!nodes.containsKey(name)) {
-                                nodes.put(name, moduleNode);
-                            } else {
-                                nodes.put(name + TYPE_NAME_SUFFIX, moduleNode);
-                            }
+                            nodes.put(nodes.containsKey(name) ? name + TYPE_NAME_SUFFIX : name, moduleNode);
                         }
                     }
                 }

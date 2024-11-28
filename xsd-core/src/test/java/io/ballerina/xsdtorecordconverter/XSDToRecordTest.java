@@ -76,11 +76,11 @@ public class XSDToRecordTest {
 
     @org.junit.jupiter.api.Test
     void testXsdSchema() throws IOException {
-        String sourceFile = "simple_type_with_restrictions.xml";
+        String sourceFile = "elements_with_choice.xml";
         String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
         String result = XSDToRecord.convert(xmlFileContent);
-//        Path destinationFile = Paths.get(sourceFile.replace(".xsd", ".bal"));
-//        Files.writeString(destinationFile, result);
+        Path destinationFile = Paths.get(sourceFile.replace(".xsd", ".bal"));
+        Files.writeString(destinationFile, result);
         System.out.println(result);
     }
 }
