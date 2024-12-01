@@ -18,13 +18,20 @@
 
 package io.ballerina.xsdtorecordconverter;
 
+import io.ballerina.xsdtorecordconverter.component.ComplexType;
+import io.ballerina.xsdtorecordconverter.component.Element;
+import io.ballerina.xsdtorecordconverter.component.IComponent;
+import io.ballerina.xsdtorecordconverter.component.SimpleType;
 import org.w3c.dom.Node;
 
-import static io.ballerina.xsdtorecordconverter.XSDVisitor.COMPLEX_TYPE;
-import static io.ballerina.xsdtorecordconverter.XSDVisitor.ELEMENT;
-import static io.ballerina.xsdtorecordconverter.XSDVisitor.SIMPLE_TYPE;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.COMPLEX_TYPE;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.ELEMENT;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.SIMPLE_TYPE;
 
-public class XSDFactory {
+/**
+ * The factory class for generating XSD components.
+ */
+public final class XSDFactory {
     public static IComponent generateComponents(Node node) {
         if (node.getNodeType() != Node.ELEMENT_NODE) {
             return null;
