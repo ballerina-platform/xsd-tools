@@ -16,17 +16,22 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter;
+package io.ballerina.xsdtorecordconverter.component;
 
+import io.ballerina.xsdtorecordconverter.visitor.IXSDVisitor;
 import org.w3c.dom.Node;
 
-public class SimpleType implements IComponent {
-    Node node;
-    boolean isSubType;
+/**
+ * Represents a complex type in the XSD schema.
+ */
+public class ComplexType implements IComponent {
+    private final Node node;
+    private boolean isSubType = false;
+    private boolean isOptional = false;
+    private boolean isNestedElement = false;
 
-    public SimpleType(Node node) {
+    public ComplexType(Node node) {
         this.node = node;
-        this.isSubType = false;
     }
 
     public Node getNode() {
@@ -35,7 +40,7 @@ public class SimpleType implements IComponent {
 
     @Override
     public String accept(IXSDVisitor xsdVisitor) {
-        return xsdVisitor.visit(this);
+        return isSubType ? xsdVisitor.visit(this, true) : xsdVisitor.visit(this);
     }
 
     @Override
@@ -46,5 +51,25 @@ public class SimpleType implements IComponent {
     @Override
     public boolean isSubType() {
         return isSubType;
+    }
+
+    @Override
+    public boolean isOptional() {
+        return isOptional;
+    }
+
+    @Override
+    public boolean isNestedElement() {
+        return isNestedElement;
+    }
+
+    @Override
+    public void setOptional(boolean isOptional) {
+        this.isOptional = isOptional;
+    }
+
+    @Override
+    public void setNestedElement(boolean isNestedElement) {
+        this.isNestedElement = isNestedElement;
     }
 }

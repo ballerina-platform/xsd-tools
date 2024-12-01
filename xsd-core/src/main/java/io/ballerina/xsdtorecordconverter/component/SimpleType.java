@@ -16,27 +16,30 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter;
+package io.ballerina.xsdtorecordconverter.component;
 
+import io.ballerina.xsdtorecordconverter.visitor.IXSDVisitor;
 import org.w3c.dom.Node;
 
-public class Element implements IComponent {
-    Node node;
-    boolean isSubType;
+/**
+ * Represents a simple type in the XSD schema.
+ */
+public class SimpleType implements IComponent {
+    private final Node node;
+    private boolean isSubType = false;
+    private boolean isOptional = false;
+    private boolean isNestedElement = false;
 
-    public Element(Node node) {
+    public SimpleType(Node node) {
         this.node = node;
-        this.isSubType = false;
     }
 
     public Node getNode() {
         return node;
     }
 
+    @Override
     public String accept(IXSDVisitor xsdVisitor) {
-        if (isSubType) {
-            return xsdVisitor.visit(this, true);
-        }
         return xsdVisitor.visit(this);
     }
 
@@ -47,6 +50,26 @@ public class Element implements IComponent {
 
     @Override
     public boolean isSubType() {
-        return this.isSubType;
+        return isSubType;
+    }
+
+    @Override
+    public boolean isOptional() {
+        return isOptional;
+    }
+
+    @Override
+    public boolean isNestedElement() {
+        return isNestedElement;
+    }
+
+    @Override
+    public void setOptional(boolean isOptional) {
+        this.isOptional = isOptional;
+    }
+
+    @Override
+    public void setNestedElement(boolean isNestedElement) {
+        this.isNestedElement = isNestedElement;
     }
 }
