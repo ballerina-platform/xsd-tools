@@ -40,7 +40,6 @@ gradleEnterprise {
 }
 
 include 'xsd-cli:cmd'
-findProject(':xsd-cli:cmd')?.name = 'cmd'
 include 'xsd-cli'
 include 'xsd-core'
 include 'module-ballerina-xsd'
