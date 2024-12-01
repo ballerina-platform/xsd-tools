@@ -57,7 +57,6 @@ dependencies {
 }
 
 tasks.register('updateTomlFiles') {
-    // Update the Ballerina.toml and Dependencies.toml files
     doLast {
         def newConfig = ballerinaTomlFilePlaceHolder.text.replace("@project.version@", project.version)
         newConfig = newConfig.replace("@toml.version@", tomlVersion)
@@ -70,7 +69,6 @@ tasks.register('updateTomlFiles') {
 }
 
 tasks.register('commitTomlFiles') {
-    // Commit the Ballerina.toml and Dependencies.toml files
     doLast {
         project.exec {
             ignoreExitValue true

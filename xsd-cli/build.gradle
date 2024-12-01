@@ -9,11 +9,11 @@ configurations.all {
 }
 
 dependencies {
-    implementation 'org.ballerinalang:ballerina-cli:2201.10.0'
-    implementation 'info.picocli:picocli:4.0.1'
+    implementation group: 'org.ballerinalang', name: 'ballerina-cli', version: "${ballerinaLangVersion}"
+    implementation group: 'info.picocli', name: 'picocli', version: "${picocliVersion}"
+    testImplementation group: 'junit', name: 'junit', version: "${junitVersion}"
+    testImplementation group: 'org.testng', name: 'testng', version: "${testngVersion}"
     implementation project(path: ':xsd-core')
-    testImplementation 'junit:junit:4.13.1'
-    testImplementation 'org.testng:testng:7.7.0'
 }
 
 build.dependsOn ":xsd-core:build"
