@@ -16,20 +16,37 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter;
+package io.ballerina.xsdtorecordconverter.visitor;
 
 import io.ballerina.compiler.syntax.tree.SyntaxKind;
+import io.ballerina.xsdtorecordconverter.component.ComplexType;
+import io.ballerina.xsdtorecordconverter.component.Element;
+import io.ballerina.xsdtorecordconverter.component.IComponent;
+import io.ballerina.xsdtorecordconverter.component.SimpleType;
+import io.ballerina.xsdtorecordconverter.XSDFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.addNamespace;
+import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.deriveType;
+import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.generateDefaultValue;
+import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.handleDefaultValues;
+import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.handleFixedValues;
+import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.handleMaxOccurrences;
+import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.handleMinOccurrences;
+import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.isSimpleType;
+import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.typeGenerator;
+
+/**
+ * This class is responsible for visiting and processing components of an XSD schema.
+ */
 public class XSDVisitor implements IXSDVisitor {
     public static final String PUBLIC = "public";
     public static final String WHITESPACE = " ";
     public static final String CONTENT_FIELD = "\\#content";
-    public static final String EQUAL = "=";
     public static final String SEMICOLON = ";";
     public static final String RECORD = "record";
     public static final String TYPE = "type";
@@ -40,8 +57,6 @@ public class XSDVisitor implements IXSDVisitor {
     public static final String QUOTATION_MARK = "\"";
     public static final String OPEN_BRACES = "{";
     public static final String CLOSE_BRACES = "}";
-    public static final String OPEN_SQUARE_BRACKET = "[";
-    public static final String CLOSE_SQUARE_BRACKET = "]";
     public static final String IMPORT = "import";
     public static final String ELEMENT = "element";
     public static final String COMPLEX_TYPE = "complexType";
@@ -55,66 +70,38 @@ public class XSDVisitor implements IXSDVisitor {
     public static final String ENUMERATION = "enumeration";
     public static final String ENUM = "enum";
     public static final String BASE = "base";
-    public static final String ZERO = "0";
-    public static final String ONE = "1";
     public static final String QUESTION_MARK = "?";
-    public static final String MAX_OCCURS = "maxOccurs";
-    public static final String MIN_OCCURS = "minOccurs";
-    public static final String UNBOUNDED = "unbounded";
     public static final String REQUIRED = "required";
     public static final String USE = "use";
     public static final String VALUE = "value";
     public static final String COMMA = ",";
     public static final String COLON = ":";
-    public static final String TIME = "time";
-    public static final String DATE_TIME = "dateTime";
-    public static final String DATE = "date";
-    public static final String G_YEAR_MONTH = "gYearMonth";
-    public static final String G_YEAR = "gYear";
     public static final String STRING = "string";
-    public static final String INTEGER = "integer";
-    public static final String LONG = "long";
-    public static final String NEGATIVE_INTEGER = "negativeInteger";
-    public static final String NON_POSITIVE_INTEGER = "nonPositiveInteger";
-    public static final String POSITIVE_INTEGER = "positiveInteger";
-    public static final String SHORT = "short";
-    public static final String UNSIGNED_LONG = "unsignedLong";
-    public static final String UNSIGNED_INT = "unsignedInt";
-    public static final String UNSIGNED_SHORT = "unsignedShort";
-    public static final String UNSIGNED_BYTE = "unsignedByte";
     public static final String INT = "int";
-    public static final String BASE64_BINARY = "base64Binary";
-    public static final String BYTE_ARRAY = "byte[]";
     public static final String BALLERINA_XML_DATA_MODULE = "ballerina/data.xmldata";
     public static final String ATTRIBUTE_ANNOTATION = "@xmldata:Attribute";
-    public static final String XMLDATA_NAMESPACE = "@xmldata:Namespace";
     public static final String TYPE_NAME_SUFFIX = "123";
-    public static final String PREFIX = "prefix";
-    public static final String URI = "uri";
+    public static final String MEMBER_TYPES = "memberTypes";
+    public static final String UNION = "union";
+    public static final String VERTICAL_BAR = "|";
+    public static final String EMPTY_STRING = "";
+    public static final String RECORD_WITH_OPEN_BRACE = "record {";
+
     private final ArrayList<String> imports = new ArrayList<>();
     private final LinkedHashMap<String, String> extensions = new LinkedHashMap<>();
+    private LinkedHashMap<String, String> rootElements = new LinkedHashMap<>();
+    private final LinkedHashMap<String, String> nestedElements = new LinkedHashMap<>();
 
     @Override
     public String visit(Element element) {
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
-        builder.append(addNamespace(node));
+        builder.append(addNamespace(this, node));
         builder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
         if (!node.hasChildNodes()) {
             return handleSingleElementNode(node, builder);
         }
         return handleElementsWithChildNodes(node, builder);
-    }
-
-    public String addNamespace(Node node) {
-        this.addImports(BALLERINA_XML_DATA_MODULE);
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(XMLDATA_NAMESPACE).append(WHITESPACE).append(OPEN_BRACES);
-        stringBuilder.append(PREFIX).append(COLON).append(QUOTATION_MARK);
-        stringBuilder.append(node.getPrefix()).append(QUOTATION_MARK).append(COMMA);
-        stringBuilder.append(URI).append(COLON).append(QUOTATION_MARK);
-        stringBuilder.append(node.getNamespaceURI()).append(QUOTATION_MARK).append(CLOSE_BRACES);
-        return stringBuilder.toString();
     }
 
     @Override
@@ -123,62 +110,31 @@ public class XSDVisitor implements IXSDVisitor {
         StringBuilder builder = new StringBuilder();
         Node nameNode = node.getAttributes().getNamedItem(NAME);
         Node typeNode = node.getAttributes().getNamedItem(TYPE);
+        typeNode = visitNestedElements(node, nameNode, typeNode);
         handleFixedValues(node, builder, typeNode);
         handleMaxOccurrences(node, builder);
         builder.append(nameNode.getNodeValue());
-        handleMinOccurrences(node, builder);
+        handleMinOccurrences(element, builder);
         handleDefaultValues(node, builder, typeNode);
         builder.append(SEMICOLON);
         return builder.toString();
     }
 
-    private void handleFixedValues(Node node, StringBuilder builder, Node typeNode) {
-        Node fixedNode = node.getAttributes().getNamedItem(FIXED);
-        if (fixedNode != null) {
-            builder.append(generateFixedValue(deriveType(typeNode), fixedNode.getNodeValue())).append(WHITESPACE);
-        } else {
-            builder.append(deriveType(typeNode)).append(WHITESPACE);
-        }
-    }
-
-    private void handleDefaultValues(Node node, StringBuilder builder, Node typeNode) {
-        Node defaultNode = node.getAttributes().getNamedItem(DEFAULT);
-        if (defaultNode != null) {
-            builder.append(generateDefaultValue(deriveType(typeNode), defaultNode.getNodeValue()));
-        }
-    }
-
-    private static void handleMinOccurrences(Node node, StringBuilder builder) {
-        Node minOccurrence = node.getAttributes().getNamedItem(MIN_OCCURS);
-        if (minOccurrence != null) {
-            if (minOccurrence.getNodeValue().equals(ZERO)) {
-                builder.append(QUESTION_MARK);
+    private Node visitNestedElements(Node node, Node nameNode, Node typeNode) {
+        if (typeNode == null && node.hasChildNodes()) {
+            typeNode = nameNode;
+            for (int j = 0; j < node.getChildNodes().getLength(); j++) {
+                IComponent component = XSDFactory.generateComponents(node.getChildNodes().item(j));
+                StringBuilder stringBuilder = new StringBuilder();
+                if (component == null) {
+                    continue;
+                }
+                component.setNestedElement(true);
+                stringBuilder.append(component.accept(this));
+                nestedElements.put(nameNode.getNodeValue(), stringBuilder.toString());
             }
         }
-    }
-
-    private static void handleMaxOccurrences(Node node, StringBuilder builder) {
-        Node maxOccurrence = node.getAttributes().getNamedItem(MAX_OCCURS);
-        if (maxOccurrence != null) {
-            if (maxOccurrence.getNodeValue().equals(UNBOUNDED)) {
-                builder.append(OPEN_SQUARE_BRACKET).append(CLOSE_SQUARE_BRACKET).append(WHITESPACE);
-            } else if (!maxOccurrence.getNodeValue().equals(ONE)) {
-                builder.append(OPEN_SQUARE_BRACKET).append(maxOccurrence.getNodeValue())
-                        .append(CLOSE_SQUARE_BRACKET).append(WHITESPACE);
-            }
-        }
-    }
-
-    private void handleFixedValues(StringBuilder builder, Node typeNode, Node fixedNode) {
-        if (fixedNode != null) {
-            builder.append(generateFixedValue(deriveType(typeNode), fixedNode.getNodeValue())).append(WHITESPACE);
-        } else {
-            builder.append(deriveType(typeNode)).append(WHITESPACE);
-        }
-    }
-
-    private static void handleMaxOccurrences(StringBuilder builder, Node maxOccurrence) {
-
+        return typeNode;
     }
 
     private String handleElementsWithChildNodes(Node node, StringBuilder builder) {
@@ -202,7 +158,7 @@ public class XSDVisitor implements IXSDVisitor {
         return builder.toString();
     }
 
-    public String generateFixedValue(String type, String value) {
+    public static String generateFixedValue(String type, String value) {
         StringBuilder builder = new StringBuilder();
         switch (type) {
             case INT -> builder.append(value).append(WHITESPACE);
@@ -211,40 +167,53 @@ public class XSDVisitor implements IXSDVisitor {
         return builder.toString();
     }
 
-    public String generateDefaultValue(String type, String value) {
-        StringBuilder builder = new StringBuilder().append(WHITESPACE).append(EQUAL).append(WHITESPACE);
-        switch (type) {
-            case INT -> builder.append(value);
-            case STRING -> builder.append(QUOTATION_MARK).append(value).append(QUOTATION_MARK);
-        }
-        return builder.toString();
-    }
 
     @Override
     public String visit(ComplexType element) {
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
-        builder.append(addNamespace(node));
+        builder.append(addNamespace(this, node));
         builder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
-        Node nameNode = node.getAttributes().getNamedItem(NAME);
-        if (nameNode != null) {
-            builder.append(nameNode.getNodeValue()).append(WHITESPACE);
-            builder.append(RECORD).append(WHITESPACE);
-            builder.append(OPEN_BRACES);
-        }
-        for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-            if (node.getChildNodes().item(i).getNodeType() == Node.ELEMENT_NODE) {
-                Node compositor = node.getChildNodes().item(i);
-                switch (compositor.getLocalName()) {
-                    case SEQUENCE -> builder.append(visitSequence(compositor));
-                    case CHOICE -> builder.append(visitChoice(compositor));
-                    case ATTRIBUTE -> builder.append(visitAttribute(compositor));
-                    case COMPLEX_CONTENT, SIMPLE_CONTENT -> builder.append(visitComplexContent(compositor));
-                }
-            }
-        }
+        setTypeDefinition(element, node, builder);
+        processChildNodes(node, builder);
         builder.append(CLOSE_BRACES).append(SEMICOLON);
         return builder.toString();
+    }
+
+    private void setTypeDefinition(ComplexType element, Node node, StringBuilder builder) {
+        Node nameNode = node.getAttributes().getNamedItem(NAME);
+        if (nameNode != null) {
+            builder.append(nameNode.getNodeValue());
+        } else if (element.isNestedElement()) {
+            builder.append(getParentNodeName(element));
+        }
+        builder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES);
+    }
+
+    private String getParentNodeName(ComplexType element) {
+        Node parentNode = element.getNode().getParentNode();
+        Node nameNode = parentNode.getAttributes().getNamedItem(NAME);
+        return nameNode != null ? nameNode.getNodeValue() : EMPTY_STRING;
+    }
+
+    private void processChildNodes(Node node, StringBuilder builder) {
+        for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+            Node childNode = node.getChildNodes().item(i);
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            processChildNodeByType(childNode, builder);
+        }
+    }
+
+    private void processChildNodeByType(Node childNode, StringBuilder builder) {
+        String localName = childNode.getLocalName();
+        switch (localName) {
+            case SEQUENCE -> builder.append(visitSequence(childNode, false));
+            case CHOICE -> builder.append(visitChoice(childNode));
+            case ATTRIBUTE -> builder.append(visitAttribute(childNode));
+            case COMPLEX_CONTENT, SIMPLE_CONTENT -> builder.append(visitComplexContent(childNode));
+        }
     }
 
     @Override
@@ -256,7 +225,7 @@ public class XSDVisitor implements IXSDVisitor {
             if (node.getChildNodes().item(i).getNodeType() == Node.ELEMENT_NODE) {
                 Node compositor = node.getChildNodes().item(i);
                 switch (compositor.getLocalName()) {
-                    case SEQUENCE -> builder.append(visitSequence(compositor));
+                    case SEQUENCE -> builder.append(visitSequence(compositor, false));
                     case CHOICE -> builder.append(visitChoice(compositor));
                     case ATTRIBUTE -> builder.append(visitAttribute(compositor));
                     case COMPLEX_CONTENT, SIMPLE_CONTENT -> builder.append(visitComplexContent(compositor));
@@ -272,10 +241,10 @@ public class XSDVisitor implements IXSDVisitor {
         for (int i = 0; i < node.getChildNodes().getLength(); i++) {
             Node element = node.getChildNodes().item(i);
             if (element.getNodeType() == Node.ELEMENT_NODE && element.getLocalName().equals(EXTENSION)) {
-                builder.append(addNamespace(element));
                 String base = element.getAttributes().getNamedItem(BASE).getNodeValue();
-                builder.append(base).append(WHITESPACE).append(base).append(SEMICOLON);
                 builder.append(visitExtension(element));
+                String parentNodeName = node.getParentNode().getAttributes().getNamedItem(NAME).getNodeValue();
+                extensions.put(parentNodeName, base);
             }
         }
         return builder.toString();
@@ -285,8 +254,9 @@ public class XSDVisitor implements IXSDVisitor {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < node.getChildNodes().getLength(); i++) {
             Node element = node.getChildNodes().item(i);
-            addNamespace(element);
-            if (element.getNodeType() == Node.ELEMENT_NODE) {builder.append(visitAttribute(element));
+            addNamespace(this, element);
+            if (element.getNodeType() == Node.ELEMENT_NODE) {
+                builder.append(visitAttribute(element));
             }
         }
         return builder.toString();
@@ -296,16 +266,17 @@ public class XSDVisitor implements IXSDVisitor {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < node.getChildNodes().getLength(); i++) {
             Node element = node.getChildNodes().item(i);
-            if (element.getNodeType() == Node.ELEMENT_NODE) {
-                if (element.getLocalName().equals(SEQUENCE)) {
-                    builder.append(visitSequence(element));
-                } else {
-                    builder.append(addNamespace(element));
-                    Node nameNode = element.getAttributes().getNamedItem(NAME);
-                    Node typeNode = element.getAttributes().getNamedItem(TYPE);
-                    builder.append(deriveType(typeNode)).append(WHITESPACE);
-                    builder.append(nameNode.getNodeValue()).append(QUESTION_MARK).append(SEMICOLON);
-                }
+            if (element.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            if (element.getLocalName().equals(SEQUENCE)) {
+                builder.append(visitSequence(element, true));
+            } else {
+                builder.append(addNamespace(this, element));
+                Node nameNode = element.getAttributes().getNamedItem(NAME);
+                Node typeNode = element.getAttributes().getNamedItem(TYPE);
+                builder.append(deriveType(typeNode)).append(WHITESPACE);
+                builder.append(nameNode.getNodeValue()).append(QUESTION_MARK).append(SEMICOLON);
             }
         }
         return builder.toString();
@@ -314,10 +285,9 @@ public class XSDVisitor implements IXSDVisitor {
     public String visitAttribute(Node attribute) {
         StringBuilder builder = new StringBuilder();
         this.addImports(BALLERINA_XML_DATA_MODULE);
-        builder.append(ATTRIBUTE_ANNOTATION).append(WHITESPACE);
         Node nameNode = attribute.getAttributes().getNamedItem(NAME);
         Node typeNode = attribute.getAttributes().getNamedItem(TYPE);
-        Node defaultNode = attribute.getAttributes().getNamedItem(DEFAULT);
+        builder.append(ATTRIBUTE_ANNOTATION).append(WHITESPACE);
         Node fixedNode = attribute.getAttributes().getNamedItem(FIXED);
         handleFixedValues(builder, typeNode, fixedNode);
         builder.append(nameNode.getNodeValue());
@@ -325,6 +295,7 @@ public class XSDVisitor implements IXSDVisitor {
         if (attributeType != null && !attributeType.getNodeValue().equals(REQUIRED)) {
             builder.append(QUESTION_MARK);
         }
+        Node defaultNode = attribute.getAttributes().getNamedItem(DEFAULT);
         if (defaultNode != null) {
             builder.append(generateDefaultValue(deriveType(typeNode), defaultNode.getNodeValue()));
         }
@@ -332,15 +303,18 @@ public class XSDVisitor implements IXSDVisitor {
         return builder.toString();
     }
 
-    public String visitSequence(Node node) {
+    public String visitSequence(Node node, boolean isOptional) {
         StringBuilder builder = new StringBuilder();
         for (int j = 0; j < node.getChildNodes().getLength(); j++) {
-            IComponent component = XSDFactory.generateComponents(node.getChildNodes().item(j));
-            if (component != null) {
-                component.setSubType(true);
-                builder.append(addNamespace(node.getChildNodes().item(j)));
-                builder.append(component.accept(this));
+            Node childNode = node.getChildNodes().item(j);
+            IComponent component = XSDFactory.generateComponents(childNode);
+            if (component == null) {
+                continue;
             }
+            component.setSubType(true);
+            component.setOptional(isOptional);
+            builder.append(addNamespace(this, childNode));
+            builder.append(component.accept(this));
         }
         return builder.toString();
     }
@@ -351,26 +325,47 @@ public class XSDVisitor implements IXSDVisitor {
         Node nameNode = element.getNode().getAttributes().getNamedItem(NAME);
         for (int i = 0; i < element.getNode().getChildNodes().getLength(); i++) {
             Node simpleTypeNode = element.getNode().getChildNodes().item(i);
+            if (simpleTypeNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
             StringBuilder stringBuilder = new StringBuilder();
-            if (simpleTypeNode.getNodeType() == Node.ELEMENT_NODE) {
-                builder.append(addNamespace(element.getNode()));
-                boolean enumeration = hasEnumerations(simpleTypeNode, stringBuilder);
-                if (enumeration) {
-                    builder.append(PUBLIC).append(WHITESPACE).append(ENUM).append(WHITESPACE);
-                    builder.append(nameNode.getNodeValue()).append(WHITESPACE).append(OPEN_BRACES);
-                    builder.append(stringBuilder.substring(0, stringBuilder.length() - 1));
-                    builder.append(CLOSE_BRACES).append(SEMICOLON);
-                } else {
-                    builder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
-                    builder.append(nameNode.getNodeValue()).append(WHITESPACE);
-                    builder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES);
-                    Node typeNode = simpleTypeNode.getAttributes().getNamedItem(BASE);
-                    builder.append(deriveType(typeNode)).append(WHITESPACE).append(CONTENT_FIELD).append(SEMICOLON);
-                    builder.append(CLOSE_BRACES).append(SEMICOLON);
-                }
+            builder.append(addNamespace(this, element.getNode()));
+            boolean enumeration = hasEnumerations(simpleTypeNode, stringBuilder);
+            if (enumeration) {
+                processEnumerations(builder, nameNode, stringBuilder);
+            } else if (simpleTypeNode.getLocalName().equals(UNION)) {
+                processUnionOfSimpleTypes(builder, simpleTypeNode);
+            } else {
+                processSimpleType(builder, nameNode, simpleTypeNode);
             }
         }
         return builder.toString();
+    }
+
+    private static void processSimpleType(StringBuilder builder, Node nameNode, Node simpleTypeNode) {
+        builder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
+        builder.append(nameNode.getNodeValue()).append(WHITESPACE);
+        Node typeNode = simpleTypeNode.getAttributes().getNamedItem(BASE);
+        builder.append(deriveType(typeNode)).append(WHITESPACE).append(SEMICOLON);
+    }
+
+    private static void processUnionOfSimpleTypes(StringBuilder builder, Node simpleTypeNode) {
+        builder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
+        builder.append(simpleTypeNode.getParentNode().getAttributes().getNamedItem(NAME).getNodeValue());
+        builder.append(WHITESPACE);
+        String unionTypes = simpleTypeNode.getAttributes().getNamedItem(MEMBER_TYPES).getNodeValue();
+        String[] typesArray = unionTypes.split(WHITESPACE);
+        for (String type: typesArray) {
+            builder.append(type.substring(type.indexOf(COLON) + 1)).append(VERTICAL_BAR);
+        }
+        builder.delete(builder.length() - 1, builder.length()).append(SEMICOLON);
+    }
+
+    private static void processEnumerations(StringBuilder builder, Node nameNode, StringBuilder stringBuilder) {
+        builder.append(PUBLIC).append(WHITESPACE).append(ENUM).append(WHITESPACE);
+        builder.append(nameNode.getNodeValue()).append(WHITESPACE).append(OPEN_BRACES);
+        builder.append(stringBuilder.substring(0, stringBuilder.length() - 1));
+        builder.append(CLOSE_BRACES).append(SEMICOLON);
     }
 
     private static boolean hasEnumerations(Node simpleTypeNode, StringBuilder stringBuilder) {
@@ -390,35 +385,46 @@ public class XSDVisitor implements IXSDVisitor {
 
     private String handleSingleElementNode(Node element, StringBuilder builder) {
         Node nameNode = element.getAttributes().getNamedItem(NAME);
-        if (nameNode != null) {
-            Node typeNode = element.getAttributes().getNamedItem(TYPE);
-            if (typeNode != null) {
-                String typeName = deriveType(typeNode);
-                if (typeName.equals(nameNode.getNodeValue())) {
-                    builder.append(nameNode.getNodeValue()).append(TYPE_NAME_SUFFIX).append(WHITESPACE);
-                } else {
-                    builder.append(nameNode.getNodeValue()).append(WHITESPACE);
-                }
-                builder.append(WHITESPACE).append(RECORD).append(OPEN_BRACES);
-                builder.append(typeGenerator(typeName)).append(WHITESPACE).append(CONTENT_FIELD).append(SEMICOLON);
-                builder.append(CLOSE_BRACES);
-            } else {
-                builder.append(SyntaxKind.ANYDATA_KEYWORD.stringValue());
-            }
-            builder.append(SEMICOLON);
-            return builder.toString();
+        if (nameNode == null) {
+            return null;
         }
-        return null;
+        String elementName = nameNode.getNodeValue();
+        Node typeNode = element.getAttributes().getNamedItem(TYPE);
+        if (typeNode == null) {
+            builder.append(SyntaxKind.ANYDATA_KEYWORD.stringValue());
+        } else {
+            handleTypedElement(elementName, typeNode, builder);
+        }
+        builder.append(SEMICOLON);
+        return builder.toString();
     }
 
-    public String deriveType(Node node) {
-        String derivedType = node.getNodeValue().contains(COLON) ?
-                node.getNodeValue().substring(node.getNodeValue().indexOf(COLON) + 1) : node.getNodeValue();
-        return typeGenerator(derivedType);
+    private void handleTypedElement(String elementName, Node typeNode, StringBuilder builder) {
+        String typeName = deriveType(typeNode);
+        if (!isSimpleType(typeName)) {
+            rootElements.put(elementName, typeName);
+        }
+        appendElementNameWithSuffix(elementName, typeName, builder);
+        appendRecordStructure(typeName, builder);
     }
 
-    public ArrayList<String> getImports() {
-        return imports;
+    private void appendElementNameWithSuffix(String elementName, String typeName, StringBuilder builder) {
+        builder.append(elementName);
+        if (typeName.equals(elementName)) {
+            builder.append(TYPE_NAME_SUFFIX);
+        }
+        builder.append(WHITESPACE);
+    }
+
+    private void appendRecordStructure(String typeName, StringBuilder builder) {
+        builder.append(RECORD)
+                .append(WHITESPACE)
+                .append(OPEN_BRACES)
+                .append(typeGenerator(typeName))
+                .append(WHITESPACE)
+                .append(CONTENT_FIELD)
+                .append(SEMICOLON)
+                .append(CLOSE_BRACES);
     }
 
     public void addImports(String module) {
@@ -428,25 +434,23 @@ public class XSDVisitor implements IXSDVisitor {
         }
     }
 
+    public ArrayList<String> getImports() {
+        return imports;
+    }
+
     public LinkedHashMap<String, String> getExtensions() {
         return extensions;
     }
 
-    public static String typeGenerator(String typeName) {
-        switch (typeName) {
-            case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING -> {
-                return STRING;
-            }
-            case INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER, POSITIVE_INTEGER, SHORT,
-                    UNSIGNED_LONG, UNSIGNED_INT, UNSIGNED_SHORT, UNSIGNED_BYTE, INT -> {
-                return INT;
-            }
-            case BASE64_BINARY -> {
-                return BYTE_ARRAY;
-            }
-            default -> {
-                return typeName;
-            }
-        }
+    public LinkedHashMap<String, String> getRootElements() {
+        return rootElements;
+    }
+
+    public void setRootElements(LinkedHashMap<String, String> rootElements) {
+        this.rootElements = rootElements;
+    }
+
+    public LinkedHashMap<String, String> getNestedElements() {
+        return nestedElements;
     }
 }

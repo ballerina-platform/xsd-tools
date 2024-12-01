@@ -16,8 +16,15 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter;
+package io.ballerina.xsdtorecordconverter.visitor;
 
+import io.ballerina.xsdtorecordconverter.component.ComplexType;
+import io.ballerina.xsdtorecordconverter.component.Element;
+import io.ballerina.xsdtorecordconverter.component.SimpleType;
+
+/**
+ * Defines methods for visiting various components of an XSD schema.
+ */
 public interface IXSDVisitor {
     String visit(Element element);
     String visit(Element element, boolean isSubType);
