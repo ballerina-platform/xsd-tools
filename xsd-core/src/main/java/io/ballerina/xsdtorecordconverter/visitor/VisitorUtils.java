@@ -23,6 +23,7 @@ import org.w3c.dom.Node;
 
 import java.util.Arrays;
 
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.EMPTY_STRING;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.generateFixedValue;
 
 /**
@@ -125,21 +126,19 @@ public final class VisitorUtils {
     public static void handleMaxOccurrences(Node node, StringBuilder builder) {
         Node maxOccurrence = node.getAttributes().getNamedItem(MAX_OCCURS);
         if (maxOccurrence != null) {
-            if (maxOccurrence.getNodeValue().equals(UNBOUNDED)) {
-                builder.append(OPEN_SQUARE_BRACKET).append(CLOSE_SQUARE_BRACKET).append(WHITESPACE);
-            } else if (!maxOccurrence.getNodeValue().equals(ONE)) {
-                builder.append(OPEN_SQUARE_BRACKET).append(maxOccurrence.getNodeValue())
-                        .append(CLOSE_SQUARE_BRACKET).append(WHITESPACE);
-            }
+            String maxValue = maxOccurrence.getNodeValue();
+            builder.append(maxValue.equals(UNBOUNDED)
+                    ? OPEN_SQUARE_BRACKET + CLOSE_SQUARE_BRACKET + WHITESPACE : !maxValue.equals(ONE)
+                    ? OPEN_SQUARE_BRACKET + maxValue + CLOSE_SQUARE_BRACKET + WHITESPACE : EMPTY_STRING
+            );
         }
     }
 
+
     public static void handleFixedValues(StringBuilder builder, Node typeNode, Node fixedNode) {
-        if (fixedNode != null) {
-            builder.append(generateFixedValue(deriveType(typeNode), fixedNode.getNodeValue())).append(WHITESPACE);
-        } else {
-            builder.append(deriveType(typeNode)).append(WHITESPACE);
-        }
+        builder.append(fixedNode != null
+                ? generateFixedValue(deriveType(typeNode), fixedNode.getNodeValue())
+                : deriveType(typeNode)).append(WHITESPACE);
     }
 
     public static String deriveType(Node node) {
