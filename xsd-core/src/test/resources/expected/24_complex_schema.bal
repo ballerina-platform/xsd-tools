@@ -1,11 +1,6 @@
 import ballerina/data.xmldata;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Document123 record {
-    Document \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type AccountIdentification4Choice record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
     IBAN2007Identifier IBAN?;
@@ -22,22 +17,17 @@ public type AccountSchemeName1Choice record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ActiveOrHistoricCurrencyAndAmount_SimpleType record {
-    decimal \#content;
-};
+public type ActiveOrHistoricCurrencyAndAmount_SimpleType decimal;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type ActiveOrHistoricCurrencyAndAmount record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ActiveOrHistoricCurrencyAndAmount_SimpleType ActiveOrHistoricCurrencyAndAmount_SimpleType;
+    decimal \#content;
     @xmldata:Attribute
     ActiveOrHistoricCurrencyCode Ccy;
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ActiveOrHistoricCurrencyCode record {
-    string \#content;
-};
+public type ActiveOrHistoricCurrencyCode string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public enum AddressType2Code {
@@ -89,14 +79,10 @@ public type AmountType4Choice record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type AnyBICDec2014Identifier record {
-    string \#content;
-};
+public type AnyBICDec2014Identifier string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type BICFIDec2014Identifier record {
-    string \#content;
-};
+public type BICFIDec2014Identifier string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type BranchAndFinancialInstitutionIdentification8 record {
@@ -246,9 +232,7 @@ public type Contact13 record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type CountryCode record {
-    string \#content;
-};
+public type CountryCode string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public enum CreditDebitCode {
@@ -346,9 +330,7 @@ public type DateType2Choice record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type DecimalNumber record {
-    decimal \#content;
-};
+public type DecimalNumber decimal;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type Document record {
@@ -445,114 +427,70 @@ public type EquivalentAmount2 record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Exact2NumericText record {
-    string \#content;
-};
+public type Exact2NumericText string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Exact4AlphaNumericText record {
-    string \#content;
-};
+public type Exact4AlphaNumericText string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalAccountIdentification1Code record {
-    string \#content;
-};
+public type ExternalAccountIdentification1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalAgentInstruction1Code record {
-    string \#content;
-};
+public type ExternalAgentInstruction1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalCashAccountType1Code record {
-    string \#content;
-};
+public type ExternalCashAccountType1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalCashClearingSystem1Code record {
-    string \#content;
-};
+public type ExternalCashClearingSystem1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalCategoryPurpose1Code record {
-    string \#content;
-};
+public type ExternalCategoryPurpose1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalClearingSystemIdentification1Code record {
-    string \#content;
-};
+public type ExternalClearingSystemIdentification1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalCreditorReferenceType1Code record {
-    string \#content;
-};
+public type ExternalCreditorReferenceType1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalDateType1Code record {
-    string \#content;
-};
+public type ExternalDateType1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalDocumentAmountType1Code record {
-    string \#content;
-};
+public type ExternalDocumentAmountType1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalDocumentLineType1Code record {
-    string \#content;
-};
+public type ExternalDocumentLineType1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalDocumentType1Code record {
-    string \#content;
-};
+public type ExternalDocumentType1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalFinancialInstitutionIdentification1Code record {
-    string \#content;
-};
+public type ExternalFinancialInstitutionIdentification1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalGarnishmentType1Code record {
-    string \#content;
-};
+public type ExternalGarnishmentType1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalLocalInstrument1Code record {
-    string \#content;
-};
+public type ExternalLocalInstrument1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalMandateSetupReason1Code record {
-    string \#content;
-};
+public type ExternalMandateSetupReason1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalOrganisationIdentification1Code record {
-    string \#content;
-};
+public type ExternalOrganisationIdentification1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalPersonIdentification1Code record {
-    string \#content;
-};
+public type ExternalPersonIdentification1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalProxyAccountType1Code record {
-    string \#content;
-};
+public type ExternalProxyAccountType1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalPurpose1Code record {
-    string \#content;
-};
+public type ExternalPurpose1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalServiceLevel1Code record {
-    string \#content;
-};
+public type ExternalServiceLevel1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type FinancialIdentificationSchemeName1Choice record {
@@ -696,24 +634,16 @@ public type GenericPersonIdentification2 record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type IBAN2007Identifier record {
-    string \#content;
-};
+public type IBAN2007Identifier string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ISODate record {
-    string \#content;
-};
+public type ISODate string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ISODateTime record {
-    string \#content;
-};
+public type ISODateTime string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ISOYear record {
-    string \#content;
-};
+public type ISOYear string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type InstructionForAssignee1 record {
@@ -724,9 +654,7 @@ public type InstructionForAssignee1 record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type LEIIdentifier record {
-    string \#content;
-};
+public type LEIIdentifier string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type LocalInstrument2Choice record {
@@ -802,64 +730,40 @@ public type MandateTypeInformation2 record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max1025Text record {
-    string \#content;
-};
+public type Max1025Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max10KBinary record {
-    byte[] \#content;
-};
+public type Max10KBinary byte[];
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max128Text record {
-    string \#content;
-};
+public type Max128Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max140Text record {
-    string \#content;
-};
+public type Max140Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max16Text record {
-    string \#content;
-};
+public type Max16Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max2048Text record {
-    string \#content;
-};
+public type Max2048Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max256Text record {
-    string \#content;
-};
+public type Max256Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max34Text record {
-    string \#content;
-};
+public type Max34Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max350Text record {
-    string \#content;
-};
+public type Max350Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max35Text record {
-    string \#content;
-};
+public type Max35Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max4Text record {
-    string \#content;
-};
+public type Max4Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max70Text record {
-    string \#content;
-};
+public type Max70Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type MissingCover6 record {
@@ -875,9 +779,7 @@ public enum NamePrefix2Code {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Number record {
-    decimal \#content;
-};
+public type Number decimal;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type OrganisationIdentification39 record {
@@ -1015,9 +917,7 @@ public type PaymentTypeInformation27 record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type PercentageRate record {
-    decimal \#content;
-};
+public type PercentageRate decimal;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type PersonIdentification18 record {
@@ -1036,9 +936,7 @@ public type PersonIdentificationSchemeName1Choice record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type PhoneNumber record {
-    string \#content;
-};
+public type PhoneNumber string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type PostalAddress27 record {
@@ -1340,14 +1238,10 @@ public enum TaxRecordPeriod1Code {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type TrueFalseIndicator record {
-    boolean \#content;
-};
+public type TrueFalseIndicator boolean;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type UUIDv4Identifier record {
-    string \#content;
-};
+public type UUIDv4Identifier string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type UnderlyingGroupInformation1 record {
@@ -1430,6 +1324,10 @@ public type UnderlyingTransaction8Choice record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type YesNoIndicator record {
-    boolean \#content;
+public type YesNoIndicator boolean;
+
+@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+public type Document123 record {
+    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    ClaimNonReceiptV10 ClmNonRct;
 };

@@ -10,4 +10,5 @@
             <xs:enumeration value="DLVY"/>
         </xs:restriction>
     </xs:simpleType>
+    <xs:element name="Address" type="AddressType2Code"/>
 </xs:schema>

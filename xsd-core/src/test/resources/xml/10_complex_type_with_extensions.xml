@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <!-- Define a base type with common attributes -->
     <xs:complexType name="PersonBase">
         <xs:attribute name="id" type="xs:int" use="required"/>
         <xs:attribute name="name" type="xs:string" use="required"/>
     </xs:complexType>
-
-    <!-- Define a derived type that extends the base type -->
     <xs:complexType name="Employee">
         <xs:complexContent>
             <xs:extension base="PersonBase">
@@ -15,7 +12,6 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-
-    <!-- Define an element of the derived type -->
     <xs:element name="Employee" type="Employee"/>
+    <xs:element name="EmployeePerson" type="PersonBase"/>
 </xs:schema>

@@ -19,4 +19,9 @@
             <xs:pattern value="[A-Z]{3,3}"/>
         </xs:restriction>
     </xs:simpleType>
+    <xs:element name="Root" type="ActiveCurrencyAndAmount"/>
+    <xs:element name="Root2" type="ActiveCurrencyAndAmount"/>
+    <xs:simpleType name="SimpleType">
+        <xs:restriction base="xs:boolean"></xs:restriction>
+    </xs:simpleType>
 </xs:schema>

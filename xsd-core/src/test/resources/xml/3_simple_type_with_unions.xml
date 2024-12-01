@@ -1,0 +1,6 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="ID">
+        <xs:union memberTypes="xs:string xs:int"/>
+    </xs:simpleType>
+    <xs:element name="Person" type="ID"/>
+</xs:schema>
