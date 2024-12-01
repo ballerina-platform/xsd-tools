@@ -26,6 +26,8 @@ import io.ballerina.compiler.syntax.tree.NodeFactory;
 import io.ballerina.compiler.syntax.tree.NodeList;
 import io.ballerina.compiler.syntax.tree.NodeParser;
 import io.ballerina.compiler.syntax.tree.Token;
+import io.ballerina.xsdtorecordconverter.component.IComponent;
+import io.ballerina.xsdtorecordconverter.visitor.XSDVisitor;
 import org.ballerinalang.formatter.core.Formatter;
 import org.ballerinalang.formatter.core.FormatterException;
 import org.ballerinalang.formatter.core.options.ForceFormattingOptions;
@@ -43,75 +45,164 @@ import java.util.LinkedHashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import static io.ballerina.xsdtorecordconverter.XSDVisitor.CLOSE_BRACES;
-import static io.ballerina.xsdtorecordconverter.XSDVisitor.NAME;
-import static io.ballerina.xsdtorecordconverter.XSDVisitor.NEW_LINE;
-import static io.ballerina.xsdtorecordconverter.XSDVisitor.OPEN_BRACES;
-import static io.ballerina.xsdtorecordconverter.XSDVisitor.RECORD;
-import static io.ballerina.xsdtorecordconverter.XSDVisitor.SEMICOLON;
-import static io.ballerina.xsdtorecordconverter.XSDVisitor.TYPE_NAME_SUFFIX;
-import static io.ballerina.xsdtorecordconverter.XSDVisitor.WHITESPACE;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.CLOSE_BRACES;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.CONTENT_FIELD;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.NAME;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.NEW_LINE;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.SEMICOLON;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.STRING;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.TYPE_NAME_SUFFIX;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.WHITESPACE;
 
-public class XSDToRecord {
+/**
+ * This class is used for transforming an XSD into a corresponding record format.
+ */
+public final class XSDToRecord {
     public static final String EOF_TOKEN = "";
     public static final String INVALID_IMPORTS_ERROR = "Invalid imports have been found.";
 
     public static String convert(String xsdData) {
         try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(xsdData.getBytes(StandardCharsets.UTF_8));
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            dbFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-            dbFactory.setNamespaceAware(true);
-            DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
-            Document doc = docBuilder.parse(inputStream);
-            Element rootElement = doc.getDocumentElement();
+            Document document = parseXSD(xsdData);
+            Element rootElement = document.getDocumentElement();
             HashMap<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
             XSDVisitor xsdVisitor = new XSDVisitor();
-            for (int i = 0; i < rootElement.getChildNodes().getLength(); i++) {
-                if (rootElement.getChildNodes().item(i).getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    IComponent component = XSDFactory.generateComponents(rootElement.getChildNodes().item(i));
-                    if (component != null) {
-                        stringBuilder.append(component.accept(xsdVisitor));
-                        String[] types = stringBuilder.toString().split(NEW_LINE);
-                        for (String type : types) {
-                            ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(type);
-                            String name = rootElement
-                                    .getChildNodes().item(i).getAttributes().getNamedItem(NAME).getNodeValue();
-                            nodes.put(nodes.containsKey(name) ? name + TYPE_NAME_SUFFIX : name, moduleNode);
-                        }
-                    }
-                }
-            }
-            handleExtensions(nodes, xsdVisitor);
-            NodeList<ModuleMemberDeclarationNode> moduleMembers = AbstractNodeFactory.createNodeList(nodes.values());
-            NodeList<ImportDeclarationNode> imports = getImportDeclarations(xsdVisitor);
-            Token eofToken = AbstractNodeFactory.createIdentifierToken(EOF_TOKEN);
-            ModulePartNode modulePartNode = NodeFactory.createModulePartNode(imports, moduleMembers, eofToken);
+            processNodeList(rootElement, nodes, xsdVisitor);
+            ModulePartNode modulePartNode = generateModulePartNode(nodes, xsdVisitor);
             return formatModuleParts(modulePartNode);
         } catch (Exception e) {
             return e.getMessage();
         }
     }
 
-    private static void handleExtensions(HashMap<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
-        LinkedHashMap<String, String> extensions = xsdVisitor.getExtensions();
-        for (String key: extensions.keySet()) {
-            if (nodes.containsKey(key)) {
-                String value = extensions.get(key);
-                String attributes = value.substring(value.indexOf(OPEN_BRACES) + 1, value.indexOf(CLOSE_BRACES));
-                attributes += CLOSE_BRACES;
-                String extendedValue = nodes.get(key).toString().replace(CLOSE_BRACES, attributes);
-                if (nodes.get(key).toString().equals(extendedValue)) {
-                    String recordPart = WHITESPACE + RECORD + WHITESPACE + OPEN_BRACES;
-                    String[] tokens = extendedValue.substring(0, extendedValue.length() - 1).split(WHITESPACE);
-                    recordPart = recordPart + tokens[3] + WHITESPACE + tokens[2] + SEMICOLON;
-                    extendedValue = value.replace(OPEN_BRACES, recordPart);
-                }
-                ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
-                nodes.replace(key, moduleNode);
+    private static Document parseXSD(String xsdData) throws Exception {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(xsdData.getBytes(StandardCharsets.UTF_8));
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        dbFactory.setNamespaceAware(true);
+        DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+        return docBuilder.parse(inputStream);
+    }
+
+    private static ModulePartNode generateModulePartNode(HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                                         XSDVisitor xsdVisitor) throws Exception {
+        NodeList<ModuleMemberDeclarationNode> moduleMembers = AbstractNodeFactory.createNodeList(nodes.values());
+        NodeList<ImportDeclarationNode> imports = getImportDeclarations(xsdVisitor);
+        Token eofToken = AbstractNodeFactory.createIdentifierToken(EOF_TOKEN);
+        return NodeFactory.createModulePartNode(imports, moduleMembers, eofToken);
+    }
+
+    private static void processNodeList(Element rootElement,
+                                        HashMap<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
+        generateNodes(rootElement, nodes, xsdVisitor);
+        processRootElements(nodes, xsdVisitor.getRootElements());
+        processNestedElements(nodes, xsdVisitor.getNestedElements());
+        processExtensions(nodes, xsdVisitor);
+    }
+
+    private static void processNestedElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                              HashMap<String, String> nestedElements) {
+        for (String element: nestedElements.keySet()) {
+            String nestedElement = nestedElements.get(element);
+            ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(nestedElement);
+            nodes.put(element, moduleNode);
+        }
+    }
+
+    private static void processRootElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                            HashMap<String, String> rootElements) {
+        for (String element: rootElements.keySet()) {
+            processRootElement(nodes, rootElements, element);
+        }
+    }
+
+    private static void processRootElement(HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                           HashMap<String, String> rootElements, String element) {
+        String type = rootElements.get(element);
+        String[] tokens = nodes.get(type).toString().split(WHITESPACE);
+        if (!nodes.get(type).toString().contains(XSDVisitor.RECORD_WITH_OPEN_BRACE)) {
+            processSingleTypeElements(nodes, element, type, tokens);
+        } else {
+            processRecordTypeElements(nodes, element, type);
+        }
+    }
+
+    private static void processRecordTypeElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                                  String element, String type) {
+        String fields = extractSubstring(nodes.get(type).toString(),
+                                         XSDVisitor.RECORD_WITH_OPEN_BRACE, CLOSE_BRACES + SEMICOLON);
+        String extendedValue = nodes.get(element)
+                .toString().replace(type + WHITESPACE + CONTENT_FIELD + SEMICOLON, fields);
+        ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
+        nodes.put(element, moduleNode);
+    }
+
+    private static void processSingleTypeElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                                  String element, String type, String[] tokens) {
+        String token = nodes.get(type).toString().contains(XSDVisitor.ENUM) ? STRING : tokens[tokens.length - 2];
+        String rootElement = nodes.get(element).toString().replace(type + WHITESPACE + CONTENT_FIELD,
+                token + WHITESPACE + CONTENT_FIELD);
+        ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(rootElement);
+        nodes.put(element, moduleNode);
+    }
+
+    private static void generateNodes(Element rootElement,
+                                      HashMap<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
+        for (int i = 0; i < rootElement.getChildNodes().getLength(); i++) {
+            if (rootElement.getChildNodes().item(i).getNodeType() != org.w3c.dom.Node.ELEMENT_NODE) {
+                continue;
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            IComponent component = XSDFactory.generateComponents(rootElement.getChildNodes().item(i));
+            if (component == null) {
+                continue;
+            }
+            stringBuilder.append(component.accept(xsdVisitor));
+            String[] types = stringBuilder.toString().split(NEW_LINE);
+            for (String type : types) {
+                resolveTypeNames(rootElement, nodes, xsdVisitor, i, type);
             }
         }
+    }
+
+    private static void resolveTypeNames(Element rootElement, HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                         XSDVisitor xsdVisitor, int i, String type) {
+        ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(type);
+        String name = rootElement.getChildNodes().item(i).getAttributes().getNamedItem(NAME).getNodeValue();
+        LinkedHashMap<String, String> roots = xsdVisitor.getRootElements();
+        if (roots.containsKey(name) && nodes.containsKey(name)) {
+            roots.put(name + TYPE_NAME_SUFFIX, roots.get(name));
+            xsdVisitor.setRootElements(roots);
+        }
+        nodes.put(nodes.containsKey(name) ? name + TYPE_NAME_SUFFIX : name, moduleNode);
+    }
+
+    private static void processExtensions(HashMap<String,
+                                          ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
+        LinkedHashMap<String, String> extensions = xsdVisitor.getExtensions();
+        for (String key: extensions.keySet()) {
+            if (!nodes.containsKey(key)) {
+                continue;
+            }
+            String baseValue = extensions.get(key);
+            ModuleMemberDeclarationNode baseNode = nodes.get(baseValue);
+            ModuleMemberDeclarationNode parentNode = nodes.get(key);
+            String fields = extractSubstring(baseNode.toString(), XSDVisitor.RECORD_WITH_OPEN_BRACE,
+                    CLOSE_BRACES + SEMICOLON);
+            fields = XSDVisitor.RECORD_WITH_OPEN_BRACE + fields;
+            String extendedValue = parentNode.toString().replace(XSDVisitor.RECORD_WITH_OPEN_BRACE, fields);
+            ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
+            nodes.replace(key, moduleNode);
+        }
+    }
+
+    public static String extractSubstring(String baseString, String startToken, String endToken) {
+        if (!baseString.contains(startToken)) {
+            return baseString.split(WHITESPACE)[baseString.split(WHITESPACE).length - 2] +
+                    WHITESPACE + CONTENT_FIELD + SEMICOLON;
+        }
+        int startIndex = baseString.indexOf(startToken) + startToken.length();
+        int endIndex = baseString.indexOf(endToken, startIndex);
+        return baseString.substring(startIndex, endIndex);
     }
 
     public static NodeList<ImportDeclarationNode> getImportDeclarations(XSDVisitor xsdVisitor) throws Exception {
