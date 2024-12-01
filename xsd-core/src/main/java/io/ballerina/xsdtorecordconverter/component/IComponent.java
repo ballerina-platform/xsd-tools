@@ -16,10 +16,19 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter;
+package io.ballerina.xsdtorecordconverter.component;
 
+import io.ballerina.xsdtorecordconverter.visitor.IXSDVisitor;
+
+/**
+ * Interface representing a component of an XSD schema.
+ */
 public interface IComponent {
     String accept(IXSDVisitor xsdVisitor);
     void setSubType(boolean subType);
     boolean isSubType();
+    boolean isOptional();
+    boolean isNestedElement();
+    void setOptional(boolean isOptional);
+    void setNestedElement(boolean isOptional);
 }
