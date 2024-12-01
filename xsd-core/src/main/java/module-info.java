@@ -4,4 +4,6 @@ module io.ballerina.xsdtorecordconverter {
     requires io.ballerina.formatter.core;
 
     exports io.ballerina.xsdtorecordconverter;
+    exports io.ballerina.xsdtorecordconverter.visitor;
+    exports io.ballerina.xsdtorecordconverter.component;
 }
