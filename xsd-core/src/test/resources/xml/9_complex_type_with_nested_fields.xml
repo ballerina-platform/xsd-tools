@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+    <!-- Root element -->
+    <xs:element name="World">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Continent">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Country">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="State">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="City">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="Landmark" type="xs:string"/>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

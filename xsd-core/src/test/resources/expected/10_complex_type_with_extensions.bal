@@ -10,8 +10,10 @@ public type PersonBase record {
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type Employee record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    PersonBase PersonBase;
+    @xmldata:Attribute
+    int id;
+    @xmldata:Attribute
+    string name;
     @xmldata:Attribute
     int age?;
     @xmldata:Attribute
@@ -20,5 +22,16 @@ public type Employee record {
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type Employee123 record {
-    Employee \#content;
+    @xmldata:Attribute
+    int age?;
+    @xmldata:Attribute
+    string position?;
+};
+
+@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+public type EmployeePerson record {
+    @xmldata:Attribute
+    int id;
+    @xmldata:Attribute
+    string name;
 };

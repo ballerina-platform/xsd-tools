@@ -6,5 +6,5 @@
             <xs:minInclusive value="0"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:element name="age" type="Age" />
+    <xs:element name="Root" type="Age"/>
 </xs:schema>

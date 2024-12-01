@@ -1,55 +1,6 @@
 import ballerina/data.xmldata;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Document123 record {
-    Document \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type AccountIdentification4Choice record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    IBAN2007Identifier IBAN?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    GenericAccountIdentification1 Othr?;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type AccountReportingRequestV07 record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    GroupHeader117 GrpHdr;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ReportingRequest7[] RptgReq;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    SupplementaryData1[] SplmtryData?;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type AccountSchemeName1Choice record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ExternalAccountIdentification1Code Cd?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text Prtry?;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ActiveOrHistoricCurrencyAndAmount_SimpleType record {
-    decimal \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ActiveOrHistoricCurrencyAndAmount record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ActiveOrHistoricCurrencyAndAmount_SimpleType ActiveOrHistoricCurrencyAndAmount_SimpleType;
-    @xmldata:Attribute
-    ActiveOrHistoricCurrencyCode Ccy;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ActiveOrHistoricCurrencyCode record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public enum AddressType2Code {
     ADDR, PBOX, HOME, BIZZ, MLTO, DLVY
 };
@@ -63,38 +14,10 @@ public type AddressType3Choice record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type AnyBICDec2014Identifier record {
-    string \#content;
-};
+public type AnyBICDec2014Identifier string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type BICFIDec2014Identifier record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type BalanceSubType1Choice record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ExternalBalanceSubType1Code Cd?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text Prtry?;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type BalanceType10Choice record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ExternalBalanceType1Code Cd?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text Prtry?;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type BalanceType13 record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    BalanceType10Choice CdOrPrtry;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    BalanceSubType1Choice SubTp?;
-};
+public type BICFIDec2014Identifier string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type BranchAndFinancialInstitutionIdentification8 record {
@@ -117,25 +40,25 @@ public type BranchData5 record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type CashAccount40 record {
+public type Case6 record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    AccountIdentification4Choice Id?;
+    Max35Text Id;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    CashAccountType2Choice Tp?;
+    Party50Choice Cretr;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ActiveOrHistoricCurrencyCode Ccy?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max70Text Nm?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ProxyAccountIdentification1 Prxy?;
+    YesNoIndicator ReopCaseIndctn?;
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type CashAccountType2Choice record {
+public type CaseAssignment6 record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ExternalCashAccountType1Code Cd?;
+    Max35Text Id;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text Prtry?;
+    Party50Choice Assgnr;
+    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    Party50Choice Assgne;
+    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    ISODateTime CreDtTm;
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
@@ -185,14 +108,7 @@ public type Contact13 record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type CountryCode record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public enum CreditDebitCode {
-    CRDT, DBIT
-};
+public type CountryCode string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type DateAndPlaceOfBirth1 record {
@@ -207,81 +123,37 @@ public type DateAndPlaceOfBirth1 record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type DatePeriod3 record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ISODate FrDt;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ISODate ToDt?;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type Document record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    AccountReportingRequestV07 AcctRptgReq;
+    DuplicateV07 Dplct;
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type EntryStatus1Choice record {
+public type DuplicateV07 record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ExternalEntryStatus1Code Cd?;
+    CaseAssignment6 Assgnmt;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text Prtry?;
+    Case6 Case?;
+    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    ProprietaryData7 Dplct;
+    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    SupplementaryData1[] SplmtryData?;
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Exact4AlphaNumericText record {
-    string \#content;
-};
+public type Exact4AlphaNumericText string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalAccountIdentification1Code record {
-    string \#content;
-};
+public type ExternalClearingSystemIdentification1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalBalanceSubType1Code record {
-    string \#content;
-};
+public type ExternalFinancialInstitutionIdentification1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalBalanceType1Code record {
-    string \#content;
-};
+public type ExternalOrganisationIdentification1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalCashAccountType1Code record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalClearingSystemIdentification1Code record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalEntryStatus1Code record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalFinancialInstitutionIdentification1Code record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalOrganisationIdentification1Code record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalPersonIdentification1Code record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ExternalProxyAccountType1Code record {
-    string \#content;
-};
+public type ExternalPersonIdentification1Code string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type FinancialIdentificationSchemeName1Choice record {
@@ -305,21 +177,6 @@ public type FinancialInstitutionIdentification23 record {
     PostalAddress27 PstlAdr?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
     GenericFinancialIdentification1 Othr?;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public enum FloorLimitType1Code {
-    CRED, DEBT, BOTH
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type GenericAccountIdentification1 record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max34Text Id;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    AccountSchemeName1Choice SchmeNm?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text Issr?;
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
@@ -363,97 +220,40 @@ public type GenericPersonIdentification2 record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type GroupHeader117 record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text MsgId;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ISODateTime CreDtTm;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Party50Choice MsgSndr?;
-};
+public type ISODate string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type IBAN2007Identifier record {
-    string \#content;
-};
+public type ISODateTime string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ISODate record {
-    string \#content;
-};
+public type LEIIdentifier string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ISODateTime record {
-    string \#content;
-};
+public type Max128Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ISOTime record {
-    string \#content;
-};
+public type Max140Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type LEIIdentifier record {
-    string \#content;
-};
+public type Max16Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Limit2 record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ActiveOrHistoricCurrencyAndAmount Amt;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    FloorLimitType1Code CdtDbtInd;
-};
+public type Max2048Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max128Text record {
-    string \#content;
-};
+public type Max256Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max140Text record {
-    string \#content;
-};
+public type Max350Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max16Text record {
-    string \#content;
-};
+public type Max35Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max2048Text record {
-    string \#content;
-};
+public type Max4Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max256Text record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max34Text record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max350Text record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max35Text record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max4Text record {
-    string \#content;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Max70Text record {
-    string \#content;
-};
+public type Max70Text string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public enum NamePrefix2Code {
@@ -533,9 +333,7 @@ public type PersonIdentificationSchemeName1Choice record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type PhoneNumber record {
-    string \#content;
-};
+public type PhoneNumber string;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type PostalAddress27 record {
@@ -583,78 +381,21 @@ public enum PreferredContactMethod2Code {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ProxyAccountIdentification1 record {
+public type ProprietaryData6 record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ProxyAccountType1Choice Tp?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max2048Text Id;
+    SkipPayload Any;
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ProxyAccountType1Choice record {
+public type ProprietaryData7 record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ExternalProxyAccountType1Code Cd?;
+    Max35Text Tp;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text Prtry?;
+    ProprietaryData6 Data;
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public enum QueryType3Code {
-    ALLL, CHNG, MODF
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ReportingPeriod5 record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    DatePeriod3 FrToDt;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    TimePeriodDetails1 FrToTm?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    QueryType3Code Tp;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ReportingRequest7 record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text Id?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text ReqdMsgNmId;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    CashAccount40 Acct?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Party50Choice AcctOwnr;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    BranchAndFinancialInstitutionIdentification8 AcctSvcr?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ReportingPeriod5 RptgPrd?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    SequenceRange1Choice RptgSeq?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    TransactionType2 ReqdTxTp?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    BalanceType13[] ReqdBalTp?;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type SequenceRange1 record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text FrSeq;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text ToSeq;
-};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type SequenceRange1Choice record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text FrSeq?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text ToSeq?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    SequenceRange1 FrToSeq?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text EQSeq?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max35Text NEQSeq?;
+public type SkipPayload record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
@@ -670,19 +411,10 @@ public type SupplementaryDataEnvelope1 record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type TimePeriodDetails1 record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ISOTime FrTm;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    ISOTime ToTm?;
-};
+public type YesNoIndicator boolean;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type TransactionType2 record {
+public type Document123 record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    EntryStatus1Choice Sts;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    CreditDebitCode CdtDbtInd;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Limit2[] FlrLmt?;
+    DuplicateV07 Dplct;
 };
