@@ -21,12 +21,17 @@ package io.ballerina.xsdtorecordconverter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testng.Assert;
+import org.w3c.dom.Document;
 
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 public class XSDToRecordTest {
     private static final Path RES_DIR = Paths.get("src/test/resources/").toAbsolutePath();
@@ -68,22 +73,32 @@ public class XSDToRecordTest {
 
     @ParameterizedTest
     @MethodSource("provideTestPaths")
-    void testXsdToRecord(String xmlFilePath, String balFilePath) throws IOException {
+    void testXsdToRecord(String xmlFilePath, String balFilePath) throws Exception {
         validate(RES_DIR.resolve(XML_DIR).resolve(xmlFilePath), RES_DIR.resolve(EXPECTED_DIR).resolve(balFilePath));
     }
 
-    private void validate(Path sample, Path expected) throws IOException {
+    private void validate(Path sample, Path expected) throws Exception {
         String xmlFileContent = Files.readString(sample);
-        String result = XSDToRecord.convert(xmlFileContent);
+        Document document = parseXSD(xmlFileContent);
+        String result = XSDToRecord.convert(document);
         String expectedValue = Files.readString(expected);
         Assert.assertEquals(result, expectedValue);
     }
 
+    private static Document parseXSD(String xsdData) throws Exception {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(xsdData.getBytes(StandardCharsets.UTF_8));
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        dbFactory.setNamespaceAware(true);
+        DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+        return docBuilder.parse(inputStream);
+    }
+
     @org.junit.jupiter.api.Test
-    void testXsdSchema() throws IOException {
-       String sourceFile = "20_elements_with_attributes.xml";
+    void testXsdSchema() throws Exception {
+       String sourceFile = "8_elements_with_sequence.xml";
        String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
-       String result = XSDToRecord.convert(xmlFileContent);
+       Document document = parseXSD(xmlFileContent);
+       String result = XSDToRecord.convert(document);
        System.out.println(result);
     }
 }
