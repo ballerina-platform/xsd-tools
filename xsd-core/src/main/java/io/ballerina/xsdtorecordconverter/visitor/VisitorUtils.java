@@ -134,7 +134,6 @@ public final class VisitorUtils {
         }
     }
 
-
     public static void handleFixedValues(StringBuilder builder, Node typeNode, Node fixedNode) {
         builder.append(fixedNode != null
                 ? generateFixedValue(deriveType(typeNode), fixedNode.getNodeValue())
