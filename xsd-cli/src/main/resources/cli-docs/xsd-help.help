@@ -17,5 +17,9 @@ OPTIONS
            which the command is run.
 
 EXAMPLE
-       Generate records and parser functions for a given EDI schema.
-           $ bal xsd schema.xsd -o modules/records.bal
+       Generate types from an XSD schema. The output will be saved to the types.bal file
+       in the same directory where the command is executed.
+           $ bal xsd schema.xsd
+
+       Generate types from an XSD schema with a specified relative path of the output file
+           $ bal xsd schema.xsd -o modules/xsd/records.bal
