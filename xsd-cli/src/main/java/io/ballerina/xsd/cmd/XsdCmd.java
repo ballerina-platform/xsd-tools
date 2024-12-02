@@ -85,14 +85,49 @@ public class XsdCmd implements BLauncherCmd {
             return;
         }
         try {
+            if (!Files.exists(Path.of(argList.get(0)))) {
+                outStream.println(argList.get(0) + " file does not exist.");
+                return;
+            }
             String xmlFileContent = Files.readString(Path.of(argList.get(0)));
             Document document = parseXSD(xmlFileContent);
+            String result = XSDToRecord.convert(document);
+            Path destinationFile = Files.exists(Paths.get(outputPath))
+                    ? handleFileOverwrite(Paths.get(outputPath), outStream) : Paths.get(outputPath);
+            Path parentDirectory = destinationFile.getParent();
+            if (parentDirectory != null && !Files.exists(parentDirectory)) {
+                Files.createDirectories(parentDirectory);
+            }
             Files.writeString(destinationFile, result);
-            System.out.println("Processing completed. Output written to " + outputPath);
+            System.out.println("Output is written to " + destinationFile);
         } catch (Exception e) {
-            outStream.println("Error: " + e.getLocalizedMessage());
+            outStream.println("Error occurred: " + e.getLocalizedMessage());
             exitOnError();
         }
+    }
+
+    public static Path handleFileOverwrite(Path destinationFile, PrintStream outStream) {
+        if (!Files.exists(destinationFile)) {
+            return destinationFile;
+        }
+        String filePath = destinationFile.toString();
+        outStream.print("File already exists at " + filePath + ". Overwrite? (y/N): ");
+        String response = new Scanner(System.in).nextLine().trim().toLowerCase();
+        if (response.equals("y")) {
+            return destinationFile;
+        }
+        int counter = 1;
+        String fileName = new File(filePath).getName();
+        int dotIndex = fileName.lastIndexOf('.');
+        String baseName = dotIndex == -1 ? fileName : fileName.substring(0, dotIndex);
+        String extension = dotIndex == -1 ? "" : fileName.substring(dotIndex);
+        String parentPath = new File(filePath).getParent() != null ? new File(filePath).getParent() : "";
+        while (Files.exists(destinationFile)) {
+            String newFileName = baseName + "." + counter + extension;
+            destinationFile = Path.of(parentPath, newFileName);
+            counter++;
+        }
+        return destinationFile;
     }
 
     private static Document parseXSD(String xsdData) throws Exception {
