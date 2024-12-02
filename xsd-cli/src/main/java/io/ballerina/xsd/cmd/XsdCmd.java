@@ -74,14 +74,37 @@ public class XsdCmd implements BLauncherCmd {
         }
         try {
             String xmlFileContent = Files.readString(Path.of(argList.get(0)));
-            String result = XSDToRecord.convert(xmlFileContent);
-            Path destinationFile = Paths.get(outputPath);
+            Document document = parseXSD(xmlFileContent);
             Files.writeString(destinationFile, result);
             System.out.println("Processing completed. Output written to " + outputPath);
         } catch (Exception e) {
             outStream.println("Error: " + e.getLocalizedMessage());
             exitOnError();
         }
+    }
+
+    private static Document parseXSD(String xsdData) throws Exception {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(xsdData.getBytes(StandardCharsets.UTF_8));
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        dbFactory.setNamespaceAware(true);
+        DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+        docBuilder.setErrorHandler(new ErrorHandler() {
+            @Override
+            public void warning(SAXParseException exception) {
+                throw new RuntimeException(exception);
+            }
+
+            @Override
+            public void error(SAXParseException exception) {
+                throw new RuntimeException(exception);
+            }
+
+            @Override
+            public void fatalError(SAXParseException exception) {
+                throw new RuntimeException(exception);
+            }
+        });
+        return docBuilder.parse(inputStream);
     }
 
     @Override
