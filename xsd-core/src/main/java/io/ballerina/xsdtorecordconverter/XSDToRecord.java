@@ -35,15 +35,11 @@ import org.ballerinalang.formatter.core.options.FormattingOptions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.Objects;
 
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.CLOSE_BRACES;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.CONTENT_FIELD;
@@ -58,29 +54,22 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.WHITESPACE;
  * This class is used for transforming an XSD into a corresponding record format.
  */
 public final class XSDToRecord {
+    public static final String SCHEMA = "schema";
     public static final String EOF_TOKEN = "";
     public static final String INVALID_IMPORTS_ERROR = "Invalid imports have been found.";
+    public static final String INVALID_XSD_FORMAT_ERROR = "The provided XML document is not a valid XSD schema. " +
+            "The root element must be a <schema>.";
 
-    public static String convert(String xsdData) {
-        try {
-            Document document = parseXSD(xsdData);
-            Element rootElement = document.getDocumentElement();
-            HashMap<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
-            XSDVisitor xsdVisitor = new XSDVisitor();
-            processNodeList(rootElement, nodes, xsdVisitor);
-            ModulePartNode modulePartNode = generateModulePartNode(nodes, xsdVisitor);
-            return formatModuleParts(modulePartNode);
-        } catch (Exception e) {
-            return e.getMessage();
+    public static String convert(Document document) throws Exception{
+        Element rootElement = document.getDocumentElement();
+        if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
+            throw new Exception(INVALID_XSD_FORMAT_ERROR);
         }
-    }
-
-    private static Document parseXSD(String xsdData) throws Exception {
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(xsdData.getBytes(StandardCharsets.UTF_8));
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        dbFactory.setNamespaceAware(true);
-        DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
-        return docBuilder.parse(inputStream);
+        HashMap<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
+        XSDVisitor xsdVisitor = new XSDVisitor();
+        processNodeList(rootElement, nodes, xsdVisitor);
+        ModulePartNode modulePartNode = generateModulePartNode(nodes, xsdVisitor);
+        return formatModuleParts(modulePartNode);
     }
 
     private static ModulePartNode generateModulePartNode(HashMap<String, ModuleMemberDeclarationNode> nodes,
