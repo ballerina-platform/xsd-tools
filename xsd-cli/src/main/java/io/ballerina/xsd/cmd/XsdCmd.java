@@ -19,10 +19,16 @@
 package io.ballerina.xsd.cmd;
 
 import io.ballerina.xsdtorecordconverter.XSDToRecord;
+import org.w3c.dom.Document;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import picocli.CommandLine;
 import io.ballerina.cli.BLauncherCmd;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -33,6 +39,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Main class to implement "xsd" command for ballerina.
@@ -48,10 +58,11 @@ public class XsdCmd implements BLauncherCmd {
     @CommandLine.Option(names = {"-h", "--help"}, hidden = true)
     private boolean helpFlag;
 
-    @CommandLine.Parameters(description = "Program arguments")
+    @CommandLine.Parameters(description = "Input file path of the XSD schema")
     private final List<String> argList = new ArrayList<>();
 
-    @CommandLine.Option(names = {"-o", "--output"}, description = "Generating the types from the XSD file")
+    @CommandLine.Option(names = {"-o", "--output"}, description = "Destination file path of the generated types from " +
+            "the XSD file")
     private String outputPath = "types.bal";
 
     public XsdCmd() {
@@ -68,7 +79,8 @@ public class XsdCmd implements BLauncherCmd {
             return;
         }
         if (argList.isEmpty()) {
-            outStream.println("Missing input xsd file");
+            outStream.println("An XSD file path is required to generate the types");
+            outStream.println("e.g: bal xsd <xsd source file path>");
             exitOnError();
             return;
         }
