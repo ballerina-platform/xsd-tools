@@ -63,7 +63,7 @@ public final class XSDToRecord {
     public static final String INVALID_XSD_FORMAT_ERROR = "The provided XML document is not a valid XSD schema. " +
             "The root element must be a <schema>.";
 
-    public static String convert(Document document) throws Exception{
+    public static String convert(Document document) throws Exception {
         Element rootElement = document.getDocumentElement();
         if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
             throw new Exception(INVALID_XSD_FORMAT_ERROR);
