@@ -1,6 +1,12 @@
 import ballerina/data.xmldata;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+public type Document123 record {
+    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    CustomerDirectDebitInitiationV11 CstmrDrctDbtInitn;
+};
+
+@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type AccountIdentification4Choice record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
     IBAN2007Identifier IBAN?;
@@ -1228,9 +1234,3 @@ public type TrueFalseIndicator boolean;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type UUIDv4Identifier string;
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Document123 record {
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    CustomerDirectDebitInitiationV11 CstmrDrctDbtInitn;
-};

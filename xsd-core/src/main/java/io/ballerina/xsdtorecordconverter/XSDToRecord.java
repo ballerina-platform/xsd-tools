@@ -34,6 +34,7 @@ import org.ballerinalang.formatter.core.options.ForceFormattingOptions;
 import org.ballerinalang.formatter.core.options.FormattingOptions;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,6 +48,7 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.NAME;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.NEW_LINE;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.SEMICOLON;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.STRING;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.TYPE;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.TYPE_NAME_SUFFIX;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.WHITESPACE;
 
@@ -136,33 +138,47 @@ public final class XSDToRecord {
 
     private static void generateNodes(Element rootElement,
                                       HashMap<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
-        for (int i = 0; i < rootElement.getChildNodes().getLength(); i++) {
-            if (rootElement.getChildNodes().item(i).getNodeType() != org.w3c.dom.Node.ELEMENT_NODE) {
+        for (int index = 0; index < rootElement.getChildNodes().getLength(); index++) {
+            if (rootElement.getChildNodes().item(index).getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
             StringBuilder stringBuilder = new StringBuilder();
-            IComponent component = XSDFactory.generateComponents(rootElement.getChildNodes().item(i));
+            IComponent component = XSDFactory.generateComponents(rootElement.getChildNodes().item(index));
             if (component == null) {
                 continue;
             }
             stringBuilder.append(component.accept(xsdVisitor));
-            String[] types = stringBuilder.toString().split(NEW_LINE);
-            for (String type : types) {
-                resolveTypeNames(rootElement, nodes, xsdVisitor, i, type);
-            }
+            ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
+            String name = resolveTypeName(rootElement, index, moduleNode);
+            setRemainingRootElements(nodes, xsdVisitor, name);
+            nodes.put(nodes.containsKey(name) ? name + TYPE_NAME_SUFFIX : name, moduleNode);
         }
     }
 
-    private static void resolveTypeNames(Element rootElement, HashMap<String, ModuleMemberDeclarationNode> nodes,
-                                         XSDVisitor xsdVisitor, int i, String type) {
-        ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(type);
-        String name = rootElement.getChildNodes().item(i).getAttributes().getNamedItem(NAME).getNodeValue();
+    private static void setRemainingRootElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                                 XSDVisitor xsdVisitor, String name) {
         LinkedHashMap<String, String> roots = xsdVisitor.getRootElements();
         if (roots.containsKey(name) && nodes.containsKey(name)) {
             roots.put(name + TYPE_NAME_SUFFIX, roots.get(name));
             xsdVisitor.setRootElements(roots);
         }
-        nodes.put(nodes.containsKey(name) ? name + TYPE_NAME_SUFFIX : name, moduleNode);
+    }
+
+    private static String resolveTypeName(Element rootElement, int index, ModuleMemberDeclarationNode moduleNode) {
+        String name = extractTypeName(moduleNode.toString().split(WHITESPACE));
+        return name != null
+                ? name : rootElement.getChildNodes().item(index).getAttributes().getNamedItem(NAME).getNodeValue();
+    }
+
+    public static String extractTypeName(String[] values) {
+        String previous = null;
+        for (String current : values) {
+            if (TYPE.equals(previous)) {
+                return current;
+            }
+            previous = current;
+        }
+        return null;
     }
 
     private static void processExtensions(HashMap<String,

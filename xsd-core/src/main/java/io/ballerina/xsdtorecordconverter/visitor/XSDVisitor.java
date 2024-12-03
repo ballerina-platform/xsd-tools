@@ -401,30 +401,25 @@ public class XSDVisitor implements IXSDVisitor {
 
     private void handleTypedElement(String elementName, Node typeNode, StringBuilder builder) {
         String typeName = deriveType(typeNode);
+        elementName = appendElementNameWithSuffix(elementName, typeName, builder);
         if (!isSimpleType(typeName)) {
             rootElements.put(elementName, typeName);
         }
-        appendElementNameWithSuffix(elementName, typeName, builder);
         appendRecordStructure(typeName, builder);
     }
 
-    private void appendElementNameWithSuffix(String elementName, String typeName, StringBuilder builder) {
-        builder.append(elementName);
+    private String appendElementNameWithSuffix(String elementName, String typeName, StringBuilder builder) {
         if (typeName.equals(elementName)) {
-            builder.append(TYPE_NAME_SUFFIX);
+            elementName += TYPE_NAME_SUFFIX;
         }
-        builder.append(WHITESPACE);
+        builder.append(elementName).append(WHITESPACE);
+        return elementName;
     }
 
     private void appendRecordStructure(String typeName, StringBuilder builder) {
-        builder.append(RECORD)
-                .append(WHITESPACE)
-                .append(OPEN_BRACES)
-                .append(typeGenerator(typeName))
-                .append(WHITESPACE)
-                .append(CONTENT_FIELD)
-                .append(SEMICOLON)
-                .append(CLOSE_BRACES);
+        builder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(WHITESPACE)
+                .append(typeGenerator(typeName)).append(WHITESPACE).append(CONTENT_FIELD)
+                .append(SEMICOLON).append(WHITESPACE).append(CLOSE_BRACES);
     }
 
     public void addImports(String module) {
