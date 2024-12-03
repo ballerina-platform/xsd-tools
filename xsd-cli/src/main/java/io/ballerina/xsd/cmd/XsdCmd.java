@@ -44,6 +44,8 @@ import java.util.Scanner;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.EMPTY_STRING;
+
 /**
  * Main class to implement "xsd" command for ballerina.
  */
@@ -53,6 +55,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 )
 public class XsdCmd implements BLauncherCmd {
     private static final String CMD_NAME = "xsd";
+    private static final String FILE_OVERWRITE_PROMPT = "File already exists at %s. Overwrite? (y/N): ";
     private final PrintStream outStream;
     private final boolean exitWhenFinish;
     @CommandLine.Option(names = {"-h", "--help"}, hidden = true)
@@ -111,7 +114,7 @@ public class XsdCmd implements BLauncherCmd {
             return destinationFile;
         }
         String filePath = destinationFile.toString();
-        outStream.print("File already exists at " + filePath + ". Overwrite? (y/N): ");
+        outStream.printf(FILE_OVERWRITE_PROMPT, filePath);
         String response = new Scanner(System.in).nextLine().trim().toLowerCase();
         if (response.equals("y")) {
             return destinationFile;
@@ -120,8 +123,8 @@ public class XsdCmd implements BLauncherCmd {
         String fileName = new File(filePath).getName();
         int dotIndex = fileName.lastIndexOf('.');
         String baseName = dotIndex == -1 ? fileName : fileName.substring(0, dotIndex);
-        String extension = dotIndex == -1 ? "" : fileName.substring(dotIndex);
-        String parentPath = new File(filePath).getParent() != null ? new File(filePath).getParent() : "";
+        String extension = dotIndex == -1 ? EMPTY_STRING : fileName.substring(dotIndex);
+        String parentPath = new File(filePath).getParent() != null ? new File(filePath).getParent() : EMPTY_STRING;
         while (Files.exists(destinationFile)) {
             String newFileName = baseName + "." + counter + extension;
             destinationFile = Path.of(parentPath, newFileName);
