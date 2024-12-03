@@ -27,6 +27,7 @@ import io.ballerina.compiler.syntax.tree.NodeList;
 import io.ballerina.compiler.syntax.tree.NodeParser;
 import io.ballerina.compiler.syntax.tree.Token;
 import io.ballerina.xsdtorecordconverter.component.IComponent;
+import io.ballerina.xsdtorecordconverter.visitor.VisitorUtils;
 import io.ballerina.xsdtorecordconverter.visitor.XSDVisitor;
 import org.ballerinalang.formatter.core.Formatter;
 import org.ballerinalang.formatter.core.FormatterException;
@@ -138,18 +139,18 @@ public final class XSDToRecord {
 
     private static void generateNodes(Element rootElement,
                                       HashMap<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
-        for (int index = 0; index < rootElement.getChildNodes().getLength(); index++) {
-            if (rootElement.getChildNodes().item(index).getNodeType() != Node.ELEMENT_NODE) {
+        for (Node childNode : VisitorUtils.asIterable(rootElement.getChildNodes())) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
             StringBuilder stringBuilder = new StringBuilder();
-            IComponent component = XSDFactory.generateComponents(rootElement.getChildNodes().item(index));
+            IComponent component = XSDFactory.generateComponents(childNode);
             if (component == null) {
                 continue;
             }
             stringBuilder.append(component.accept(xsdVisitor));
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
-            String name = resolveTypeName(rootElement, index, moduleNode);
+            String name = resolveTypeName(childNode, moduleNode);
             setRemainingRootElements(nodes, xsdVisitor, name);
             nodes.put(nodes.containsKey(name) ? name + TYPE_NAME_SUFFIX : name, moduleNode);
         }
@@ -164,10 +165,9 @@ public final class XSDToRecord {
         }
     }
 
-    private static String resolveTypeName(Element rootElement, int index, ModuleMemberDeclarationNode moduleNode) {
+    private static String resolveTypeName(Node node, ModuleMemberDeclarationNode moduleNode) {
         String name = extractTypeName(moduleNode.toString().split(WHITESPACE));
-        return name != null
-                ? name : rootElement.getChildNodes().item(index).getAttributes().getNamedItem(NAME).getNodeValue();
+        return name != null ? name : node.getAttributes().getNamedItem(NAME).getNodeValue();
     }
 
     public static String extractTypeName(String[] values) {
