@@ -504,7 +504,7 @@ public type PostalAddress27 record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
     CountryCode Ctry?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max70Text[7] AdrLine?;
+    Max70Text[] AdrLine?;
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}

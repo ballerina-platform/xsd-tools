@@ -132,7 +132,7 @@ public final class VisitorUtils {
             String maxValue = maxOccurrence.getNodeValue();
             builder.append(maxValue.equals(UNBOUNDED)
                     ? OPEN_SQUARE_BRACKET + CLOSE_SQUARE_BRACKET + WHITESPACE : !maxValue.equals(ONE)
-                    ? OPEN_SQUARE_BRACKET + maxValue + CLOSE_SQUARE_BRACKET + WHITESPACE : EMPTY_STRING
+                    ? OPEN_SQUARE_BRACKET + EMPTY_STRING + CLOSE_SQUARE_BRACKET + WHITESPACE : EMPTY_STRING
             );
         }
     }

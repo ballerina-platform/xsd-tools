@@ -11,7 +11,7 @@ public type Add record {
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
     string[] stringA;
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
-    int[5] intD?;
+    int[] intD?;
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
-    string[5] stringB;
+    string[] stringB;
 };

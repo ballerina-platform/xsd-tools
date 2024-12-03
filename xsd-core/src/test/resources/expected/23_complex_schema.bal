@@ -342,11 +342,11 @@ public type DirectDebitTransactionInformation32 record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
     Purpose2Choice Purp?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    RegulatoryReporting3[10] RgltryRptg?;
+    RegulatoryReporting3[] RgltryRptg?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
     TaxData1 Tax?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    RemittanceLocation8[10] RltdRmtInf?;
+    RemittanceLocation8[] RltdRmtInf?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
     RemittanceInformation22 RmtInf?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
@@ -647,7 +647,7 @@ public type GroupHeader118 record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
     ISODateTime CreDtTm;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Authorisation1Choice[2] Authstn?;
+    Authorisation1Choice[] Authstn?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
     Max15NumericText NbOfTxs;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
@@ -944,7 +944,7 @@ public type PostalAddress27 record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
     CountryCode Ctry?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max70Text[7] AdrLine?;
+    Max70Text[] AdrLine?;
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
@@ -1101,7 +1101,7 @@ public type StructuredRemittanceInformation18 record {
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
     Garnishment4 GrnshmtRmt?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Max140Text[3] AddtlRmtInf?;
+    Max140Text[] AddtlRmtInf?;
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
