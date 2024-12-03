@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.addNamespace;
+import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.asIterable;
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.deriveType;
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.generateDefaultValue;
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.handleDefaultValues;
@@ -123,15 +124,13 @@ public class XSDVisitor implements IXSDVisitor {
     private Node visitNestedElements(Node node, Node nameNode, Node typeNode) {
         if (typeNode == null && node.hasChildNodes()) {
             typeNode = nameNode;
-            for (int j = 0; j < node.getChildNodes().getLength(); j++) {
-                IComponent component = XSDFactory.generateComponents(node.getChildNodes().item(j));
-                StringBuilder stringBuilder = new StringBuilder();
+            for (Node childNode : asIterable(node.getChildNodes())) {
+                IComponent component = XSDFactory.generateComponents(childNode);
                 if (component == null) {
                     continue;
                 }
                 component.setNestedElement(true);
-                stringBuilder.append(component.accept(this));
-                nestedElements.put(nameNode.getNodeValue(), stringBuilder.toString());
+                nestedElements.put(nameNode.getNodeValue(), component.accept(this));
             }
         }
         return typeNode;
@@ -148,8 +147,8 @@ public class XSDVisitor implements IXSDVisitor {
         if (typeNode != null) {
             builder.append(deriveType(typeNode)).append(SEMICOLON).append(NEW_LINE);
         }
-        for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-            IComponent component = XSDFactory.generateComponents(node.getChildNodes().item(i));
+        for (Node child : asIterable(node.getChildNodes())) {
+            IComponent component = XSDFactory.generateComponents(child);
             if (component != null) {
                 component.setSubType(true);
                 builder.append(component.accept(this));
@@ -166,7 +165,6 @@ public class XSDVisitor implements IXSDVisitor {
         }
         return builder.toString();
     }
-
 
     @Override
     public String visit(ComplexType element) {
@@ -197,8 +195,8 @@ public class XSDVisitor implements IXSDVisitor {
     }
 
     private void processChildNodes(Node node, StringBuilder builder) {
-        for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-            Node childNode = node.getChildNodes().item(i);
+        NodeList childNodes = node.getChildNodes();
+        for (Node childNode : asIterable(childNodes)) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
@@ -221,15 +219,16 @@ public class XSDVisitor implements IXSDVisitor {
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
         builder.append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(WHITESPACE);
-        for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-            if (node.getChildNodes().item(i).getNodeType() == Node.ELEMENT_NODE) {
-                Node compositor = node.getChildNodes().item(i);
-                switch (compositor.getLocalName()) {
-                    case SEQUENCE -> builder.append(visitSequence(compositor, false));
-                    case CHOICE -> builder.append(visitChoice(compositor));
-                    case ATTRIBUTE -> builder.append(visitAttribute(compositor));
-                    case COMPLEX_CONTENT, SIMPLE_CONTENT -> builder.append(visitComplexContent(compositor));
-                }
+        NodeList childNodes = node.getChildNodes();
+        for (Node childNode : asIterable(childNodes)) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            switch (childNode.getLocalName()) {
+                case SEQUENCE -> builder.append(visitSequence(childNode, false));
+                case CHOICE -> builder.append(visitChoice(childNode));
+                case ATTRIBUTE -> builder.append(visitAttribute(childNode));
+                case COMPLEX_CONTENT, SIMPLE_CONTENT -> builder.append(visitComplexContent(childNode));
             }
         }
         builder.append(CLOSE_BRACES).append(SEMICOLON);
@@ -238,11 +237,11 @@ public class XSDVisitor implements IXSDVisitor {
 
     public String visitComplexContent(Node node) {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-            Node element = node.getChildNodes().item(i);
-            if (element.getNodeType() == Node.ELEMENT_NODE && element.getLocalName().equals(EXTENSION)) {
-                String base = element.getAttributes().getNamedItem(BASE).getNodeValue();
-                builder.append(visitExtension(element));
+        NodeList childNodes = node.getChildNodes();
+        for (Node childNode : asIterable(childNodes)) {
+            if (childNode.getNodeType() == Node.ELEMENT_NODE && EXTENSION.equals(childNode.getLocalName())) {
+                String base = childNode.getAttributes().getNamedItem(BASE).getNodeValue();
+                builder.append(visitExtension(childNode));
                 String parentNodeName = node.getParentNode().getAttributes().getNamedItem(NAME).getNodeValue();
                 extensions.put(parentNodeName, base);
             }
@@ -252,11 +251,11 @@ public class XSDVisitor implements IXSDVisitor {
 
     public String visitExtension(Node node) {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-            Node element = node.getChildNodes().item(i);
-            addNamespace(this, element);
-            if (element.getNodeType() == Node.ELEMENT_NODE) {
-                builder.append(visitAttribute(element));
+        NodeList childNodes = node.getChildNodes();
+        for (Node childNode : asIterable(childNodes)) {
+            addNamespace(this, childNode);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                builder.append(visitAttribute(childNode));
             }
         }
         return builder.toString();
@@ -264,17 +263,17 @@ public class XSDVisitor implements IXSDVisitor {
 
     public String visitChoice(Node node) {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-            Node element = node.getChildNodes().item(i);
-            if (element.getNodeType() != Node.ELEMENT_NODE) {
+        NodeList childNodes = node.getChildNodes();
+        for (Node childNode : asIterable(childNodes)) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
-            if (element.getLocalName().equals(SEQUENCE)) {
-                builder.append(visitSequence(element, true));
-            } else {
-                builder.append(addNamespace(this, element));
-                Node nameNode = element.getAttributes().getNamedItem(NAME);
-                Node typeNode = element.getAttributes().getNamedItem(TYPE);
+            if (childNode.getLocalName().equals(SEQUENCE)) {
+                builder.append(visitSequence(childNode, true));
+            } else { // TODO: check child node have other types except sequence and none
+                builder.append(addNamespace(this, childNode));
+                Node nameNode = childNode.getAttributes().getNamedItem(NAME);
+                Node typeNode = childNode.getAttributes().getNamedItem(TYPE);
                 builder.append(deriveType(typeNode)).append(WHITESPACE);
                 builder.append(nameNode.getNodeValue()).append(QUESTION_MARK).append(SEMICOLON);
             }
@@ -305,8 +304,8 @@ public class XSDVisitor implements IXSDVisitor {
 
     public String visitSequence(Node node, boolean isOptional) {
         StringBuilder builder = new StringBuilder();
-        for (int j = 0; j < node.getChildNodes().getLength(); j++) {
-            Node childNode = node.getChildNodes().item(j);
+        NodeList childNodes = node.getChildNodes();
+        for (Node childNode : asIterable(childNodes)) {
             IComponent component = XSDFactory.generateComponents(childNode);
             if (component == null) {
                 continue;
@@ -323,8 +322,7 @@ public class XSDVisitor implements IXSDVisitor {
     public String visit(SimpleType element) {
         StringBuilder builder = new StringBuilder();
         Node nameNode = element.getNode().getAttributes().getNamedItem(NAME);
-        for (int i = 0; i < element.getNode().getChildNodes().getLength(); i++) {
-            Node simpleTypeNode = element.getNode().getChildNodes().item(i);
+        for (Node simpleTypeNode : asIterable(element.getNode().getChildNodes())) {
             if (simpleTypeNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
@@ -333,7 +331,7 @@ public class XSDVisitor implements IXSDVisitor {
             boolean enumeration = hasEnumerations(simpleTypeNode, stringBuilder);
             if (enumeration) {
                 processEnumerations(builder, nameNode, stringBuilder);
-            } else if (simpleTypeNode.getLocalName().equals(UNION)) {
+            } else if (UNION.equals(simpleTypeNode.getLocalName())) {
                 processUnionOfSimpleTypes(builder, simpleTypeNode);
             } else {
                 processSimpleType(builder, nameNode, simpleTypeNode);
@@ -372,9 +370,8 @@ public class XSDVisitor implements IXSDVisitor {
         boolean enumeration = false;
         if (simpleTypeNode.hasChildNodes()) {
             NodeList nodes = simpleTypeNode.getChildNodes();
-            for (int i = 0; i < nodes.getLength(); i++) {
-                Node node = nodes.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE && node.getLocalName().equals(ENUMERATION)) {
+            for (Node node : asIterable(nodes)) {
+                if (node.getNodeType() == Node.ELEMENT_NODE && ENUMERATION.equals(node.getLocalName())) {
                     enumeration = true;
                     stringBuilder.append(node.getAttributes().getNamedItem(VALUE).getNodeValue()).append(COMMA);
                 }

@@ -20,8 +20,11 @@ package io.ballerina.xsdtorecordconverter.visitor;
 
 import io.ballerina.xsdtorecordconverter.component.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.EMPTY_STRING;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.generateFixedValue;
@@ -173,5 +176,24 @@ public final class VisitorUtils {
                 UNSIGNED_BYTE, INT, BASE64_BINARY, BOOLEAN, FLOAT, DOUBLE, DECIMAL, ANY_URI
         };
         return Arrays.stream(simpleTypes).toList().contains(typeName);
+    }
+
+    public static Iterable<Node> asIterable(NodeList nodeList) {
+        return () -> new Iterator<>() {
+            private int index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return index < nodeList.getLength();
+            }
+
+            @Override
+            public Node next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return nodeList.item(index++);
+            }
+        };
     }
 }
