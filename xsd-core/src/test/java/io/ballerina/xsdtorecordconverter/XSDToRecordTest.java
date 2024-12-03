@@ -96,7 +96,7 @@ public class XSDToRecordTest {
 
     @org.junit.jupiter.api.Test
     void testXsdSchema() throws Exception {
-       String sourceFile = "8_elements_with_sequence.xml";
+       String sourceFile = "16_elements_with_required_fields.xml";
        String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
        Document document = parseXSD(xmlFileContent);
        String result = XSDToRecord.convert(document);
