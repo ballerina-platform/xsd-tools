@@ -41,16 +41,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.CLOSE_BRACES;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.CONTENT_FIELD;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.NAME;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.NEW_LINE;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.SEMICOLON;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.STRING;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.TYPE;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.TYPE_NAME_SUFFIX;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.WHITESPACE;
 
 /**
@@ -103,18 +102,13 @@ public final class XSDToRecord {
     private static void processRootElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
                                             HashMap<String, String> rootElements) {
         for (String element: rootElements.keySet()) {
-            processRootElement(nodes, rootElements, element);
-        }
-    }
-
-    private static void processRootElement(HashMap<String, ModuleMemberDeclarationNode> nodes,
-                                           HashMap<String, String> rootElements, String element) {
-        String type = rootElements.get(element);
-        String[] tokens = nodes.get(type).toString().split(WHITESPACE);
-        if (!nodes.get(type).toString().contains(XSDVisitor.RECORD_WITH_OPEN_BRACE)) {
-            processSingleTypeElements(nodes, element, type, tokens);
-        } else {
-            processRecordTypeElements(nodes, element, type);
+            String type = rootElements.get(element);
+            String[] tokens = nodes.get(type).toString().split(WHITESPACE);
+            if (!nodes.get(type).toString().contains(XSDVisitor.RECORD_WITH_OPEN_BRACE)) {
+                processSingleTypeElements(nodes, element, type, tokens);
+            } else {
+                processRecordTypeElements(nodes, element, type);
+            }
         }
     }
 
@@ -152,7 +146,7 @@ public final class XSDToRecord {
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
             String name = resolveTypeName(childNode, moduleNode);
             setRemainingRootElements(nodes, xsdVisitor, name);
-            nodes.put(nodes.containsKey(name) ? name + TYPE_NAME_SUFFIX : name, moduleNode);
+            nodes.put(nodes.containsKey(name) ? resolveNameConflicts(name, nodes) : name, moduleNode);
         }
     }
 
@@ -160,9 +154,19 @@ public final class XSDToRecord {
                                                  XSDVisitor xsdVisitor, String name) {
         LinkedHashMap<String, String> roots = xsdVisitor.getRootElements();
         if (roots.containsKey(name) && nodes.containsKey(name)) {
-            roots.put(name + TYPE_NAME_SUFFIX, roots.get(name));
+            roots.put(resolveNameConflicts(name, nodes), roots.get(name));
             xsdVisitor.setRootElements(roots);
         }
+    }
+
+    private static String resolveNameConflicts(String name, Map<String, ModuleMemberDeclarationNode> nodes) {
+        String resolvedName = name;
+        int counter = 1;
+        while (nodes.containsKey(resolvedName)) {
+            resolvedName += counter;
+            counter++;
+        }
+        return resolvedName;
     }
 
     private static String resolveTypeName(Node node, ModuleMemberDeclarationNode moduleNode) {

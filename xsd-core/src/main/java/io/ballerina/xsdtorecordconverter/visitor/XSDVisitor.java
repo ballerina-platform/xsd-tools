@@ -18,6 +18,7 @@
 
 package io.ballerina.xsdtorecordconverter.visitor;
 
+import io.ballerina.compiler.syntax.tree.ModuleMemberDeclarationNode;
 import io.ballerina.compiler.syntax.tree.SyntaxKind;
 import io.ballerina.xsdtorecordconverter.component.ComplexType;
 import io.ballerina.xsdtorecordconverter.component.Element;
@@ -29,6 +30,7 @@ import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.addNamespace;
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.asIterable;
@@ -81,7 +83,6 @@ public class XSDVisitor implements IXSDVisitor {
     public static final String INT = "int";
     public static final String BALLERINA_XML_DATA_MODULE = "ballerina/data.xmldata";
     public static final String ATTRIBUTE_ANNOTATION = "@xmldata:Attribute";
-    public static final String TYPE_NAME_SUFFIX = "123";
     public static final String MEMBER_TYPES = "memberTypes";
     public static final String UNION = "union";
     public static final String VERTICAL_BAR = "|";
@@ -140,7 +141,7 @@ public class XSDVisitor implements IXSDVisitor {
         Node nameNode = node.getAttributes().getNamedItem(NAME);
         Node typeNode = node.getAttributes().getNamedItem(TYPE);
         if (typeNode != null && typeNode.getNodeValue().equals(nameNode.getNodeValue())) {
-            builder.append(nameNode.getNodeValue()).append(TYPE_NAME_SUFFIX).append(WHITESPACE);
+            builder.append(resolveNameConflicts(nameNode.getNodeValue(), typeNode.getNodeValue())).append(WHITESPACE);
         } else if (typeNode == null) {
             builder.append(nameNode.getNodeValue()).append(WHITESPACE);
         }
@@ -155,6 +156,16 @@ public class XSDVisitor implements IXSDVisitor {
             }
         }
         return builder.toString();
+    }
+
+    private static String resolveNameConflicts(String name, String typeName) {
+        StringBuilder resolvedName = new StringBuilder(name);
+        int counter = 1;
+        while (resolvedName.toString().equals(typeName)) {
+            resolvedName.append(counter);
+            counter++;
+        }
+        return resolvedName.toString();
     }
 
     public static String generateFixedValue(String type, String value) {
@@ -407,7 +418,7 @@ public class XSDVisitor implements IXSDVisitor {
 
     private String appendElementNameWithSuffix(String elementName, String typeName, StringBuilder builder) {
         if (typeName.equals(elementName)) {
-            elementName += TYPE_NAME_SUFFIX;
+            elementName = resolveNameConflicts(elementName, typeName);
         }
         builder.append(elementName).append(WHITESPACE);
         return elementName;
