@@ -29,7 +29,7 @@ public type Employee record {
 };
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Employee123 record {
+public type Employee1 record {
     @xmldata:Attribute
     int age?;
     @xmldata:Attribute
