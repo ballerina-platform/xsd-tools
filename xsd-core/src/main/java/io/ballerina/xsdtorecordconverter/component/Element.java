@@ -18,13 +18,13 @@
 
 package io.ballerina.xsdtorecordconverter.component;
 
-import io.ballerina.xsdtorecordconverter.visitor.IXSDVisitor;
+import io.ballerina.xsdtorecordconverter.visitor.XSDVisitor;
 import org.w3c.dom.Node;
 
 /**
  * Represents an element type in the XSD schema.
  */
-public class Element implements IComponent {
+public class Element implements XSDComponent {
     private final Node node;
     private boolean isSubType = false;
     private boolean isOptional = false;
@@ -56,7 +56,7 @@ public class Element implements IComponent {
         return node;
     }
 
-    public String accept(IXSDVisitor xsdVisitor) throws Exception {
+    public String accept(XSDVisitor xsdVisitor) throws Exception {
         return isSubType ? xsdVisitor.visit(this, true) : xsdVisitor.visit(this);
     }
 

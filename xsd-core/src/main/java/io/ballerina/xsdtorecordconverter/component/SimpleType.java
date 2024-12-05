@@ -18,13 +18,13 @@
 
 package io.ballerina.xsdtorecordconverter.component;
 
-import io.ballerina.xsdtorecordconverter.visitor.IXSDVisitor;
+import io.ballerina.xsdtorecordconverter.visitor.XSDVisitor;
 import org.w3c.dom.Node;
 
 /**
  * Represents a simple type in the XSD schema.
  */
-public class SimpleType implements IComponent {
+public class SimpleType implements XSDComponent {
     private final Node node;
     private boolean isSubType = false;
     private boolean isOptional = false;
@@ -39,7 +39,7 @@ public class SimpleType implements IComponent {
     }
 
     @Override
-    public String accept(IXSDVisitor xsdVisitor) {
+    public String accept(XSDVisitor xsdVisitor) {
         return xsdVisitor.visit(this);
     }
 
