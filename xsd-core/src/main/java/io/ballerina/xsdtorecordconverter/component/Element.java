@@ -57,7 +57,7 @@ public class Element implements XSDComponent {
     }
 
     public String accept(XSDVisitor xsdVisitor) throws Exception {
-        return isSubType ? xsdVisitor.visit(this, true) : xsdVisitor.visit(this);
+        return isSubType() ? xsdVisitor.visit(this, true) : xsdVisitor.visit(this);
     }
 
     @Override
