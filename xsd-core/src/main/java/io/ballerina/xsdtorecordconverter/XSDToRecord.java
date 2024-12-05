@@ -82,8 +82,8 @@ public final class XSDToRecord {
         return NodeFactory.createModulePartNode(imports, moduleMembers, eofToken);
     }
 
-    private static void processNodeList(Element rootElement,
-                                        HashMap<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
+    private static void processNodeList(Element rootElement, HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                        XSDVisitor xsdVisitor) throws Exception {
         generateNodes(rootElement, nodes, xsdVisitor);
         processRootElements(nodes, xsdVisitor.getRootElements());
         processNestedElements(nodes, xsdVisitor.getNestedElements());
@@ -132,7 +132,7 @@ public final class XSDToRecord {
     }
 
     private static void generateNodes(Element rootElement,
-                                      HashMap<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
+                                      HashMap<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) throws Exception {
         for (Node childNode : VisitorUtils.asIterable(rootElement.getChildNodes())) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
@@ -145,17 +145,7 @@ public final class XSDToRecord {
             stringBuilder.append(component.accept(xsdVisitor));
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
             String name = resolveTypeName(childNode, moduleNode);
-            setRemainingRootElements(nodes, xsdVisitor, name);
             nodes.put(nodes.containsKey(name) ? resolveNameConflicts(name, nodes) : name, moduleNode);
-        }
-    }
-
-    private static void setRemainingRootElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
-                                                 XSDVisitor xsdVisitor, String name) {
-        LinkedHashMap<String, String> roots = xsdVisitor.getRootElements();
-        if (roots.containsKey(name) && nodes.containsKey(name)) {
-            roots.put(resolveNameConflicts(name, nodes), roots.get(name));
-            xsdVisitor.setRootElements(roots);
         }
     }
 
