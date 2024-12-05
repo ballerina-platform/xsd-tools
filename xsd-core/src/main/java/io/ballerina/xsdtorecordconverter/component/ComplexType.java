@@ -39,7 +39,7 @@ public class ComplexType implements IComponent {
     }
 
     @Override
-    public String accept(IXSDVisitor xsdVisitor) {
+    public String accept(IXSDVisitor xsdVisitor) throws Exception {
         return isSubType ? xsdVisitor.visit(this, true) : xsdVisitor.visit(this);
     }
 

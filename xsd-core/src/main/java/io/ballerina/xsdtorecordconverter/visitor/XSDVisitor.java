@@ -18,7 +18,6 @@
 
 package io.ballerina.xsdtorecordconverter.visitor;
 
-import io.ballerina.compiler.syntax.tree.ModuleMemberDeclarationNode;
 import io.ballerina.compiler.syntax.tree.SyntaxKind;
 import io.ballerina.xsdtorecordconverter.component.ComplexType;
 import io.ballerina.xsdtorecordconverter.component.Element;
@@ -30,7 +29,6 @@ import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.addNamespace;
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.asIterable;
@@ -88,14 +86,15 @@ public class XSDVisitor implements IXSDVisitor {
     public static final String VERTICAL_BAR = "|";
     public static final String EMPTY_STRING = "";
     public static final String RECORD_WITH_OPEN_BRACE = "record {";
+    public static final String REQUIRED_FIELD_NOT_FOUND_ERROR = "Required field is not found in <complexType>: '%s'";
 
     private final ArrayList<String> imports = new ArrayList<>();
     private final LinkedHashMap<String, String> extensions = new LinkedHashMap<>();
-    private LinkedHashMap<String, String> rootElements = new LinkedHashMap<>();
+    private final LinkedHashMap<String, String> rootElements = new LinkedHashMap<>();
     private final LinkedHashMap<String, String> nestedElements = new LinkedHashMap<>();
 
     @Override
-    public String visit(Element element) {
+    public String visit(Element element) throws Exception {
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
         builder.append(addNamespace(this, node));
@@ -107,7 +106,7 @@ public class XSDVisitor implements IXSDVisitor {
     }
 
     @Override
-    public String visit(Element element, boolean subElement) {
+    public String visit(Element element, boolean subElement) throws Exception {
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
         Node nameNode = node.getAttributes().getNamedItem(NAME);
@@ -122,7 +121,7 @@ public class XSDVisitor implements IXSDVisitor {
         return builder.toString();
     }
 
-    private Node visitNestedElements(Node node, Node nameNode, Node typeNode) {
+    private Node visitNestedElements(Node node, Node nameNode, Node typeNode) throws Exception {
         if (typeNode == null && node.hasChildNodes()) {
             typeNode = nameNode;
             for (Node childNode : asIterable(node.getChildNodes())) {
@@ -137,7 +136,7 @@ public class XSDVisitor implements IXSDVisitor {
         return typeNode;
     }
 
-    private String handleElementsWithChildNodes(Node node, StringBuilder builder) {
+    private String handleElementsWithChildNodes(Node node, StringBuilder builder) throws Exception {
         Node nameNode = node.getAttributes().getNamedItem(NAME);
         Node typeNode = node.getAttributes().getNamedItem(TYPE);
         if (typeNode != null && typeNode.getNodeValue().equals(nameNode.getNodeValue())) {
@@ -178,7 +177,7 @@ public class XSDVisitor implements IXSDVisitor {
     }
 
     @Override
-    public String visit(ComplexType element) {
+    public String visit(ComplexType element) throws Exception {
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
         builder.append(addNamespace(this, node));
@@ -189,12 +188,14 @@ public class XSDVisitor implements IXSDVisitor {
         return builder.toString();
     }
 
-    private void setTypeDefinition(ComplexType element, Node node, StringBuilder builder) {
+    private void setTypeDefinition(ComplexType element, Node node, StringBuilder builder) throws Exception {
         Node nameNode = node.getAttributes().getNamedItem(NAME);
         if (nameNode != null) {
             builder.append(nameNode.getNodeValue());
         } else if (element.isNestedElement()) {
             builder.append(getParentNodeName(element));
+        } else {
+            throw new Exception(String.format(REQUIRED_FIELD_NOT_FOUND_ERROR, NAME));
         }
         builder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES);
     }
@@ -205,7 +206,7 @@ public class XSDVisitor implements IXSDVisitor {
         return nameNode != null ? nameNode.getNodeValue() : EMPTY_STRING;
     }
 
-    private void processChildNodes(Node node, StringBuilder builder) {
+    private void processChildNodes(Node node, StringBuilder builder) throws Exception {
         NodeList childNodes = node.getChildNodes();
         for (Node childNode : asIterable(childNodes)) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
@@ -215,7 +216,7 @@ public class XSDVisitor implements IXSDVisitor {
         }
     }
 
-    private void processChildNodeByType(Node childNode, StringBuilder builder) {
+    private void processChildNodeByType(Node childNode, StringBuilder builder) throws Exception {
         String localName = childNode.getLocalName();
         switch (localName) {
             case SEQUENCE -> builder.append(visitSequence(childNode, false));
@@ -226,7 +227,7 @@ public class XSDVisitor implements IXSDVisitor {
     }
 
     @Override
-    public String visit(ComplexType element, boolean isSubType) {
+    public String visit(ComplexType element, boolean isSubType) throws Exception {
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
         builder.append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(WHITESPACE);
@@ -272,7 +273,7 @@ public class XSDVisitor implements IXSDVisitor {
         return builder.toString();
     }
 
-    public String visitChoice(Node node) {
+    public String visitChoice(Node node) throws Exception {
         StringBuilder builder = new StringBuilder();
         NodeList childNodes = node.getChildNodes();
         for (Node childNode : asIterable(childNodes)) {
@@ -313,7 +314,7 @@ public class XSDVisitor implements IXSDVisitor {
         return builder.toString();
     }
 
-    public String visitSequence(Node node, boolean isOptional) {
+    public String visitSequence(Node node, boolean isOptional) throws Exception {
         StringBuilder builder = new StringBuilder();
         NodeList childNodes = node.getChildNodes();
         for (Node childNode : asIterable(childNodes)) {
@@ -391,10 +392,10 @@ public class XSDVisitor implements IXSDVisitor {
         return enumeration;
     }
 
-    private String handleSingleElementNode(Node element, StringBuilder builder) {
+    private String handleSingleElementNode(Node element, StringBuilder builder) throws Exception {
         Node nameNode = element.getAttributes().getNamedItem(NAME);
         if (nameNode == null) {
-            return null;
+            throw new Exception(String.format(REQUIRED_FIELD_NOT_FOUND_ERROR, NAME));
         }
         String elementName = nameNode.getNodeValue();
         Node typeNode = element.getAttributes().getNamedItem(TYPE);
@@ -447,10 +448,6 @@ public class XSDVisitor implements IXSDVisitor {
 
     public LinkedHashMap<String, String> getRootElements() {
         return rootElements;
-    }
-
-    public void setRootElements(LinkedHashMap<String, String> rootElements) {
-        this.rootElements = rootElements;
     }
 
     public LinkedHashMap<String, String> getNestedElements() {

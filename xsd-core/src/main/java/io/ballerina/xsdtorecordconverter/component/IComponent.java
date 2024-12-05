@@ -24,7 +24,7 @@ import io.ballerina.xsdtorecordconverter.visitor.IXSDVisitor;
  * Interface representing a component of an XSD schema.
  */
 public interface IComponent {
-    String accept(IXSDVisitor xsdVisitor);
+    String accept(IXSDVisitor xsdVisitor) throws Exception;
     void setSubType(boolean subType);
     boolean isSubType();
     boolean isOptional();
