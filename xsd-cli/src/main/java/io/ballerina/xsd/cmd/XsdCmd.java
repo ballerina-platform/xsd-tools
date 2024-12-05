@@ -21,7 +21,6 @@ package io.ballerina.xsd.cmd;
 import io.ballerina.xsdtorecordconverter.XSDToRecord;
 import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import picocli.CommandLine;
 import io.ballerina.cli.BLauncherCmd;
@@ -44,7 +43,7 @@ import java.util.Scanner;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.EMPTY_STRING;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.EMPTY_STRING;
 
 /**
  * Main class to implement "xsd" command for ballerina.

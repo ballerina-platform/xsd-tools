@@ -26,8 +26,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.EMPTY_STRING;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.generateFixedValue;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.EMPTY_STRING;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.generateFixedValue;
 
 /**
  * Contains utility functions for working with XSD specifications.
@@ -80,7 +80,7 @@ public final class VisitorUtils {
     public static final String PREFIX = "prefix";
     public static final String URI = "uri";
 
-    public static String addNamespace(XSDVisitor xsdVisitor, Node node) {
+    public static String addNamespace(XSDVisitorImpl xsdVisitor, Node node) {
         xsdVisitor.addImports(BALLERINA_XML_DATA_MODULE);
         return XMLDATA_NAMESPACE + WHITESPACE + OPEN_BRACES + PREFIX + COLON + QUOTATION_MARK + node.getPrefix() +
                 QUOTATION_MARK + COMMA + URI + COLON + QUOTATION_MARK + node.getNamespaceURI() +

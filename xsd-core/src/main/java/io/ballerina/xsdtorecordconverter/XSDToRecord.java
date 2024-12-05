@@ -26,9 +26,9 @@ import io.ballerina.compiler.syntax.tree.NodeFactory;
 import io.ballerina.compiler.syntax.tree.NodeList;
 import io.ballerina.compiler.syntax.tree.NodeParser;
 import io.ballerina.compiler.syntax.tree.Token;
-import io.ballerina.xsdtorecordconverter.component.IComponent;
+import io.ballerina.xsdtorecordconverter.component.XSDComponent;
 import io.ballerina.xsdtorecordconverter.visitor.VisitorUtils;
-import io.ballerina.xsdtorecordconverter.visitor.XSDVisitor;
+import io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl;
 import org.ballerinalang.formatter.core.Formatter;
 import org.ballerinalang.formatter.core.FormatterException;
 import org.ballerinalang.formatter.core.options.ForceFormattingOptions;
@@ -44,13 +44,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.CLOSE_BRACES;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.CONTENT_FIELD;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.NAME;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.SEMICOLON;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.STRING;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.TYPE;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitor.WHITESPACE;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.CLOSE_BRACES;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.CONTENT_FIELD;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.NAME;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.SEMICOLON;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.STRING;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.TYPE;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.WHITESPACE;
 
 /**
  * This class is used for transforming an XSD into a corresponding record format.
@@ -68,14 +68,14 @@ public final class XSDToRecord {
             throw new Exception(INVALID_XSD_FORMAT_ERROR);
         }
         HashMap<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
-        XSDVisitor xsdVisitor = new XSDVisitor();
+        XSDVisitorImpl xsdVisitor = new XSDVisitorImpl();
         processNodeList(rootElement, nodes, xsdVisitor);
         ModulePartNode modulePartNode = generateModulePartNode(nodes, xsdVisitor);
         return formatModuleParts(modulePartNode);
     }
 
     private static ModulePartNode generateModulePartNode(HashMap<String, ModuleMemberDeclarationNode> nodes,
-                                                         XSDVisitor xsdVisitor) throws Exception {
+                                                         XSDVisitorImpl xsdVisitor) throws Exception {
         NodeList<ModuleMemberDeclarationNode> moduleMembers = AbstractNodeFactory.createNodeList(nodes.values());
         NodeList<ImportDeclarationNode> imports = getImportDeclarations(xsdVisitor);
         Token eofToken = AbstractNodeFactory.createIdentifierToken(EOF_TOKEN);
@@ -83,7 +83,7 @@ public final class XSDToRecord {
     }
 
     private static void processNodeList(Element rootElement, HashMap<String, ModuleMemberDeclarationNode> nodes,
-                                        XSDVisitor xsdVisitor) throws Exception {
+                                        XSDVisitorImpl xsdVisitor) throws Exception {
         generateNodes(rootElement, nodes, xsdVisitor);
         processRootElements(nodes, xsdVisitor.getRootElements());
         processNestedElements(nodes, xsdVisitor.getNestedElements());
@@ -104,7 +104,7 @@ public final class XSDToRecord {
         for (String element: rootElements.keySet()) {
             String type = rootElements.get(element);
             String[] tokens = nodes.get(type).toString().split(WHITESPACE);
-            if (!nodes.get(type).toString().contains(XSDVisitor.RECORD_WITH_OPEN_BRACE)) {
+            if (!nodes.get(type).toString().contains(XSDVisitorImpl.RECORD_WITH_OPEN_BRACE)) {
                 processSingleTypeElements(nodes, element, type, tokens);
             } else {
                 processRecordTypeElements(nodes, element, type);
@@ -115,7 +115,7 @@ public final class XSDToRecord {
     private static void processRecordTypeElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
                                                   String element, String type) {
         String fields = extractSubstring(nodes.get(type).toString(),
-                                         XSDVisitor.RECORD_WITH_OPEN_BRACE, CLOSE_BRACES + SEMICOLON);
+                                         XSDVisitorImpl.RECORD_WITH_OPEN_BRACE, CLOSE_BRACES + SEMICOLON);
         String extendedValue = nodes.get(element)
                 .toString().replace(type + WHITESPACE + CONTENT_FIELD + SEMICOLON, fields);
         ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
@@ -124,7 +124,7 @@ public final class XSDToRecord {
 
     private static void processSingleTypeElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
                                                   String element, String type, String[] tokens) {
-        String token = nodes.get(type).toString().contains(XSDVisitor.ENUM) ? STRING : tokens[tokens.length - 2];
+        String token = nodes.get(type).toString().contains(XSDVisitorImpl.ENUM) ? STRING : tokens[tokens.length - 2];
         String rootElement = nodes.get(element).toString().replace(type + WHITESPACE + CONTENT_FIELD,
                 token + WHITESPACE + CONTENT_FIELD);
         ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(rootElement);
@@ -132,13 +132,13 @@ public final class XSDToRecord {
     }
 
     private static void generateNodes(Element rootElement,
-                                      HashMap<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) throws Exception {
+                                      HashMap<String, ModuleMemberDeclarationNode> nodes, XSDVisitorImpl xsdVisitor) throws Exception {
         for (Node childNode : VisitorUtils.asIterable(rootElement.getChildNodes())) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
             StringBuilder stringBuilder = new StringBuilder();
-            IComponent component = XSDFactory.generateComponents(childNode);
+            XSDComponent component = XSDFactory.generateComponents(childNode);
             if (component == null) {
                 continue;
             }
@@ -176,7 +176,7 @@ public final class XSDToRecord {
     }
 
     private static void processExtensions(HashMap<String,
-                                          ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
+                                          ModuleMemberDeclarationNode> nodes, XSDVisitorImpl xsdVisitor) {
         LinkedHashMap<String, String> extensions = xsdVisitor.getExtensions();
         for (String key: extensions.keySet()) {
             if (!nodes.containsKey(key)) {
@@ -185,10 +185,10 @@ public final class XSDToRecord {
             String baseValue = extensions.get(key);
             ModuleMemberDeclarationNode baseNode = nodes.get(baseValue);
             ModuleMemberDeclarationNode parentNode = nodes.get(key);
-            String fields = extractSubstring(baseNode.toString(), XSDVisitor.RECORD_WITH_OPEN_BRACE,
+            String fields = extractSubstring(baseNode.toString(), XSDVisitorImpl.RECORD_WITH_OPEN_BRACE,
                     CLOSE_BRACES + SEMICOLON);
-            fields = XSDVisitor.RECORD_WITH_OPEN_BRACE + fields;
-            String extendedValue = parentNode.toString().replace(XSDVisitor.RECORD_WITH_OPEN_BRACE, fields);
+            fields = XSDVisitorImpl.RECORD_WITH_OPEN_BRACE + fields;
+            String extendedValue = parentNode.toString().replace(XSDVisitorImpl.RECORD_WITH_OPEN_BRACE, fields);
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
             nodes.replace(key, moduleNode);
         }
@@ -204,7 +204,7 @@ public final class XSDToRecord {
         return baseString.substring(startIndex, endIndex);
     }
 
-    public static NodeList<ImportDeclarationNode> getImportDeclarations(XSDVisitor xsdVisitor) throws Exception {
+    public static NodeList<ImportDeclarationNode> getImportDeclarations(XSDVisitorImpl xsdVisitor) throws Exception {
         Collection<ImportDeclarationNode> imports = new ArrayList<>();
         for (String module : xsdVisitor.getImports()) {
             ImportDeclarationNode node = NodeParser.parseImportDeclaration(module);
