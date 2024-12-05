@@ -26,9 +26,9 @@ import io.ballerina.xsdtorecordconverter.component.SimpleType;
  * Defines methods for visiting various components of an XSD schema.
  */
 public interface IXSDVisitor {
-    String visit(Element element);
-    String visit(Element element, boolean isSubType);
-    String visit(ComplexType element);
-    String visit(ComplexType element, boolean isSubType);
+    String visit(Element element) throws Exception;
+    String visit(Element element, boolean isSubType) throws Exception;
+    String visit(ComplexType element) throws Exception;
+    String visit(ComplexType element, boolean isSubType) throws Exception;
     String visit(SimpleType element);
 }

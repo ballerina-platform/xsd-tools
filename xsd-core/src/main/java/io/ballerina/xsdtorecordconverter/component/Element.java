@@ -56,7 +56,7 @@ public class Element implements IComponent {
         return node;
     }
 
-    public String accept(IXSDVisitor xsdVisitor) {
+    public String accept(IXSDVisitor xsdVisitor) throws Exception {
         return isSubType ? xsdVisitor.visit(this, true) : xsdVisitor.visit(this);
     }
 
