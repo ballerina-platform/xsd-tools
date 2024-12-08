@@ -196,4 +196,11 @@ public final class VisitorUtils {
             }
         };
     }
+
+    public static String convertToCamelCase(String pascalCase) {
+        if (pascalCase == null || pascalCase.isEmpty()) {
+            return pascalCase;
+        }
+        return Character.toLowerCase(pascalCase.charAt(0)) + pascalCase.substring(1);
+    }
 }
