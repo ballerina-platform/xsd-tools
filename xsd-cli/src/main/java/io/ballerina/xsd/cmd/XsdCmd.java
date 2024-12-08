@@ -21,6 +21,7 @@ package io.ballerina.xsd.cmd;
 import io.ballerina.xsdtorecordconverter.XSDToRecord;
 import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import picocli.CommandLine;
 import io.ballerina.cli.BLauncherCmd;
@@ -42,6 +43,7 @@ import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.EMPTY_STRING;
 
@@ -55,6 +57,7 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.EMPTY_STR
 public class XsdCmd implements BLauncherCmd {
     private static final String CMD_NAME = "xsd";
     private static final String FILE_OVERWRITE_PROMPT = "File already exists at %s. Overwrite? (y/N): ";
+    public static final String INVALID_BALLERINA_DIRECTORY_ERROR = "Invalid Ballerina package directory: %s, cannot find 'Ballerina. toml' file";
     private final PrintStream outStream;
     private final boolean exitWhenFinish;
     @CommandLine.Option(names = {"-h", "--help"}, hidden = true)
@@ -80,6 +83,13 @@ public class XsdCmd implements BLauncherCmd {
             System.out.println(stringBuilder);
             return;
         }
+        Path currentDir = Paths.get("").toAbsolutePath();
+        Path commandPath = currentDir.resolve("Ballerina.toml");
+        if (!Files.exists(commandPath)) {
+            outStream.printf((INVALID_BALLERINA_DIRECTORY_ERROR) + "%n", commandPath);
+            exitOnError();
+            return;
+        }
         if (argList.isEmpty()) {
             outStream.println("An XSD file path is required to generate the types");
             outStream.println("e.g: bal xsd <xsd source file path>");
@@ -101,9 +111,13 @@ public class XsdCmd implements BLauncherCmd {
                 Files.createDirectories(parentDirectory);
             }
             Files.writeString(destinationFile, result);
-            System.out.println("Output is written to " + destinationFile);
+            outStream.println("Output is successfully written to " + destinationFile);
+        } catch (ParserConfigurationException | SAXException e) {
+            outStream.println("XSD file contains errors. " + e.getLocalizedMessage());
+        } catch (IOException e) {
+            outStream.println("Error occurred while accessing the file. " + e.getLocalizedMessage());
         } catch (Exception e) {
-            outStream.println("Error occurred: " + e.getLocalizedMessage());
+            outStream.println("Error: " + e.getLocalizedMessage());
             exitOnError();
         }
     }
@@ -136,7 +150,12 @@ public class XsdCmd implements BLauncherCmd {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xsdData.getBytes(StandardCharsets.UTF_8));
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         dbFactory.setNamespaceAware(true);
-        DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+        DocumentBuilder docBuilder;
+        try {
+            docBuilder = dbFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new ParserConfigurationException(e.getLocalizedMessage());
+        }
         docBuilder.setErrorHandler(new ErrorHandler() {
             @Override
             public void warning(SAXParseException exception) {
@@ -153,7 +172,13 @@ public class XsdCmd implements BLauncherCmd {
                 throw new RuntimeException(exception);
             }
         });
-        return docBuilder.parse(inputStream);
+        try {
+            return docBuilder.parse(inputStream);
+        } catch (SAXException e) {
+            throw new SAXException(e);
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
     }
 
     @Override
