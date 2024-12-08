@@ -114,8 +114,8 @@ public final class XSDToRecord {
 
     private static void processRecordTypeElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
                                                   String element, String type) {
-        String fields = extractSubstring(nodes.get(type).toString(),
-                                         XSDVisitorImpl.RECORD_WITH_OPEN_BRACE, CLOSE_BRACES + SEMICOLON);
+        String fields = extractSubstring(nodes.get(type).toString(), XSDVisitorImpl.RECORD_WITH_OPEN_BRACE,
+                                         VERTICAL_BAR + CLOSE_BRACES + SEMICOLON);
         String extendedValue = nodes.get(element)
                 .toString().replace(type + WHITESPACE + CONTENT_FIELD + SEMICOLON, fields);
         ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
@@ -186,7 +186,7 @@ public final class XSDToRecord {
             ModuleMemberDeclarationNode baseNode = nodes.get(baseValue);
             ModuleMemberDeclarationNode parentNode = nodes.get(key);
             String fields = extractSubstring(baseNode.toString(), XSDVisitorImpl.RECORD_WITH_OPEN_BRACE,
-                    CLOSE_BRACES + SEMICOLON);
+                                             VERTICAL_BAR + CLOSE_BRACES + SEMICOLON);
             fields = XSDVisitorImpl.RECORD_WITH_OPEN_BRACE + fields;
             String extendedValue = parentNode.toString().replace(XSDVisitorImpl.RECORD_WITH_OPEN_BRACE, fields);
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
