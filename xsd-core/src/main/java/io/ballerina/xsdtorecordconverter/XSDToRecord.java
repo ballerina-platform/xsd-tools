@@ -144,8 +144,8 @@ public final class XSDToRecord {
         nodes.put(element, moduleNode);
     }
 
-    private static void generateNodes(Element rootElement,
-                                      HashMap<String, ModuleMemberDeclarationNode> nodes, XSDVisitorImpl xsdVisitor) throws Exception {
+    private static void generateNodes(Element rootElement, HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                      XSDVisitorImpl xsdVisitor) throws Exception {
         for (Node childNode : VisitorUtils.asIterable(rootElement.getChildNodes())) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
@@ -166,13 +166,13 @@ public final class XSDToRecord {
     }
 
     public static String resolveNameConflicts(String name, Map<?, ?> nodes) {
-        String resolvedName = name;
+        String baseName = name;
         int counter = 1;
-        while (nodes.containsKey(resolvedName)) {
-            resolvedName += counter;
+        while (nodes.containsKey(name)) {
+            name = baseName + counter;
             counter++;
         }
-        return resolvedName;
+        return name;
     }
 
     public static String extractTypeName(String[] values) {
