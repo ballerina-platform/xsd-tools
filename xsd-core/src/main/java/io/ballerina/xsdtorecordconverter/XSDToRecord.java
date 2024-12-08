@@ -50,6 +50,7 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.NAME;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.SEMICOLON;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.STRING;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.TYPE;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.VERTICAL_BAR;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.WHITESPACE;
 
 /**
@@ -61,6 +62,7 @@ public final class XSDToRecord {
     public static final String INVALID_IMPORTS_ERROR = "Invalid imports have been found.";
     public static final String INVALID_XSD_FORMAT_ERROR = "The provided XML document is not a valid XSD schema. " +
             "The root element must be a <schema>.";
+    public static final String XMLDATA_NAME_ANNOTATION = "@xmldata:Name {value: \"%s\"}";
 
     public static String convert(Document document) throws Exception {
         Element rootElement = document.getDocumentElement();
@@ -87,7 +89,18 @@ public final class XSDToRecord {
         generateNodes(rootElement, nodes, xsdVisitor);
         processRootElements(nodes, xsdVisitor.getRootElements());
         processNestedElements(nodes, xsdVisitor.getNestedElements());
+        processNameResolvers(nodes, xsdVisitor.getNameResolvers());
         processExtensions(nodes, xsdVisitor);
+    }
+
+    private static void processNameResolvers(HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                             LinkedHashMap<String, String> nameResolvers) {
+        for (String element: nameResolvers.keySet()) {
+            String node = nodes.get(element).toString();
+            String newNode = String.format(XMLDATA_NAME_ANNOTATION, nameResolvers.get(element)) + node;
+            ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(newNode);
+            nodes.put(element, moduleNode);
+        }
     }
 
     private static void processNestedElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
@@ -144,7 +157,10 @@ public final class XSDToRecord {
             }
             stringBuilder.append(component.accept(xsdVisitor));
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
-            String name = resolveTypeName(childNode, moduleNode);
+            String name = extractTypeName(moduleNode.toString().split(WHITESPACE));
+            if (name == null) {
+                name = childNode.getAttributes().getNamedItem(NAME).getNodeValue();
+            }
             nodes.put(nodes.containsKey(name) ? resolveNameConflicts(name, nodes) : name, moduleNode);
         }
     }
@@ -157,11 +173,6 @@ public final class XSDToRecord {
             counter++;
         }
         return resolvedName;
-    }
-
-    private static String resolveTypeName(Node node, ModuleMemberDeclarationNode moduleNode) {
-        String name = extractTypeName(moduleNode.toString().split(WHITESPACE));
-        return name != null ? name : node.getAttributes().getNamedItem(NAME).getNodeValue();
     }
 
     public static String extractTypeName(String[] values) {

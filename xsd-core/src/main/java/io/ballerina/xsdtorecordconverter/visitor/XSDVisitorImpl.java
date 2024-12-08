@@ -101,6 +101,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     private final ArrayList<String> imports = new ArrayList<>();
     private final LinkedHashMap<String, String> extensions = new LinkedHashMap<>();
     private final LinkedHashMap<String, String> rootElements = new LinkedHashMap<>();
+    private final LinkedHashMap<String, String> nameResolvers = new LinkedHashMap<>();
     private final LinkedHashMap<String, String> nestedElements = new LinkedHashMap<>();
 
     @Override
@@ -150,7 +151,9 @@ public class XSDVisitorImpl implements XSDVisitor {
         Node nameNode = node.getAttributes().getNamedItem(NAME);
         Node typeNode = node.getAttributes().getNamedItem(TYPE);
         if (typeNode != null && typeNode.getNodeValue().equals(nameNode.getNodeValue())) {
-            builder.append(resolveNameConflicts(nameNode.getNodeValue(), typeNode.getNodeValue())).append(WHITESPACE);
+            String resolvedName = resolveTypeNameConflicts(nameNode.getNodeValue(), typeNode.getNodeValue());
+            nameResolvers.put(resolvedName, nameNode.getNodeValue());
+            builder.append(resolvedName).append(WHITESPACE);
         } else if (typeNode == null) {
             builder.append(nameNode.getNodeValue()).append(WHITESPACE);
         }
@@ -167,12 +170,10 @@ public class XSDVisitorImpl implements XSDVisitor {
         return builder.toString();
     }
 
-    private static String resolveNameConflicts(String name, String typeName) {
+    private static String resolveTypeNameConflicts(String name, String typeName) {
         StringBuilder resolvedName = new StringBuilder(name);
-        int counter = 1;
-        while (resolvedName.toString().equals(typeName)) {
-            resolvedName.append(counter);
-            counter++;
+        if (resolvedName.toString().equals(typeName)) {
+            resolvedName.append(ONE);
         }
         return resolvedName.toString();
     }
@@ -483,7 +484,8 @@ public class XSDVisitorImpl implements XSDVisitor {
 
     private String appendElementNameWithSuffix(String elementName, String typeName, StringBuilder builder) {
         if (typeName.equals(elementName)) {
-            elementName = resolveNameConflicts(elementName, typeName);
+            elementName = resolveTypeNameConflicts(elementName, typeName);
+            nameResolvers.put(elementName, typeName);
         }
         builder.append(elementName).append(WHITESPACE);
         return elementName;
@@ -516,5 +518,9 @@ public class XSDVisitorImpl implements XSDVisitor {
 
     public LinkedHashMap<String, String> getNestedElements() {
         return nestedElements;
+    }
+
+    public LinkedHashMap<String, String> getNameResolvers() {
+        return nameResolvers;
     }
 }
