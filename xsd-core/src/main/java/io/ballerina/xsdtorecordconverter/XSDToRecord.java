@@ -149,7 +149,7 @@ public final class XSDToRecord {
         }
     }
 
-    private static String resolveNameConflicts(String name, Map<String, ModuleMemberDeclarationNode> nodes) {
+    public static String resolveNameConflicts(String name, Map<?, ?> nodes) {
         String resolvedName = name;
         int counter = 1;
         while (nodes.containsKey(resolvedName)) {
