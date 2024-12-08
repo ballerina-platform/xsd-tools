@@ -5,5 +5,5 @@
             <xs:element name="address" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
-    <xs:element name="person" type="Person"/>
+    <xs:element name="Person" type="Person"/>
 </xs:schema>
