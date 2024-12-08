@@ -89,7 +89,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String UNION = "union";
     public static final String VERTICAL_BAR = "|";
     public static final String EMPTY_STRING = "";
-    public static final String RECORD_WITH_OPEN_BRACE = "record {";
+    public static final String RECORD_WITH_OPEN_BRACE = "record {|";
     public static final String REQUIRED_FIELD_NOT_FOUND_ERROR = "Required field is not found in <complexType>: '%s'";
     public static final String ONE = "1";
     public static final String XMLDATA_CHOICE = "@xmldata:Choice";
@@ -194,7 +194,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         builder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
         setTypeDefinition(element, node, builder);
         processChildNodes(node, builder);
-        builder.append(CLOSE_BRACES).append(SEMICOLON);
+        builder.append(VERTICAL_BAR).append(CLOSE_BRACES).append(SEMICOLON);
         return builder.toString();
     }
 
@@ -207,7 +207,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         } else {
             throw new Exception(String.format(REQUIRED_FIELD_NOT_FOUND_ERROR, NAME));
         }
-        builder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES);
+        builder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(VERTICAL_BAR);
     }
 
     private String getParentNodeName(ComplexType element) {
@@ -240,7 +240,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     public String visit(ComplexType element, boolean isSubType) throws Exception {
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
-        builder.append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(WHITESPACE);
+        builder.append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(VERTICAL_BAR).append(WHITESPACE);
         NodeList childNodes = node.getChildNodes();
         for (Node childNode : asIterable(childNodes)) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
@@ -253,7 +253,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                 case COMPLEX_CONTENT, SIMPLE_CONTENT -> builder.append(visitComplexContent(childNode));
             }
         }
-        builder.append(CLOSE_BRACES).append(SEMICOLON);
+        builder.append(VERTICAL_BAR).append(CLOSE_BRACES).append(SEMICOLON);
         return builder.toString();
     }
 
@@ -296,7 +296,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(addNamespace(this, node));
         stringBuilder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE).append(choiceName);
-        stringBuilder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES);
+        stringBuilder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(VERTICAL_BAR);
         for (Node childNode : asIterable(childNodes)) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
@@ -311,7 +311,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                 stringBuilder.append(nameNode.getNodeValue()).append(QUESTION_MARK).append(SEMICOLON);
             }
         }
-        stringBuilder.append(CLOSE_BRACES).append(SEMICOLON);
+        stringBuilder.append(VERTICAL_BAR).append(CLOSE_BRACES).append(SEMICOLON);
         return stringBuilder;
     }
 
@@ -365,7 +365,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(addNamespace(this, node));
         stringBuilder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE).append(sequenceName);
-        stringBuilder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES);
+        stringBuilder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(VERTICAL_BAR);
         for (Node childNode : asIterable(childNodes)) {
             XSDComponent component = XSDFactory.generateComponents(childNode);
             if (component == null) {
@@ -376,7 +376,7 @@ public class XSDVisitorImpl implements XSDVisitor {
             stringBuilder.append(addNamespace(this, childNode));
             stringBuilder.append(component.accept(this));
         }
-        stringBuilder.append(CLOSE_BRACES).append(SEMICOLON);
+        stringBuilder.append(VERTICAL_BAR).append(CLOSE_BRACES).append(SEMICOLON);
         return stringBuilder;
     }
 
@@ -437,10 +437,9 @@ public class XSDVisitorImpl implements XSDVisitor {
     }
 
     private static void processEnumerations(StringBuilder builder, Node nameNode, StringBuilder stringBuilder) {
-        builder.append(PUBLIC).append(WHITESPACE).append(ENUM).append(WHITESPACE);
-        builder.append(nameNode.getNodeValue()).append(WHITESPACE).append(OPEN_BRACES);
-        builder.append(stringBuilder.substring(0, stringBuilder.length() - 1));
-        builder.append(CLOSE_BRACES).append(SEMICOLON);
+        builder.append(PUBLIC).append(WHITESPACE).append(ENUM).append(WHITESPACE).append(nameNode.getNodeValue())
+                .append(WHITESPACE).append(OPEN_BRACES).append(stringBuilder.substring(0, stringBuilder.length() - 1))
+                .append(CLOSE_BRACES).append(SEMICOLON);
     }
 
     private static boolean hasEnumerations(Node simpleTypeNode, StringBuilder stringBuilder) {
@@ -491,9 +490,9 @@ public class XSDVisitorImpl implements XSDVisitor {
     }
 
     private void appendRecordStructure(String typeName, StringBuilder builder) {
-        builder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(WHITESPACE)
-                .append(typeGenerator(typeName)).append(WHITESPACE).append(CONTENT_FIELD)
-                .append(SEMICOLON).append(WHITESPACE).append(CLOSE_BRACES);
+        builder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(VERTICAL_BAR)
+                .append(WHITESPACE).append(typeGenerator(typeName)).append(WHITESPACE).append(CONTENT_FIELD)
+                .append(SEMICOLON).append(WHITESPACE).append(VERTICAL_BAR).append(CLOSE_BRACES);
     }
 
     public void addImports(String module) {
