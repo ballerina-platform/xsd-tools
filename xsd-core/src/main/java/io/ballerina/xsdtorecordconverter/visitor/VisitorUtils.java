@@ -33,7 +33,6 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.generateF
  * Contains utility functions for working with XSD specifications.
  */
 public final class VisitorUtils {
-
     public static final String WHITESPACE = " ";
     public static final String EQUAL = "=";
     public static final String DEFAULT = "default";
