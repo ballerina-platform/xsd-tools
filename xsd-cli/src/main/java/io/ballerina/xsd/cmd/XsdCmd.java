@@ -57,7 +57,8 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.EMPTY_STR
 public class XsdCmd implements BLauncherCmd {
     private static final String CMD_NAME = "xsd";
     private static final String FILE_OVERWRITE_PROMPT = "File already exists at %s. Overwrite? (y/N): ";
-    public static final String INVALID_BALLERINA_DIRECTORY_ERROR = "Invalid Ballerina package directory: %s, cannot find 'Ballerina. toml' file";
+    public static final String INVALID_BALLERINA_DIRECTORY_ERROR =
+            "Invalid Ballerina package directory: %s, cannot find 'Ballerina.toml' file";
     private final PrintStream outStream;
     private final boolean exitWhenFinish;
     @CommandLine.Option(names = {"-h", "--help"}, hidden = true)
