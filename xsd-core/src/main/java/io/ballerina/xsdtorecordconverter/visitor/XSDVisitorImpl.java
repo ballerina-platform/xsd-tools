@@ -19,7 +19,7 @@
 package io.ballerina.xsdtorecordconverter.visitor;
 
 import io.ballerina.compiler.syntax.tree.SyntaxKind;
-import io.ballerina.xsdtorecordconverter.XSDToRecord;
+import io.ballerina.xsdtorecordconverter.Utils;
 import io.ballerina.xsdtorecordconverter.component.ComplexType;
 import io.ballerina.xsdtorecordconverter.component.Element;
 import io.ballerina.xsdtorecordconverter.component.XSDComponent;
@@ -30,7 +30,6 @@ import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.MAX_OCCURS;
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.MIN_OCCURS;
@@ -133,6 +132,61 @@ public class XSDVisitorImpl implements XSDVisitor {
         return builder.toString();
     }
 
+    @Override
+    public String visit(ComplexType element) throws Exception {
+        Node node = element.getNode();
+        StringBuilder builder = new StringBuilder();
+        builder.append(addNamespace(this, node));
+        builder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
+        setTypeDefinition(element, node, builder);
+        processChildNodes(node, builder);
+        builder.append(VERTICAL_BAR).append(CLOSE_BRACES).append(SEMICOLON);
+        return builder.toString();
+    }
+
+    @Override
+    public String visit(ComplexType element, boolean isSubType) throws Exception {
+        Node node = element.getNode();
+        StringBuilder builder = new StringBuilder();
+        builder.append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(VERTICAL_BAR).append(WHITESPACE);
+        NodeList childNodes = node.getChildNodes();
+        for (Node childNode : asIterable(childNodes)) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            switch (childNode.getLocalName()) {
+                case SEQUENCE -> builder.append(visitSequence(childNode, false));
+                case CHOICE -> builder.append(visitChoice(childNode));
+                case ATTRIBUTE -> builder.append(visitAttribute(childNode));
+                case COMPLEX_CONTENT, SIMPLE_CONTENT -> builder.append(visitComplexContent(childNode));
+            }
+        }
+        builder.append(VERTICAL_BAR).append(CLOSE_BRACES).append(SEMICOLON);
+        return builder.toString();
+    }
+
+    @Override
+    public String visit(SimpleType element) {
+        StringBuilder builder = new StringBuilder();
+        Node nameNode = element.getNode().getAttributes().getNamedItem(NAME);
+        for (Node simpleTypeNode : asIterable(element.getNode().getChildNodes())) {
+            if (simpleTypeNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            builder.append(addNamespace(this, element.getNode()));
+            boolean enumeration = hasEnumerations(simpleTypeNode, stringBuilder);
+            if (enumeration) {
+                processEnumerations(builder, nameNode, stringBuilder);
+            } else if (UNION.equals(simpleTypeNode.getLocalName())) {
+                processUnionOfSimpleTypes(builder, simpleTypeNode);
+            } else {
+                processSimpleType(builder, nameNode, simpleTypeNode);
+            }
+        }
+        return builder.toString();
+    }
+
     private Node visitNestedElements(Node node, Node nameNode, Node typeNode) throws Exception {
         if (typeNode == null && node.hasChildNodes()) {
             typeNode = nameNode;
@@ -143,7 +197,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                 }
                 component.setNestedElement(true);
                 if (nestedElements.containsKey(nameNode.getNodeValue())) {
-                    String resolvedName = XSDToRecord.resolveNameConflicts(nameNode.getNodeValue(), nestedElements);
+                    String resolvedName = Utils.resolveNameConflicts(nameNode.getNodeValue(), nestedElements);
                     String element = component.accept(this);
                     nestedElements.put(resolvedName, element);
                     nameResolvers.put(resolvedName, nameNode.getNodeValue());
@@ -154,6 +208,84 @@ public class XSDVisitorImpl implements XSDVisitor {
             }
         }
         return typeNode;
+    }
+
+    public String visitAttribute(Node attribute) {
+        StringBuilder builder = new StringBuilder();
+        this.addImports(BALLERINA_XML_DATA_MODULE);
+        Node nameNode = attribute.getAttributes().getNamedItem(NAME);
+        Node typeNode = attribute.getAttributes().getNamedItem(TYPE);
+        builder.append(ATTRIBUTE_ANNOTATION).append(WHITESPACE);
+        Node fixedNode = attribute.getAttributes().getNamedItem(FIXED);
+        handleFixedValues(builder, typeNode, fixedNode);
+        builder.append(nameNode.getNodeValue());
+        Node attributeType = attribute.getAttributes().getNamedItem(USE);
+        if (attributeType != null && !attributeType.getNodeValue().equals(REQUIRED)) {
+            builder.append(QUESTION_MARK);
+        }
+        Node defaultNode = attribute.getAttributes().getNamedItem(DEFAULT);
+        if (defaultNode != null) {
+            builder.append(generateDefaultValue(deriveType(typeNode), defaultNode.getNodeValue()));
+        }
+        builder.append(SEMICOLON);
+        return builder.toString();
+    }
+
+    public String visitSequence(Node node, boolean isOptional) throws Exception {
+        StringBuilder builder = new StringBuilder();
+        NodeList childNodes = node.getChildNodes();
+        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder childNodeBuilder = new StringBuilder();
+        processChildNodes(isOptional, childNodes, childNodeBuilder);
+        stringBuilder.append(addNamespace(this, node));
+        String sequenceName = applySequenceAnnotation(node, builder);
+        generateSequenceType(stringBuilder, childNodeBuilder, sequenceName);
+        if (nestedElements.containsKey(sequenceName)) {
+            sequenceName = Utils.resolveNameConflicts(sequenceName, nestedElements);
+        }
+        nestedElements.put(sequenceName, stringBuilder.toString());
+        return builder.toString();
+    }
+
+    public String visitComplexContent(Node node) {
+        StringBuilder builder = new StringBuilder();
+        NodeList childNodes = node.getChildNodes();
+        for (Node childNode : asIterable(childNodes)) {
+            if (childNode.getNodeType() == Node.ELEMENT_NODE && EXTENSION.equals(childNode.getLocalName())) {
+                String base = childNode.getAttributes().getNamedItem(BASE).getNodeValue();
+                builder.append(visitExtension(childNode));
+                String parentNodeName = node.getParentNode().getAttributes().getNamedItem(NAME).getNodeValue();
+                extensions.put(parentNodeName, base);
+            }
+        }
+        return builder.toString();
+    }
+
+    public String visitExtension(Node node) {
+        StringBuilder builder = new StringBuilder();
+        NodeList childNodes = node.getChildNodes();
+        for (Node childNode : asIterable(childNodes)) {
+            addNamespace(this, childNode);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                builder.append(visitAttribute(childNode));
+            }
+        }
+        return builder.toString();
+    }
+
+    public String visitChoice(Node node) throws Exception {
+        StringBuilder builder = new StringBuilder();
+        NodeList childNodes = node.getChildNodes();
+        String choiceName = applyChoiceAnnotation(builder, node);
+        String childElements = processChildChoiceNodes(node, childNodes, choiceName).toString();
+        if (nestedElements.containsKey(choiceName)) {
+            String resolvedName = Utils.resolveNameConflicts(choiceName, nestedElements);
+            nameResolvers.put(resolvedName, choiceName);
+            nestedElements.put(resolvedName, childElements);
+        } else {
+            nestedElements.put(choiceName, childElements);
+        }
+        return builder.toString();
     }
 
     private String handleElementsWithChildNodes(Node node, StringBuilder builder) throws Exception {
@@ -197,18 +329,6 @@ public class XSDVisitorImpl implements XSDVisitor {
         return builder.toString();
     }
 
-    @Override
-    public String visit(ComplexType element) throws Exception {
-        Node node = element.getNode();
-        StringBuilder builder = new StringBuilder();
-        builder.append(addNamespace(this, node));
-        builder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
-        setTypeDefinition(element, node, builder);
-        processChildNodes(node, builder);
-        builder.append(VERTICAL_BAR).append(CLOSE_BRACES).append(SEMICOLON);
-        return builder.toString();
-    }
-
     private void setTypeDefinition(ComplexType element, Node node, StringBuilder builder) throws Exception {
         Node nameNode = node.getAttributes().getNamedItem(NAME);
         if (nameNode != null) {
@@ -247,68 +367,6 @@ public class XSDVisitorImpl implements XSDVisitor {
         }
     }
 
-    @Override
-    public String visit(ComplexType element, boolean isSubType) throws Exception {
-        Node node = element.getNode();
-        StringBuilder builder = new StringBuilder();
-        builder.append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(VERTICAL_BAR).append(WHITESPACE);
-        NodeList childNodes = node.getChildNodes();
-        for (Node childNode : asIterable(childNodes)) {
-            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-            switch (childNode.getLocalName()) {
-                case SEQUENCE -> builder.append(visitSequence(childNode, false));
-                case CHOICE -> builder.append(visitChoice(childNode));
-                case ATTRIBUTE -> builder.append(visitAttribute(childNode));
-                case COMPLEX_CONTENT, SIMPLE_CONTENT -> builder.append(visitComplexContent(childNode));
-            }
-        }
-        builder.append(VERTICAL_BAR).append(CLOSE_BRACES).append(SEMICOLON);
-        return builder.toString();
-    }
-
-    public String visitComplexContent(Node node) {
-        StringBuilder builder = new StringBuilder();
-        NodeList childNodes = node.getChildNodes();
-        for (Node childNode : asIterable(childNodes)) {
-            if (childNode.getNodeType() == Node.ELEMENT_NODE && EXTENSION.equals(childNode.getLocalName())) {
-                String base = childNode.getAttributes().getNamedItem(BASE).getNodeValue();
-                builder.append(visitExtension(childNode));
-                String parentNodeName = node.getParentNode().getAttributes().getNamedItem(NAME).getNodeValue();
-                extensions.put(parentNodeName, base);
-            }
-        }
-        return builder.toString();
-    }
-
-    public String visitExtension(Node node) {
-        StringBuilder builder = new StringBuilder();
-        NodeList childNodes = node.getChildNodes();
-        for (Node childNode : asIterable(childNodes)) {
-            addNamespace(this, childNode);
-            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-                builder.append(visitAttribute(childNode));
-            }
-        }
-        return builder.toString();
-    }
-
-    public String visitChoice(Node node) throws Exception {
-        StringBuilder builder = new StringBuilder();
-        NodeList childNodes = node.getChildNodes();
-        String choiceName = applyChoiceAnnotation(builder, node);
-        String childElements = processChildChoiceNodes(node, childNodes, choiceName).toString();
-        if (nestedElements.containsKey(choiceName)) {
-            String resolvedName = XSDToRecord.resolveNameConflicts(choiceName, nestedElements);
-            nameResolvers.put(resolvedName, choiceName);
-            nestedElements.put(resolvedName, childElements);
-        } else {
-            nestedElements.put(choiceName, childElements);
-        }
-        return builder.toString();
-    }
-
     private StringBuilder processChildChoiceNodes(Node node, NodeList childNodes, String choiceName) throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(addNamespace(this, node));
@@ -345,50 +403,13 @@ public class XSDVisitorImpl implements XSDVisitor {
         String maxOccurrence = (maxOccurrenceNode != null) ? maxOccurrenceNode.getNodeValue() : ONE;
         String minOccurrence = (minOccurrenceNode != null) ? minOccurrenceNode.getNodeValue() : ONE;
         String choiceName = (nestedElements.containsKey(CHOICE_NAME))
-                ? XSDToRecord.resolveNameConflicts(CHOICE_NAME, nestedElements) : CHOICE_NAME;
+                ? Utils.resolveNameConflicts(CHOICE_NAME, nestedElements) : CHOICE_NAME;
         builder.append(XMLDATA_CHOICE).append(WHITESPACE).append(OPEN_BRACES);
         builder.append(MIN_OCCURS).append(COLON).append(minOccurrence).append(COMMA);
         builder.append(MAX_OCCURS).append(COLON).append(maxOccurrence).append(CLOSE_BRACES);
         builder.append(choiceName).append((maxOccurrence.equals(ONE)) ? EMPTY_STRING : EMPTY_ARRAY);
         builder.append(WHITESPACE).append(convertToCamelCase(choiceName)).append(SEMICOLON);
         return choiceName;
-    }
-
-    public String visitAttribute(Node attribute) {
-        StringBuilder builder = new StringBuilder();
-        this.addImports(BALLERINA_XML_DATA_MODULE);
-        Node nameNode = attribute.getAttributes().getNamedItem(NAME);
-        Node typeNode = attribute.getAttributes().getNamedItem(TYPE);
-        builder.append(ATTRIBUTE_ANNOTATION).append(WHITESPACE);
-        Node fixedNode = attribute.getAttributes().getNamedItem(FIXED);
-        handleFixedValues(builder, typeNode, fixedNode);
-        builder.append(nameNode.getNodeValue());
-        Node attributeType = attribute.getAttributes().getNamedItem(USE);
-        if (attributeType != null && !attributeType.getNodeValue().equals(REQUIRED)) {
-            builder.append(QUESTION_MARK);
-        }
-        Node defaultNode = attribute.getAttributes().getNamedItem(DEFAULT);
-        if (defaultNode != null) {
-            builder.append(generateDefaultValue(deriveType(typeNode), defaultNode.getNodeValue()));
-        }
-        builder.append(SEMICOLON);
-        return builder.toString();
-    }
-
-    public String visitSequence(Node node, boolean isOptional) throws Exception {
-        StringBuilder builder = new StringBuilder();
-        NodeList childNodes = node.getChildNodes();
-        StringBuilder stringBuilder = new StringBuilder();
-        StringBuilder childNodeBuilder = new StringBuilder();
-        processChildNodes(isOptional, childNodes, childNodeBuilder);
-        stringBuilder.append(addNamespace(this, node));
-        String sequenceName = applySequenceAnnotation(node, builder);
-        generateSequenceType(stringBuilder, childNodeBuilder, sequenceName);
-        if (nestedElements.containsKey(sequenceName)) {
-            sequenceName = XSDToRecord.resolveNameConflicts(sequenceName, nestedElements);
-        }
-        nestedElements.put(sequenceName, stringBuilder.toString());
-        return builder.toString();
     }
 
     private static void generateSequenceType(StringBuilder stringBuilder,
@@ -419,35 +440,13 @@ public class XSDVisitorImpl implements XSDVisitor {
         String maxOccurrence = (maxOccurrenceNode != null) ? maxOccurrenceNode.getNodeValue() : ONE;
         String minOccurrence = (minOccurrenceNode != null) ? minOccurrenceNode.getNodeValue() : ONE;
         String sequenceName = (nestedElements.containsKey(SEQUENCE_NAME))
-                ? XSDToRecord.resolveNameConflicts(SEQUENCE_NAME, nestedElements) : SEQUENCE_NAME;
+                ? Utils.resolveNameConflicts(SEQUENCE_NAME, nestedElements) : SEQUENCE_NAME;
         builder.append(XMLDATA_SEQUENCE).append(WHITESPACE).append(OPEN_BRACES);
         builder.append(MIN_OCCURS).append(COLON).append(minOccurrence).append(COMMA);
         builder.append(MAX_OCCURS).append(COLON).append(maxOccurrence).append(CLOSE_BRACES);
         builder.append(sequenceName).append((maxOccurrence.equals(ONE)) ? "" : EMPTY_ARRAY);
         builder.append(WHITESPACE).append(convertToCamelCase(sequenceName)).append(SEMICOLON);
         return sequenceName;
-    }
-
-    @Override
-    public String visit(SimpleType element) {
-        StringBuilder builder = new StringBuilder();
-        Node nameNode = element.getNode().getAttributes().getNamedItem(NAME);
-        for (Node simpleTypeNode : asIterable(element.getNode().getChildNodes())) {
-            if (simpleTypeNode.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-            StringBuilder stringBuilder = new StringBuilder();
-            builder.append(addNamespace(this, element.getNode()));
-            boolean enumeration = hasEnumerations(simpleTypeNode, stringBuilder);
-            if (enumeration) {
-                processEnumerations(builder, nameNode, stringBuilder);
-            } else if (UNION.equals(simpleTypeNode.getLocalName())) {
-                processUnionOfSimpleTypes(builder, simpleTypeNode);
-            } else {
-                processSimpleType(builder, nameNode, simpleTypeNode);
-            }
-        }
-        return builder.toString();
     }
 
     private static void processSimpleType(StringBuilder builder, Node nameNode, Node simpleTypeNode) {
