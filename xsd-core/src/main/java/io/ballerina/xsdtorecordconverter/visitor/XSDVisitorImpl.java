@@ -468,20 +468,18 @@ public class XSDVisitorImpl implements XSDVisitor {
         builder.delete(builder.length() - 1, builder.length()).append(SEMICOLON);
     }
 
-    private static void processEnumerations(StringBuilder builder, Node nameNode, StringBuilder stringBuilder) {
-        builder.append(PUBLIC).append(WHITESPACE).append(ENUM).append(WHITESPACE).append(nameNode.getNodeValue())
-                .append(WHITESPACE).append(OPEN_BRACES).append(stringBuilder.substring(0, stringBuilder.length() - 1))
-                .append(CLOSE_BRACES).append(SEMICOLON);
-    }
-
-    private static boolean hasEnumerations(Node simpleTypeNode, StringBuilder stringBuilder) {
+    private static boolean hasEnumerations(Node simpleTypeNode, ArrayList<String> enumValues) {
         boolean enumeration = false;
         if (simpleTypeNode.hasChildNodes()) {
             NodeList nodes = simpleTypeNode.getChildNodes();
             for (Node node : asIterable(nodes)) {
                 if (node.getNodeType() == Node.ELEMENT_NODE && ENUMERATION.equals(node.getLocalName())) {
                     enumeration = true;
-                    stringBuilder.append(node.getAttributes().getNamedItem(VALUE).getNodeValue()).append(COMMA);
+                    String enumValue = sanitizeString(node.getAttributes().getNamedItem(VALUE).getNodeValue());
+                    if (enumValue.equals(EMPTY_STRING)) {
+                        continue;
+                    }
+                    enumValues.add(enumValue);
                 }
             }
         }
@@ -553,5 +551,9 @@ public class XSDVisitorImpl implements XSDVisitor {
 
     public LinkedHashMap<String, String> getNameResolvers() {
         return nameResolvers;
+    }
+
+    public LinkedHashMap<String, ArrayList<String>> getEnumerationElements() {
+        return enumerationElements;
     }
 }

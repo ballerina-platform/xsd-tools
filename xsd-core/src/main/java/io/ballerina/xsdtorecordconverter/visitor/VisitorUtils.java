@@ -202,4 +202,19 @@ public final class VisitorUtils {
         }
         return Character.toLowerCase(pascalCase.charAt(0)) + pascalCase.substring(1);
     }
+
+    public static String sanitizeString(String input) {
+        if (!input.matches(".*[!@$%^&*()_\\-|/\\\\\\s\\d].*")
+                || (input.matches(".*\\d.*") && !input.matches("^\\d.*"))) {
+            return input;
+        }
+        if (input.matches("^\\d.*")) {
+            input = "_" + input;
+        }
+        String keyPart = input.toLowerCase(Locale.ROOT);
+        for (String s : Arrays.asList("[/\\\\]", "\\s", "[!@$%^&*()_\\-|]")) {
+            keyPart = keyPart.replaceAll(s, "_");
+        }
+        return keyPart + " = \"" + input + "\"";
+    }
 }
