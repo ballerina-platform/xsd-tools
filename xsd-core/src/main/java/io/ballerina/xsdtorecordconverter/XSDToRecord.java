@@ -54,8 +54,8 @@ public final class XSDToRecord {
         if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
             throw new Exception(INVALID_XSD_FORMAT_ERROR);
         }
-        HashMap<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
         XSDVisitorImpl xsdVisitor = new XSDVisitorImpl();
+        HashMap<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
         processNodeList(rootElement, nodes, xsdVisitor);
         ModulePartNode modulePartNode = Utils.generateModulePartNode(nodes, xsdVisitor);
         return Utils.formatModuleParts(modulePartNode);
@@ -68,6 +68,7 @@ public final class XSDToRecord {
         processNestedElements(nodes, xsdVisitor.getNestedElements());
         processNameResolvers(nodes, xsdVisitor.getNameResolvers());
         processExtensions(nodes, xsdVisitor);
+        processEnumerations(nodes, xsdVisitor.getEnumerationElements());
     }
 
     private static void generateNodes(Element rootElement, HashMap<String, ModuleMemberDeclarationNode> nodes,
@@ -131,14 +132,23 @@ public final class XSDToRecord {
                 continue;
             }
             String baseValue = extensions.get(key);
-            ModuleMemberDeclarationNode baseNode = nodes.get(baseValue);
-            ModuleMemberDeclarationNode parentNode = nodes.get(key);
-            String fields = Utils.extractSubstring(baseNode.toString(), XSDVisitorImpl.RECORD_WITH_OPEN_BRACE,
-                                             VERTICAL_BAR + CLOSE_BRACES + SEMICOLON);
-            fields = XSDVisitorImpl.RECORD_WITH_OPEN_BRACE + fields;
-            String extendedValue = parentNode.toString().replace(XSDVisitorImpl.RECORD_WITH_OPEN_BRACE, fields);
-            ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
-            nodes.replace(key, moduleNode);
+    public static void processEnumerations(HashMap<String, ModuleMemberDeclarationNode> nodes,
+                                           LinkedHashMap<String, ArrayList<String>> enumerations) {
+        for (String key: enumerations.keySet()) {
+            ArrayList<String> enums = enumerations.get(key);
+            StringBuilder enumBuilder = new StringBuilder();
+            for (String enumValue: enums) {
+                if (nodes.containsKey(enumValue)) {
+                    enumValue = enumValue.toLowerCase(Locale.ROOT) + " = \"" + enumValue + "\"";
+                }
+                enumBuilder.append(enumValue).append(COMMA);
+            }
+            String enumeration = nodes.get(key).toString();
+            String replacingString = ENUM + WHITESPACE + key + WHITESPACE + OPEN_BRACES;
+            enumeration = enumeration.replace(replacingString, replacingString + enumBuilder.substring(0,
+                    enumBuilder.length() - 1));
+            ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(enumeration);
+            nodes.put(key, moduleNode);
         }
     }
 }
