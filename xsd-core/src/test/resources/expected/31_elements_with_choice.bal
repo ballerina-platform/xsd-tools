@@ -1,21 +1,21 @@
 import ballerina/data.xmldata;
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Vehicle record {|
+public type Decision record {|
     @xmldata:Choice {minOccurs: 1, maxOccurs: 1}
-    ChoiceOption2 choiceOption2;
+    ChoiceOption1 choiceOption1;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type ChoiceOption record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    string Sedan?;
+    string OptionA?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    string SUV?;
+    string OptionB?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Car record {|
+public type Choice record {|
     @xmldata:Choice {minOccurs: 1, maxOccurs: 1}
     ChoiceOption choiceOption;
 |};
@@ -23,21 +23,7 @@ public type Car record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type ChoiceOption1 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    string Mountain?;
+    Choice Choice?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    string Road?;
-|};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type Bike record {|
-    @xmldata:Choice {minOccurs: 1, maxOccurs: 1}
-    ChoiceOption1 choiceOption1;
-|};
-
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-public type ChoiceOption2 record {|
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Car Car?;
-    @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
-    Bike Bike?;
+    string Alternative?;
 |};
