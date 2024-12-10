@@ -68,7 +68,10 @@ public class XSDToRecordTest {
             new Object[] {"26_complex_schema.xsd", "26_complex_schema.bal"},
             new Object[] {"27_complex_schema.xsd", "27_complex_schema.bal"},
             new Object[] {"28_complex_schema.xsd", "28_complex_schema.bal"},
-            new Object[] {"29_element_with_same_type_name.xsd", "29_element_with_same_type_name.bal"}
+            new Object[] {"29_element_with_same_type_name.xsd", "29_element_with_same_type_name.bal"},
+            new Object[] {"30_complex_type_with_nested_choices.xsd", "30_complex_type_with_nested_choices.bal"},
+            new Object[] {"31_elements_with_choice.xsd", "31_elements_with_choice.bal"},
+            new Object[] {"32_elements_with_imports.xsd", "32_elements_with_imports.bal"}
         );
     }
 
