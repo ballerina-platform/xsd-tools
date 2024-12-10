@@ -24,6 +24,7 @@ import org.w3c.dom.NodeList;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.EMPTY_STRING;
@@ -53,6 +54,7 @@ public final class VisitorUtils {
     public static final String TIME = "time";
     public static final String DATE_TIME = "dateTime";
     public static final String DATE = "date";
+    public static final String LANGUAGE = "language";
     public static final String G_YEAR_MONTH = "gYearMonth";
     public static final String G_YEAR = "gYear";
     public static final String STRING = "string";
@@ -60,6 +62,7 @@ public final class VisitorUtils {
     public static final String LONG = "long";
     public static final String NEGATIVE_INTEGER = "negativeInteger";
     public static final String NON_POSITIVE_INTEGER = "nonPositiveInteger";
+    public static final String NON_NEGATIVE_INTEGER = "nonNegativeInteger";
     public static final String POSITIVE_INTEGER = "positiveInteger";
     public static final String SHORT = "short";
     public static final String UNSIGNED_LONG = "unsignedLong";
@@ -78,6 +81,7 @@ public final class VisitorUtils {
     public static final String XMLDATA_NAMESPACE = "@xmldata:Namespace";
     public static final String PREFIX = "prefix";
     public static final String URI = "uri";
+    public static final String DURATION = "duration";
 
     public static String addNamespace(XSDVisitorImpl xsdVisitor, Node node) {
         xsdVisitor.addImports(BALLERINA_XML_DATA_MODULE);
@@ -150,11 +154,11 @@ public final class VisitorUtils {
 
     public static String typeGenerator(String typeName) {
         switch (typeName) {
-            case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING -> {
+            case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE, DURATION, ANY_URI -> {
                 return STRING;
             }
             case INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER, POSITIVE_INTEGER, SHORT,
-                    UNSIGNED_LONG, UNSIGNED_INT, UNSIGNED_SHORT, UNSIGNED_BYTE, INT -> {
+                    UNSIGNED_LONG, UNSIGNED_INT, UNSIGNED_SHORT, UNSIGNED_BYTE, INT, NON_NEGATIVE_INTEGER -> {
                 return INT;
             }
             case BASE64_BINARY -> {
@@ -169,10 +173,10 @@ public final class VisitorUtils {
     public static boolean isSimpleType(String type) {
         String typeName = type.contains(COLON) ? type.substring(type.indexOf(COLON) + 1) : type;
         String[] simpleTypes = {
-                TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING,
+                TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE, DURATION,
                 INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER, POSITIVE_INTEGER, SHORT,
                 UNSIGNED_LONG, UNSIGNED_INT, UNSIGNED_SHORT,
-                UNSIGNED_BYTE, INT, BASE64_BINARY, BOOLEAN, FLOAT, DOUBLE, DECIMAL, ANY_URI
+                UNSIGNED_BYTE, INT, BASE64_BINARY, BOOLEAN, FLOAT, DOUBLE, DECIMAL, ANY_URI, NON_NEGATIVE_INTEGER
         };
         return Arrays.stream(simpleTypes).toList().contains(typeName);
     }

@@ -28,12 +28,19 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Objects;
 
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.CLOSE_BRACES;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.COMMA;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.CONTENT_FIELD;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.ENUM;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.NAME;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.OPEN_BRACES;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.PUBLIC;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.SEMICOLON;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.VERTICAL_BAR;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.WHITESPACE;
@@ -132,6 +139,26 @@ public final class XSDToRecord {
                 continue;
             }
             String baseValue = extensions.get(key);
+            if (VisitorUtils.isSimpleType(baseValue)) {
+                String fields =
+                        XSDVisitorImpl.RECORD_WITH_OPEN_BRACE + baseValue + WHITESPACE + CONTENT_FIELD + SEMICOLON;
+                ModuleMemberDeclarationNode parentNode = nodes.get(key);
+                String extendedValue = parentNode.toString().replace(XSDVisitorImpl.RECORD_WITH_OPEN_BRACE, fields);
+                ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
+                nodes.replace(key, moduleNode);
+            } else {
+                ModuleMemberDeclarationNode baseNode = nodes.get(baseValue);
+                ModuleMemberDeclarationNode parentNode = nodes.get(key);
+                String fields = Utils.extractSubstring(baseNode.toString(), XSDVisitorImpl.RECORD_WITH_OPEN_BRACE,
+                        VERTICAL_BAR + CLOSE_BRACES + SEMICOLON);
+                fields = XSDVisitorImpl.RECORD_WITH_OPEN_BRACE + fields;
+                String extendedValue = parentNode.toString().replace(XSDVisitorImpl.RECORD_WITH_OPEN_BRACE, fields);
+                ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
+                nodes.replace(key, moduleNode);
+            }
+        }
+    }
+
     public static void processEnumerations(HashMap<String, ModuleMemberDeclarationNode> nodes,
                                            LinkedHashMap<String, ArrayList<String>> enumerations) {
         for (String key: enumerations.keySet()) {

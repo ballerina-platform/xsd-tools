@@ -69,7 +69,8 @@ public class Utils {
 
     static void processSingleTypeElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
                                           String element, String type, String[] tokens) {
-        String token = nodes.get(type).toString().contains(XSDVisitorImpl.ENUM) ? STRING : tokens[tokens.length - 2];
+        String token = (!nodes.containsKey(type)) || nodes.get(type).toString().contains(XSDVisitorImpl.ENUM)
+                ? STRING : tokens[tokens.length - 2];
         String rootElement = nodes.get(element).toString().replace(type + WHITESPACE + CONTENT_FIELD,
                 token + WHITESPACE + CONTENT_FIELD);
         ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(rootElement);
