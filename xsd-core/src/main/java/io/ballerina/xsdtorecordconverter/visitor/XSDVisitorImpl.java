@@ -437,6 +437,7 @@ public class XSDVisitorImpl implements XSDVisitor {
 
     private void processChildNodes(boolean isOptional, NodeList childNodes,
                                    StringBuilder stringBuilder) throws Exception {
+        int order = 1;
         for (Node childNode : asIterable(childNodes)) {
             XSDComponent component = XSDFactory.generateComponents(childNode);
             if (component == null) {
@@ -445,7 +446,10 @@ public class XSDVisitorImpl implements XSDVisitor {
             component.setSubType(true);
             component.setOptional(isOptional);
             stringBuilder.append(addNamespace(this, childNode));
+            String orderAnnotation = XMLDATA_ORDER + WHITESPACE + OPEN_BRACES + VALUE + COLON + order + CLOSE_BRACES;
+            stringBuilder.append(orderAnnotation);
             stringBuilder.append(component.accept(this));
+            order++;
         }
     }
 
