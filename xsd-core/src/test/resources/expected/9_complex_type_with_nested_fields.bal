@@ -9,6 +9,7 @@ public type World record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     string Landmark;
 |};
 
@@ -21,6 +22,7 @@ public type City record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup1 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     City City;
 |};
 
@@ -33,6 +35,7 @@ public type State record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup2 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     State State;
 |};
 
@@ -45,6 +48,7 @@ public type Country record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup3 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Country Country;
 |};
 
@@ -57,5 +61,6 @@ public type Continent record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup4 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Continent Continent;
 |};
