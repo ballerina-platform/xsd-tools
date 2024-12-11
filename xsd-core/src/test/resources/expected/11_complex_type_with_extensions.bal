@@ -16,5 +16,6 @@ public type Document1 record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     string FIToFIPmtStsRpt;
 |};

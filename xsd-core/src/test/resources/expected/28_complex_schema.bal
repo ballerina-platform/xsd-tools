@@ -427,10 +427,13 @@ public type ChoiceOption record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     GroupHeader117 GrpHdr;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     ReportingRequest7[] RptgReq;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     SupplementaryData1[] SplmtryData?;
 |};
 
@@ -469,42 +472,55 @@ public type ChoiceOption4 record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup1 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     BalanceType10Choice CdOrPrtry;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     BalanceSubType1Choice SubTp?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup2 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     FinancialInstitutionIdentification23 FinInstnId;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     BranchData5 BrnchId?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup3 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Max35Text Id?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     LEIIdentifier LEI?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     Max140Text Nm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 4}
     PostalAddress27 PstlAdr?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup4 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     AccountIdentification4Choice Id?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     CashAccountType2Choice Tp?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     ActiveOrHistoricCurrencyCode Ccy?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 4}
     Max70Text Nm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 5}
     ProxyAccountIdentification1 Prxy?;
 |};
 
@@ -527,64 +543,86 @@ public type ChoiceOption6 record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup5 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     ClearingSystemIdentification2Choice ClrSysId?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     Max35Text MmbId;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup6 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     NamePrefix2Code NmPrfx?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     Max140Text Nm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     PhoneNumber PhneNb?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 4}
     PhoneNumber MobNb?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 5}
     PhoneNumber FaxNb?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 6}
     Max2048Text URLAdr?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 7}
     Max256Text EmailAdr?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 8}
     Max35Text EmailPurp?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 9}
     Max35Text JobTitl?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 10}
     Max35Text Rspnsblty?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 11}
     Max70Text Dept?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 12}
     OtherContact1[] Othr?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 13}
     PreferredContactMethod2Code PrefrdMtd?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup7 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     ISODate BirthDt;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     Max35Text PrvcOfBirth?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     Max35Text CityOfBirth;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 4}
     CountryCode CtryOfBirth;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup8 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     ISODate FrDt;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     ISODate ToDt?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup9 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     AccountReportingRequestV07 AcctRptgReq;
 |};
 
@@ -607,94 +645,123 @@ public type ChoiceOption8 record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup10 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     BICFIDec2014Identifier BICFI?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     ClearingSystemMemberIdentification2 ClrSysMmbId?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     LEIIdentifier LEI?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 4}
     Max140Text Nm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 5}
     PostalAddress27 PstlAdr?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 6}
     GenericFinancialIdentification1 Othr?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup11 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Max34Text Id;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     AccountSchemeName1Choice SchmeNm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     Max35Text Issr?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup12 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Max35Text Id;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     FinancialIdentificationSchemeName1Choice SchmeNm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     Max35Text Issr?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup13 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Exact4AlphaNumericText Id;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     Max35Text Issr;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     Max35Text SchmeNm?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup14 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Max256Text Id;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     OrganisationIdentificationSchemeName1Choice SchmeNm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     Max35Text Issr?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup15 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Max256Text Id;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     PersonIdentificationSchemeName1Choice SchmeNm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     Max35Text Issr?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup16 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Max35Text MsgId;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     ISODateTime CreDtTm;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     Party50Choice MsgSndr?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup17 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     ActiveOrHistoricCurrencyAndAmount Amt;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     FloorLimitType1Code CdtDbtInd;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup18 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     AnyBICDec2014Identifier AnyBIC?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     LEIIdentifier LEI?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     GenericOrganisationIdentification3[] Othr?;
 |};
 
@@ -709,8 +776,10 @@ public type ChoiceOption9 record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup19 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Max4Text ChanlTp;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     Max128Text Id?;
 |};
 
@@ -733,22 +802,29 @@ public type ChoiceOption11 record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup20 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Max140Text Nm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     PostalAddress27 PstlAdr?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     Party52Choice Id?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 4}
     CountryCode CtryOfRes?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 5}
     Contact13 CtctDtls?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup21 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     DateAndPlaceOfBirth1 DtAndPlcOfBirth?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     GenericPersonIdentification2[] Othr?;
 |};
 
@@ -763,48 +839,68 @@ public type ChoiceOption12 record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup22 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     AddressType3Choice AdrTp?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     Max140Text CareOf?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     Max70Text Dept?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 4}
     Max70Text SubDept?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 5}
     Max140Text StrtNm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 6}
     Max16Text BldgNb?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 7}
     Max140Text BldgNm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 8}
     Max70Text Flr?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 9}
     Max16Text UnitNb?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 10}
     Max16Text PstBx?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 11}
     Max70Text Room?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 12}
     Max16Text PstCd?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 13}
     Max140Text TwnNm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 14}
     Max140Text TwnLctnNm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 15}
     Max140Text DstrctNm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 16}
     Max35Text CtrySubDvsn?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 17}
     CountryCode Ctry?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 18}
     Max70Text[] AdrLine?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup23 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     ProxyAccountType1Choice Tp?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     Max2048Text Id;
 |};
 
@@ -819,40 +915,54 @@ public type ChoiceOption13 record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup24 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     DatePeriod3 FrToDt;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     TimePeriodDetails1 FrToTm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     QueryType3Code Tp;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup25 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Max35Text Id?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     Max35Text ReqdMsgNmId;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     CashAccount40 Acct?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 4}
     Party50Choice AcctOwnr;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 5}
     BranchAndFinancialInstitutionIdentification8 AcctSvcr?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 6}
     ReportingPeriod5 RptgPrd?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 7}
     SequenceRange1Choice RptgSeq?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 8}
     TransactionType2 ReqdTxTp?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 9}
     BalanceType13[] ReqdBalTp?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup26 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Max35Text FrSeq;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     Max35Text ToSeq;
 |};
 
@@ -873,8 +983,10 @@ public type ChoiceOption14 record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup27 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     Max350Text PlcAndNm?;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     SupplementaryDataEnvelope1 Envlp;
 |};
 
@@ -885,17 +997,22 @@ public type SequenceGroup28 record {|
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup29 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     ISOTime FrTm;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     ISOTime ToTm?;
 |};
 
 @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup30 record {|
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     EntryStatus1Choice Sts;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     CreditDebitCode CdtDbtInd;
     @xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 3}
     Limit2[] FlrLmt?;
 |};

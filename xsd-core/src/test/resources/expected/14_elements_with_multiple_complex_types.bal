@@ -51,55 +51,67 @@ public type DivideResponse record {|
 @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup record {|
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     int intA;
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     int intB;
 |};
 
 @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup1 record {|
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     int AddResult;
 |};
 
 @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup2 record {|
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     int intA;
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     int intB;
 |};
 
 @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup3 record {|
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     int SubtractResult;
 |};
 
 @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup4 record {|
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     int intA;
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     int intB;
 |};
 
 @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup5 record {|
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     int MultiplyResult;
 |};
 
 @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup6 record {|
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     int intA;
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 2}
     int intB;
 |};
 
 @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
 public type SequenceGroup7 record {|
     @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:SequenceOrder {value: 1}
     int DivideResult?;
 |};
