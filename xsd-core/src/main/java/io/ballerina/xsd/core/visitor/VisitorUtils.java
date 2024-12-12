@@ -16,9 +16,9 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter.visitor;
+package io.ballerina.xsd.core.visitor;
 
-import io.ballerina.xsdtorecordconverter.component.Element;
+import io.ballerina.xsd.core.component.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -27,8 +27,8 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.EMPTY_STRING;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.generateFixedValue;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.EMPTY_STRING;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.generateFixedValue;
 
 /**
  * Contains utility functions for working with XSD specifications.

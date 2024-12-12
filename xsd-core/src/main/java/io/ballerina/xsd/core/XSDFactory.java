@@ -16,19 +16,19 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter;
+package io.ballerina.xsd.core;
 
-import io.ballerina.xsdtorecordconverter.component.ComplexType;
-import io.ballerina.xsdtorecordconverter.component.Element;
-import io.ballerina.xsdtorecordconverter.component.XSDComponent;
-import io.ballerina.xsdtorecordconverter.component.SimpleType;
+import io.ballerina.xsd.core.component.ComplexType;
+import io.ballerina.xsd.core.component.Element;
+import io.ballerina.xsd.core.component.XSDComponent;
+import io.ballerina.xsd.core.component.SimpleType;
 import org.w3c.dom.Node;
 
 import java.util.Optional;
 
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.COMPLEX_TYPE;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.ELEMENT;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.SIMPLE_TYPE;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.COMPLEX_TYPE;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.ELEMENT;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.SIMPLE_TYPE;
 
 /**
  * The factory class for generating XSD components.

@@ -16,15 +16,15 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter;
+package io.ballerina.xsd.core;
 
 import io.ballerina.compiler.syntax.tree.ModuleMemberDeclarationNode;
 import io.ballerina.compiler.syntax.tree.ModulePartNode;
 import io.ballerina.compiler.syntax.tree.NodeParser;
-import io.ballerina.xsdtorecordconverter.component.XSDComponent;
-import io.ballerina.xsdtorecordconverter.visitor.VisitorUtils;
-import io.ballerina.xsdtorecordconverter.visitor.XSDVisitor;
-import io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl;
+import io.ballerina.xsd.core.visitor.XSDVisitor;
+import io.ballerina.xsd.core.visitor.XSDVisitorImpl;
+import io.ballerina.xsd.core.component.XSDComponent;
+import io.ballerina.xsd.core.visitor.VisitorUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -36,17 +36,17 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.CLOSE_BRACES;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.COMMA;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.CONTENT_FIELD;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.ENUM;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.NAME;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.OPEN_BRACES;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.QUOTATION_MARK;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.RECORD_WITH_OPEN_BRACE;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.SEMICOLON;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.VERTICAL_BAR;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.WHITESPACE;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.CLOSE_BRACES;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.COMMA;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.OPEN_BRACES;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.QUOTATION_MARK;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.WHITESPACE;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.CONTENT_FIELD;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.ENUM;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.NAME;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.RECORD_WITH_OPEN_BRACE;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.SEMICOLON;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.VERTICAL_BAR;
 
 /**
  * This class is used for transforming an XSD into a corresponding record format.

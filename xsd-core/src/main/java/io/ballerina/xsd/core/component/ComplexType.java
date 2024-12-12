@@ -16,23 +16,23 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter.component;
+package io.ballerina.xsd.core.component;
 
-import io.ballerina.xsdtorecordconverter.visitor.XSDVisitor;
+import io.ballerina.xsd.core.visitor.XSDVisitor;
 import org.w3c.dom.Node;
 
 /**
- * Represents a simple type in the XSD schema.
+ * Represents a complex type in the XSD schema.
  *
  * @since 0.1.0
  */
-public class SimpleType implements XSDComponent {
+public class ComplexType implements XSDComponent {
     private final Node node;
     private boolean isSubType = false;
     private boolean isOptional = false;
     private boolean isNestedElement = false;
 
-    public SimpleType(Node node) {
+    public ComplexType(Node node) {
         this.node = node;
     }
 
@@ -41,8 +41,8 @@ public class SimpleType implements XSDComponent {
     }
 
     @Override
-    public String accept(XSDVisitor xsdVisitor) {
-        return xsdVisitor.visit(this);
+    public String accept(XSDVisitor xsdVisitor) throws Exception {
+        return isSubType() ? xsdVisitor.visit(this, true) : xsdVisitor.visit(this);
     }
 
     @Override
