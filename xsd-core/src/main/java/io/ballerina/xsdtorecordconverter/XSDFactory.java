@@ -24,6 +24,8 @@ import io.ballerina.xsdtorecordconverter.component.XSDComponent;
 import io.ballerina.xsdtorecordconverter.component.SimpleType;
 import org.w3c.dom.Node;
 
+import java.util.Optional;
+
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.COMPLEX_TYPE;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.ELEMENT;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.SIMPLE_TYPE;
@@ -32,22 +34,22 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.SIMPLE_TY
  * The factory class for generating XSD components.
  */
 public final class XSDFactory {
-    public static XSDComponent generateComponents(Node node) {
+    public static Optional<XSDComponent> generateComponents(Node node) {
         if (node.getNodeType() != Node.ELEMENT_NODE) {
-            return null;
+            return Optional.empty();
         }
         switch (node.getLocalName()) {
             case ELEMENT -> {
-                return new Element(node);
+                return Optional.of(new Element(node));
             }
             case COMPLEX_TYPE -> {
-                return new ComplexType(node);
+                return Optional.of(new ComplexType(node));
             }
             case SIMPLE_TYPE -> {
-                return new SimpleType(node);
+                return Optional.of(new SimpleType(node));
             }
             default -> {
-                return null;
+                return Optional.empty();
             }
         }
     }

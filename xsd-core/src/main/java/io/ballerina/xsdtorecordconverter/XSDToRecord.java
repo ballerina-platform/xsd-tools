@@ -34,6 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.CLOSE_BRACES;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.COMMA;
@@ -88,11 +89,11 @@ public final class XSDToRecord {
                 continue;
             }
             StringBuilder stringBuilder = new StringBuilder();
-            XSDComponent component = XSDFactory.generateComponents(childNode);
-            if (component == null) {
+            Optional<XSDComponent> component = XSDFactory.generateComponents(childNode);
+            if (component.isEmpty()) {
                 continue;
             }
-            stringBuilder.append(component.accept(xsdVisitor));
+            stringBuilder.append(component.get().accept(xsdVisitor));
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
             String name = Utils.extractTypeName(moduleNode.toString().split(WHITESPACE));
             if (name == null) {
