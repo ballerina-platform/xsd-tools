@@ -81,7 +81,7 @@ public class XsdCmd implements BLauncherCmd {
         if (this.helpFlag) {
             StringBuilder stringBuilder = new StringBuilder();
             printLongDesc(stringBuilder);
-            System.out.println(stringBuilder);
+            outStream.println(stringBuilder);
             return;
         }
         Path currentDir = Paths.get("").toAbsolutePath();
