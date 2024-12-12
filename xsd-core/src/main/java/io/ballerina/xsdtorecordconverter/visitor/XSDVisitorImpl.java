@@ -31,6 +31,7 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.MAX_OCCURS;
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.MIN_OCCURS;
@@ -202,18 +203,18 @@ public class XSDVisitorImpl implements XSDVisitor {
         if (typeNode == null && node.hasChildNodes()) {
             typeNode = nameNode;
             for (Node childNode : asIterable(node.getChildNodes())) {
-                XSDComponent component = XSDFactory.generateComponents(childNode);
-                if (component == null) {
+                Optional<XSDComponent> component = XSDFactory.generateComponents(childNode);
+                if (component.isEmpty()) {
                     continue;
                 }
-                component.setNestedElement(true);
+                component.get().setNestedElement(true);
                 if (nestedElements.containsKey(nameNode.getNodeValue())) {
                     String resolvedName = Utils.resolveNameConflicts(nameNode.getNodeValue(), nestedElements);
-                    String element = component.accept(this);
+                    String element = component.get().accept(this);
                     nestedElements.put(resolvedName, element);
                     nameResolvers.put(resolvedName, nameNode.getNodeValue());
                 } else {
-                    String element = component.accept(this);
+                    String element = component.get().accept(this);
                     nestedElements.put(nameNode.getNodeValue(), element);
                 }
             }
@@ -325,12 +326,12 @@ public class XSDVisitorImpl implements XSDVisitor {
             builder.append(deriveType(typeNode)).append(SEMICOLON).append(NEW_LINE);
         }
         for (Node child : asIterable(node.getChildNodes())) {
-            XSDComponent component = XSDFactory.generateComponents(child);
-            if (component == null) {
+            Optional<XSDComponent> component = XSDFactory.generateComponents(child);
+            if (component.isEmpty()) {
                 continue;
             }
-            component.setSubType(true);
-            builder.append(component.accept(this));
+            component.ifPresent(xsdComponent -> xsdComponent.setSubType(true));
+            builder.append(component.get().accept(this));
         }
         return builder.toString();
     }
@@ -441,28 +442,28 @@ public class XSDVisitorImpl implements XSDVisitor {
                                    StringBuilder stringBuilder) throws Exception {
         int order = 1;
         for (Node childNode : asIterable(childNodes)) {
-            XSDComponent component = XSDFactory.generateComponents(childNode);
-            if (component == null) {
+            Optional<XSDComponent> component = XSDFactory.generateComponents(childNode);
+            if (component.isEmpty()) {
                 continue;
             }
-            component.setSubType(true);
-            component.setOptional(isOptional);
+            component.get().setSubType(true);
+            component.get().setOptional(isOptional);
             stringBuilder.append(addNamespace(this, childNode));
             String orderAnnotation = XMLDATA_ORDER + WHITESPACE + OPEN_BRACES + VALUE + COLON + order + CLOSE_BRACES;
             stringBuilder.append(orderAnnotation);
-            stringBuilder.append(component.accept(this));
+            stringBuilder.append(component.get().accept(this));
             order++;
         }
     }
 
     private void processChildNode(boolean isOptional, Node childNode,
-                                   StringBuilder stringBuilder) throws Exception {
-        XSDComponent component = XSDFactory.generateComponents(childNode);
-        if (component != null) {
-            component.setSubType(true);
-            component.setOptional(isOptional);
+                                  StringBuilder stringBuilder) throws Exception {
+        Optional<XSDComponent> component = XSDFactory.generateComponents(childNode);
+        if (component.isPresent()) {
+            component.get().setSubType(true);
+            component.get().setOptional(isOptional);
             stringBuilder.append(addNamespace(this, childNode));
-            stringBuilder.append(component.accept(this));
+            stringBuilder.append(component.get().accept(this));
         }
     }
 
