@@ -16,15 +16,15 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter.visitor;
+package io.ballerina.xsd.core.visitor;
 
 import io.ballerina.compiler.syntax.tree.SyntaxKind;
-import io.ballerina.xsdtorecordconverter.Utils;
-import io.ballerina.xsdtorecordconverter.component.ComplexType;
-import io.ballerina.xsdtorecordconverter.component.Element;
-import io.ballerina.xsdtorecordconverter.component.XSDComponent;
-import io.ballerina.xsdtorecordconverter.component.SimpleType;
-import io.ballerina.xsdtorecordconverter.XSDFactory;
+import io.ballerina.xsd.core.Utils;
+import io.ballerina.xsd.core.XSDFactory;
+import io.ballerina.xsd.core.component.ComplexType;
+import io.ballerina.xsd.core.component.Element;
+import io.ballerina.xsd.core.component.XSDComponent;
+import io.ballerina.xsd.core.component.SimpleType;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -33,20 +33,20 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.MAX_OCCURS;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.MIN_OCCURS;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.addNamespace;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.asIterable;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.deriveType;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.generateDefaultValue;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.handleDefaultValues;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.handleFixedValues;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.handleMaxOccurrences;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.handleMinOccurrences;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.isSimpleType;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.convertToCamelCase;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.sanitizeString;
-import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.typeGenerator;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.MAX_OCCURS;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.MIN_OCCURS;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.addNamespace;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.asIterable;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.deriveType;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.generateDefaultValue;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.handleDefaultValues;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.handleFixedValues;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.handleMaxOccurrences;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.handleMinOccurrences;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.isSimpleType;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.convertToCamelCase;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.sanitizeString;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.typeGenerator;
 
 /**
  * This class is responsible for visiting and processing components of an XSD schema.

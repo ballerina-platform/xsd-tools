@@ -16,11 +16,11 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter.visitor;
+package io.ballerina.xsd.core.visitor;
 
-import io.ballerina.xsdtorecordconverter.component.ComplexType;
-import io.ballerina.xsdtorecordconverter.component.Element;
-import io.ballerina.xsdtorecordconverter.component.SimpleType;
+import io.ballerina.xsd.core.component.ComplexType;
+import io.ballerina.xsd.core.component.Element;
+import io.ballerina.xsd.core.component.SimpleType;
 
 import java.util.ArrayList;
 import java.util.Map;

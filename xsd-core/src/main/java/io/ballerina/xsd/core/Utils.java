@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter;
+package io.ballerina.xsd.core;
 
 import io.ballerina.compiler.syntax.tree.AbstractNodeFactory;
 import io.ballerina.compiler.syntax.tree.ImportDeclarationNode;
@@ -26,8 +26,8 @@ import io.ballerina.compiler.syntax.tree.NodeFactory;
 import io.ballerina.compiler.syntax.tree.NodeList;
 import io.ballerina.compiler.syntax.tree.NodeParser;
 import io.ballerina.compiler.syntax.tree.Token;
-import io.ballerina.xsdtorecordconverter.visitor.XSDVisitor;
-import io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl;
+import io.ballerina.xsd.core.visitor.XSDVisitor;
+import io.ballerina.xsd.core.visitor.XSDVisitorImpl;
 import org.ballerinalang.formatter.core.Formatter;
 import org.ballerinalang.formatter.core.FormatterException;
 import org.ballerinalang.formatter.core.options.ForceFormattingOptions;
@@ -37,14 +37,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.CLOSE_BRACES;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.CONTENT_FIELD;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.RECORD_WITH_OPEN_BRACE;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.SEMICOLON;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.STRING;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.TYPE;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.VERTICAL_BAR;
-import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.WHITESPACE;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.CLOSE_BRACES;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.CONTENT_FIELD;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.RECORD_WITH_OPEN_BRACE;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.SEMICOLON;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.STRING;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.TYPE;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.VERTICAL_BAR;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.WHITESPACE;
 
 /**
  * This class contains util functions necessary for converting XSD to Ballerina Record types.

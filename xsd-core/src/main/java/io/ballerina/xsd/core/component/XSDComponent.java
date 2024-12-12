@@ -16,9 +16,9 @@
  * under the License.
  */
 
-package io.ballerina.xsdtorecordconverter.component;
+package io.ballerina.xsd.core.component;
 
-import io.ballerina.xsdtorecordconverter.visitor.XSDVisitor;
+import io.ballerina.xsd.core.visitor.XSDVisitor;
 
 /**
  * Interface representing a component of an XSD schema.
