@@ -30,6 +30,7 @@ import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.MAX_OCCURS;
 import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.MIN_OCCURS;
@@ -98,13 +99,14 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String EMPTY_ARRAY = "[]";
     public static final String XMLDATA_SEQUENCE = "@xmldata:Sequence";
     public static final String SEQUENCE_NAME = "SequenceGroup";
+    public static final String XMLDATA_ORDER = "@xmldata:SequenceOrder";
 
     private final ArrayList<String> imports = new ArrayList<>();
-    private final LinkedHashMap<String, String> extensions = new LinkedHashMap<>();
-    private final LinkedHashMap<String, String> rootElements = new LinkedHashMap<>();
-    private final LinkedHashMap<String, String> nameResolvers = new LinkedHashMap<>();
-    private final LinkedHashMap<String, String> nestedElements = new LinkedHashMap<>();
-    private final LinkedHashMap<String, ArrayList<String>> enumerationElements = new LinkedHashMap<>();
+    private final Map<String, String> extensions = new LinkedHashMap<>();
+    private final Map<String, String> rootElements = new LinkedHashMap<>();
+    private final Map<String, String> nameResolvers = new LinkedHashMap<>();
+    private final Map<String, String> nestedElements = new LinkedHashMap<>();
+    private final Map<String, ArrayList<String>> enumerationElements = new LinkedHashMap<>();
 
     @Override
     public String visit(Element element) throws Exception {
@@ -476,7 +478,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         builder.append(XMLDATA_SEQUENCE).append(WHITESPACE).append(OPEN_BRACES);
         builder.append(MIN_OCCURS).append(COLON).append(minOccurrence).append(COMMA);
         builder.append(MAX_OCCURS).append(COLON).append(maxOccurrence).append(CLOSE_BRACES);
-        builder.append(sequenceName).append((maxOccurrence.equals(ONE)) ? "" : EMPTY_ARRAY);
+        builder.append(sequenceName).append((maxOccurrence.equals(ONE)) ? EMPTY_STRING : EMPTY_ARRAY);
         builder.append(WHITESPACE).append(convertToCamelCase(sequenceName)).append(SEMICOLON);
         return sequenceName;
     }
@@ -565,27 +567,33 @@ public class XSDVisitorImpl implements XSDVisitor {
         }
     }
 
+    @Override
     public ArrayList<String> getImports() {
         return imports;
     }
 
-    public LinkedHashMap<String, String> getExtensions() {
+    @Override
+    public Map<String, String> getExtensions() {
         return extensions;
     }
 
-    public LinkedHashMap<String, String> getRootElements() {
+    @Override
+    public Map<String, String> getRootElements() {
         return rootElements;
     }
 
-    public LinkedHashMap<String, String> getNestedElements() {
+    @Override
+    public Map<String, String> getNestedElements() {
         return nestedElements;
     }
 
-    public LinkedHashMap<String, String> getNameResolvers() {
+    @Override
+    public Map<String, String> getNameResolvers() {
         return nameResolvers;
     }
 
-    public LinkedHashMap<String, ArrayList<String>> getEnumerationElements() {
+    @Override
+    public Map<String, ArrayList<String>> getEnumerationElements() {
         return enumerationElements;
     }
 }

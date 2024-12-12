@@ -22,6 +22,9 @@ import io.ballerina.xsdtorecordconverter.component.ComplexType;
 import io.ballerina.xsdtorecordconverter.component.Element;
 import io.ballerina.xsdtorecordconverter.component.SimpleType;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 /**
  * Defines methods for visiting various components of an XSD schema.
  */
@@ -31,4 +34,10 @@ public interface XSDVisitor {
     String visit(ComplexType element) throws Exception;
     String visit(ComplexType element, boolean isSubType) throws Exception;
     String visit(SimpleType element);
+    ArrayList<String> getImports();
+    Map<String, String> getRootElements();
+    Map<String, String> getExtensions();
+    Map<String, String> getNestedElements();
+    Map<String, String> getNameResolvers();
+    Map<String, ArrayList<String>> getEnumerationElements();
 }
