@@ -23,6 +23,8 @@ import org.w3c.dom.Node;
 
 /**
  * Represents a simple type in the XSD schema.
+ *
+ * @since 0.1.0
  */
 public class SimpleType implements XSDComponent {
     private final Node node;

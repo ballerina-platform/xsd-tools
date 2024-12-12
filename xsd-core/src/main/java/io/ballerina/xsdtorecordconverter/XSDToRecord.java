@@ -50,6 +50,8 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.WHITESPAC
 
 /**
  * This class is used for transforming an XSD into a corresponding record format.
+ *
+ * @since 0.1.0
  */
 public final class XSDToRecord {
     public static final String SCHEMA = "schema";

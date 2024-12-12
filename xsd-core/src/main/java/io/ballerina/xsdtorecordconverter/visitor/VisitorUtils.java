@@ -32,6 +32,8 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.generateF
 
 /**
  * Contains utility functions for working with XSD specifications.
+ *
+ * @since 0.1.0
  */
 public final class VisitorUtils {
     public static final String WHITESPACE = " ";

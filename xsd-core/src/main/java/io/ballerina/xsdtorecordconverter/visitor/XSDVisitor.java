@@ -27,6 +27,8 @@ import java.util.Map;
 
 /**
  * Defines methods for visiting various components of an XSD schema.
+ *
+ * @since 0.1.0
  */
 public interface XSDVisitor {
     String visit(Element element) throws Exception;

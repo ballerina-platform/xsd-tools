@@ -23,6 +23,8 @@ import org.w3c.dom.Node;
 
 /**
  * Represents an element type in the XSD schema.
+ *
+ * @since 0.1.0
  */
 public class Element implements XSDComponent {
     private final Node node;

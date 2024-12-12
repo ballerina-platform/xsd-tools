@@ -32,6 +32,8 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.SIMPLE_TY
 
 /**
  * The factory class for generating XSD components.
+ *
+ * @since 0.1.0
  */
 public final class XSDFactory {
     public static Optional<XSDComponent> generateComponents(Node node) {
