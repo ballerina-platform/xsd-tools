@@ -26,6 +26,7 @@ import io.ballerina.compiler.syntax.tree.NodeFactory;
 import io.ballerina.compiler.syntax.tree.NodeList;
 import io.ballerina.compiler.syntax.tree.NodeParser;
 import io.ballerina.compiler.syntax.tree.Token;
+import io.ballerina.xsdtorecordconverter.visitor.XSDVisitor;
 import io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl;
 import org.ballerinalang.formatter.core.Formatter;
 import org.ballerinalang.formatter.core.FormatterException;
@@ -34,11 +35,11 @@ import org.ballerinalang.formatter.core.options.FormattingOptions;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.CLOSE_BRACES;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.CONTENT_FIELD;
+import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.RECORD_WITH_OPEN_BRACE;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.SEMICOLON;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.STRING;
 import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.TYPE;
@@ -49,25 +50,25 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.WHITESPAC
  * This class contains util functions necessary for converting XSD to Ballerina Record types.
  */
 public class Utils {
-    static ModulePartNode generateModulePartNode(HashMap<String, ModuleMemberDeclarationNode> nodes,
-                                                 XSDVisitorImpl xsdVisitor) throws Exception {
+    static ModulePartNode generateModulePartNode(Map<String, ModuleMemberDeclarationNode> nodes,
+                                                 XSDVisitor xsdVisitor) throws Exception {
         NodeList<ModuleMemberDeclarationNode> moduleMembers = AbstractNodeFactory.createNodeList(nodes.values());
         NodeList<ImportDeclarationNode> imports = getImportDeclarations(xsdVisitor);
         Token eofToken = AbstractNodeFactory.createIdentifierToken(XSDToRecord.EOF_TOKEN);
         return NodeFactory.createModulePartNode(imports, moduleMembers, eofToken);
     }
 
-    static void processRecordTypeElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
+    static void processRecordTypeElements(Map<String, ModuleMemberDeclarationNode> nodes,
                                           String element, String type) {
-        String fields = extractSubstring(nodes.get(type).toString(), XSDVisitorImpl.RECORD_WITH_OPEN_BRACE,
-                                         VERTICAL_BAR + CLOSE_BRACES + SEMICOLON);
+        String fields = extractSubstring(nodes.get(type).toString(), RECORD_WITH_OPEN_BRACE,
+                               VERTICAL_BAR + CLOSE_BRACES + SEMICOLON);
         String extendedValue = nodes.get(element)
                 .toString().replace(type + WHITESPACE + CONTENT_FIELD + SEMICOLON, fields);
         ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
         nodes.put(element, moduleNode);
     }
 
-    static void processSingleTypeElements(HashMap<String, ModuleMemberDeclarationNode> nodes,
+    static void processSingleTypeElements(Map<String, ModuleMemberDeclarationNode> nodes,
                                           String element, String type, String[] tokens) {
         String token = (!nodes.containsKey(type)) || nodes.get(type).toString().contains(XSDVisitorImpl.ENUM)
                 ? STRING : tokens[tokens.length - 2];
@@ -87,7 +88,7 @@ public class Utils {
         return baseString.substring(startIndex, endIndex);
     }
 
-    public static NodeList<ImportDeclarationNode> getImportDeclarations(XSDVisitorImpl xsdVisitor) throws Exception {
+    public static NodeList<ImportDeclarationNode> getImportDeclarations(XSDVisitor xsdVisitor) throws Exception {
         Collection<ImportDeclarationNode> imports = new ArrayList<>();
         for (String module : xsdVisitor.getImports()) {
             ImportDeclarationNode node = NodeParser.parseImportDeclaration(module);
