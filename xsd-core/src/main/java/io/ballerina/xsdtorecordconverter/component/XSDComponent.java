@@ -22,6 +22,8 @@ import io.ballerina.xsdtorecordconverter.visitor.XSDVisitor;
 
 /**
  * Interface representing a component of an XSD schema.
+ *
+ * @since 0.1.0
  */
 public interface XSDComponent {
     String accept(XSDVisitor xsdVisitor) throws Exception;

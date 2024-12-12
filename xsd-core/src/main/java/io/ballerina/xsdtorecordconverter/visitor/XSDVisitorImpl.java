@@ -50,6 +50,8 @@ import static io.ballerina.xsdtorecordconverter.visitor.VisitorUtils.typeGenerat
 
 /**
  * This class is responsible for visiting and processing components of an XSD schema.
+ *
+ * @since 0.1.0
  */
 public class XSDVisitorImpl implements XSDVisitor {
     public static final String PUBLIC = "public";

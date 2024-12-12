@@ -48,6 +48,8 @@ import static io.ballerina.xsdtorecordconverter.visitor.XSDVisitorImpl.WHITESPAC
 
 /**
  * This class contains util functions necessary for converting XSD to Ballerina Record types.
+ *
+ * @since 0.1.0
  */
 public class Utils {
     static ModulePartNode generateModulePartNode(Map<String, ModuleMemberDeclarationNode> nodes,
