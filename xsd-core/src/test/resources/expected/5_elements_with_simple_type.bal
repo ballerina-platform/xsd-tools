@@ -1,9 +1,9 @@
 import ballerina/data.xmldata;
 
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+@xmldata:Namespace {uri: "http://namespace.org/"}
 public type PersonAge record {|
     decimal \#content;
 |};
 
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+@xmldata:Namespace {uri: "http://namespace.org/"}
 public type Age decimal;

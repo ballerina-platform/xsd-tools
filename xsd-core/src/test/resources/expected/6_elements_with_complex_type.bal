@@ -1,23 +1,23 @@
 import ballerina/data.xmldata;
 
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+@xmldata:Namespace {uri: "http://namespace.org/"}
 public type Operations record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup sequenceGroup;
 |};
 
-@xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+@xmldata:Namespace {uri: "http://namespace.org/"}
 public type Add record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup sequenceGroup;
 |};
 
-@xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+@xmldata:Namespace {uri: "http://namespace.org/"}
 public type SequenceGroup record {|
-    @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
     int intA;
-    @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
     int intB;
 |};
