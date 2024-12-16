@@ -1,6 +1,6 @@
 import ballerina/data.xmldata;
 
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+@xmldata:Namespace {uri: "http://namespace.org/"}
 public type PersonBase record {|
     @xmldata:Attribute
     int id;
@@ -8,7 +8,7 @@ public type PersonBase record {|
     string name;
 |};
 
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+@xmldata:Namespace {uri: "http://namespace.org/"}
 public type Employee record {|
     @xmldata:Attribute
     int id;
@@ -21,7 +21,7 @@ public type Employee record {|
 |};
 
 @xmldata:Name {value: "Employee"}
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+@xmldata:Namespace {uri: "http://namespace.org/"}
 public type Employee1 record {|
     @xmldata:Attribute
     int age?;
@@ -29,7 +29,7 @@ public type Employee1 record {|
     string position?;
 |};
 
-@xmldata:Namespace {prefix: "xs", uri: "http://www.w3.org/2001/XMLSchema"}
+@xmldata:Namespace {uri: "http://namespace.org/"}
 public type EmployeePerson record {|
     @xmldata:Attribute
     int id;

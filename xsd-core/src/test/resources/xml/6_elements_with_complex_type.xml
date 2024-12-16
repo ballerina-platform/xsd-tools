@@ -1,4 +1,4 @@
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://namespace.org/">
     <xs:element name="Operations" type="Add"/>
     <s:complexType name="Add" xmlns:s="http://www.w3.org/2001/XMLSchema">
         <s:sequence>

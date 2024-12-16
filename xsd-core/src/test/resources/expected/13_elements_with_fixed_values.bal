@@ -1,17 +1,17 @@
 import ballerina/data.xmldata;
 
-@xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+@xmldata:Namespace {uri: "http://tempuri.org/"}
 public type Add record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup sequenceGroup;
 |};
 
-@xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+@xmldata:Namespace {uri: "http://tempuri.org/"}
 public type SequenceGroup record {|
-    @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 1}
     "data" stringField;
-    @xmldata:Namespace {prefix: "s", uri: "http://www.w3.org/2001/XMLSchema"}
+    @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 2}
     56 intField;
 |};
