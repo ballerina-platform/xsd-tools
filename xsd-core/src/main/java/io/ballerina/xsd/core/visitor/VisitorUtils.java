@@ -85,10 +85,9 @@ public final class VisitorUtils {
     public static final String URI = "uri";
     public static final String DURATION = "duration";
 
-    public static String addNamespace(XSDVisitorImpl xsdVisitor, Node node) {
+    public static String addNamespace(XSDVisitorImpl xsdVisitor, String namespace) {
         xsdVisitor.addImports(BALLERINA_XML_DATA_MODULE);
-        return XMLDATA_NAMESPACE + WHITESPACE + OPEN_BRACES + PREFIX + COLON + QUOTATION_MARK + node.getPrefix() +
-                QUOTATION_MARK + COMMA + URI + COLON + QUOTATION_MARK + node.getNamespaceURI() +
+        return XMLDATA_NAMESPACE + WHITESPACE + OPEN_BRACES + URI + COLON + QUOTATION_MARK + namespace +
                 QUOTATION_MARK + CLOSE_BRACES;
     }
 
