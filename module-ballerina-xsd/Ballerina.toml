@@ -4,7 +4,7 @@ org = "ballerina"
 name = "xsdtool"
 version = "0.1.0"
 authors = ["Ballerina"]
-keywords = ["xsd"]
+keywords = ["xsd", "xsd-tool"]
 repository = "https://github.com/ballerina-platform/xsd-tools"
 license = ["Apache-2.0"]
 
