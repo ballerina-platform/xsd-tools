@@ -61,6 +61,7 @@ public final class XSDToRecord {
             "The root element must be a <schema>.";
     public static final String XMLDATA_NAME_ANNOTATION = "@xmldata:Name {value: \"%s\"}";
     public static final String EQUAL = "=";
+    public static final String TARGET_NAMESPACE = "targetNamespace";
 
     public static String convert(Document document) throws Exception {
         Element rootElement = document.getDocumentElement();
@@ -68,6 +69,7 @@ public final class XSDToRecord {
             throw new Exception(INVALID_XSD_FORMAT_ERROR);
         }
         XSDVisitor xsdVisitor = new XSDVisitorImpl();
+        xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
         Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
         processNodeList(rootElement, nodes, xsdVisitor);
         ModulePartNode modulePartNode = Utils.generateModulePartNode(nodes, xsdVisitor);
@@ -170,8 +172,8 @@ public final class XSDToRecord {
             StringBuilder enumBuilder = new StringBuilder();
             for (String enumValue: enums) {
                 if (nodes.containsKey(enumValue)) {
-                    enumValue = enumValue.toLowerCase(Locale.ROOT) + WHITESPACE + EQUAL +
-                            QUOTATION_MARK + enumValue + QUOTATION_MARK;
+                    enumValue = enumValue.toLowerCase(Locale.ROOT) +
+                            WHITESPACE + EQUAL + QUOTATION_MARK + enumValue + QUOTATION_MARK;
                 }
                 enumBuilder.append(enumValue).append(COMMA);
             }

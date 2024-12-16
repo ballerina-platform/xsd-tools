@@ -43,4 +43,3 @@ include 'xsd-cli:cmd'
 include 'xsd-cli'
 include 'xsd-core'
 include 'module-ballerina-xsd'
-
