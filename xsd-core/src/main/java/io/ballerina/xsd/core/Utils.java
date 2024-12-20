@@ -52,6 +52,10 @@ import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.WHITESPACE;
  * @since 0.1.0
  */
 public class Utils {
+
+    private Utils() {
+    }
+
     static ModulePartNode generateModulePartNode(Map<String, ModuleMemberDeclarationNode> nodes,
                                                  XSDVisitor xsdVisitor) throws Exception {
         NodeList<ModuleMemberDeclarationNode> moduleMembers = AbstractNodeFactory.createNodeList(nodes.values());
@@ -80,7 +84,7 @@ public class Utils {
         nodes.put(element, moduleNode);
     }
 
-    public static String extractSubstring(String baseString, String startToken, String endToken) {
+    static String extractSubstring(String baseString, String startToken, String endToken) {
         if (!baseString.contains(startToken)) {
             return baseString.split(WHITESPACE)[baseString.split(WHITESPACE).length - 2] +
                     WHITESPACE + CONTENT_FIELD + SEMICOLON;
@@ -90,7 +94,7 @@ public class Utils {
         return baseString.substring(startIndex, endIndex);
     }
 
-    public static NodeList<ImportDeclarationNode> getImportDeclarations(XSDVisitor xsdVisitor) throws Exception {
+    static NodeList<ImportDeclarationNode> getImportDeclarations(XSDVisitor xsdVisitor) throws Exception {
         Collection<ImportDeclarationNode> imports = new ArrayList<>();
         for (String module : xsdVisitor.getImports()) {
             ImportDeclarationNode node = NodeParser.parseImportDeclaration(module);
@@ -102,7 +106,7 @@ public class Utils {
         return AbstractNodeFactory.createNodeList(imports);
     }
 
-    public static String formatModuleParts(ModulePartNode modulePartNode) throws FormatterException {
+    static String formatModuleParts(ModulePartNode modulePartNode) throws FormatterException {
         ForceFormattingOptions forceFormattingOptions = ForceFormattingOptions.builder()
                 .setForceFormatRecordFields(true).build();
         FormattingOptions formattingOptions = FormattingOptions.builder()
@@ -120,7 +124,7 @@ public class Utils {
         return name;
     }
 
-    public static String extractTypeName(String[] values) {
+    static String extractTypeName(String[] values) {
         String previous = null;
         for (String current : values) {
             if (TYPE.equals(previous)) {
