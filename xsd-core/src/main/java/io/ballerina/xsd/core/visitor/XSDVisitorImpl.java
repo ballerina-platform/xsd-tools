@@ -25,11 +25,14 @@ import io.ballerina.xsd.core.component.ComplexType;
 import io.ballerina.xsd.core.component.Element;
 import io.ballerina.xsd.core.component.XSDComponent;
 import io.ballerina.xsd.core.component.SimpleType;
+import io.ballerina.xsd.core.diagnostic.DiagnosticMessage;
+import io.ballerina.xsd.core.diagnostic.XsdDiagnostic;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -110,6 +113,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     private final Map<String, String> nameResolvers = new LinkedHashMap<>();
     private final Map<String, String> nestedElements = new LinkedHashMap<>();
     private final Map<String, ArrayList<String>> enumerationElements = new LinkedHashMap<>();
+    private List<XsdDiagnostic> diagnostics = new ArrayList<>();
     public String targetNamespace;
 
     @Override
@@ -125,20 +129,28 @@ public class XSDVisitorImpl implements XSDVisitor {
     }
 
     @Override
-    public String visit(Element element, boolean subElement) throws Exception {
+    public String visit(Element element, boolean subElement) {
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
         Node nameNode = node.getAttributes().getNamedItem(NAME);
         Node typeNode = node.getAttributes().getNamedItem(TYPE);
-        typeNode = visitNestedElements(node, nameNode, typeNode);
+        try {
+            typeNode = visitNestedElements(node, nameNode, typeNode);
+        } catch (Exception e) {
+            diagnostics.add(DiagnosticMessage.xsdToBallerinaError101(e, null));
+        }
         if (nameNode == null && typeNode == null) {
             builder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD);
         } else {
             handleFixedValues(node, builder, typeNode);
             handleMaxOccurrences(node, builder);
-            builder.append(nameNode.getNodeValue());
-            handleMinOccurrences(element, builder);
-            handleDefaultValues(node, builder, typeNode);
+            if (nameNode == null) {
+                diagnostics.add(DiagnosticMessage.xsdToBallerinaError102(NAME, null));
+            } else {
+                builder.append(nameNode.getNodeValue());
+                handleMinOccurrences(element, builder);
+                handleDefaultValues(node, builder, typeNode);
+            }
         }
         builder.append(SEMICOLON);
         return builder.toString();
@@ -609,5 +621,9 @@ public class XSDVisitorImpl implements XSDVisitor {
     @Override
     public Map<String, ArrayList<String>> getEnumerationElements() {
         return enumerationElements;
+    }
+
+    public List<XsdDiagnostic> getDiagnostics() {
+        return diagnostics;
     }
 }

@@ -84,9 +84,10 @@ public class XSDToRecordTest {
     private void validate(Path sample, Path expected) throws Exception {
         String xmlFileContent = Files.readString(sample);
         Document document = parseXSD(xmlFileContent);
-        String result = XSDToRecord.convert(document);
+        Response result = XSDToRecord.convert(document);
+        Assert.assertTrue(result.getDiagnostics().isEmpty());
         String expectedValue = Files.readString(expected);
-        Assert.assertEquals(result, expectedValue);
+        Assert.assertEquals(result.getTypes(), expectedValue);
     }
 
     private static Document parseXSD(String xsdData) throws Exception {
@@ -99,10 +100,10 @@ public class XSDToRecordTest {
 
     @org.junit.jupiter.api.Test
     void testXsdSchema() throws Exception {
-       String sourceFile = "16_elements_with_required_fields.xml";
+       String sourceFile = "hyatt.xsd";
        String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
        Document document = parseXSD(xmlFileContent);
-       String result = XSDToRecord.convert(document);
-       System.out.println(result);
+       Response result = XSDToRecord.convert(document);
+       Assert.assertTrue(result.getDiagnostics().isEmpty());
     }
 }

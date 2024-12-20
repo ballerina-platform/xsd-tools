@@ -81,9 +81,15 @@ public final class VisitorUtils {
     public static final String ANY_URI = "anyURI";
     public static final String BALLERINA_XML_DATA_MODULE = "ballerina/data.xmldata";
     public static final String XMLDATA_NAMESPACE = "@xmldata:Namespace";
-    public static final String PREFIX = "prefix";
     public static final String URI = "uri";
     public static final String DURATION = "duration";
+    private static final String INVALID_CHARS_PATTERN = ".*[!@$%^&*()_\\-|/\\\\\\s\\d].*";
+    private static final String DIGIT_PATTERN = ".*\\d.*";
+    private static final String STARTS_WITH_DIGIT_PATTERN = "^\\d.*";
+    private static final String SLASH_PATTERN = "[/\\\\]";
+    private static final String WHITESPACE_PATTERN = "\\s";
+    private static final String SPECIAL_CHARS_PATTERN = "[!@$%^&*()_\\-|]";
+    private static final String UNDERSCORE = "_";
 
     public static String addNamespace(XSDVisitorImpl xsdVisitor, String namespace) {
         xsdVisitor.addImports(BALLERINA_XML_DATA_MODULE);
@@ -209,16 +215,16 @@ public final class VisitorUtils {
     }
 
     public static String sanitizeString(String input) {
-        if (!input.matches(".*[!@$%^&*()_\\-|/\\\\\\s\\d].*")
-                || (input.matches(".*\\d.*") && !input.matches("^\\d.*"))) {
+        if (!input.matches(INVALID_CHARS_PATTERN)
+                || (input.matches(DIGIT_PATTERN) && !input.matches(STARTS_WITH_DIGIT_PATTERN))) {
             return input;
         }
-        if (input.matches("^\\d.*")) {
-            input = "_" + input;
+        if (input.matches(STARTS_WITH_DIGIT_PATTERN)) {
+            input = UNDERSCORE + input;
         }
         String keyPart = input.toLowerCase(Locale.ROOT);
-        for (String s : Arrays.asList("[/\\\\]", "\\s", "[!@$%^&*()_\\-|]")) {
-            keyPart = keyPart.replaceAll(s, "_");
+        for (String s : Arrays.asList(SLASH_PATTERN, WHITESPACE_PATTERN, SPECIAL_CHARS_PATTERN)) {
+            keyPart = keyPart.replaceAll(s, UNDERSCORE);
         }
         return keyPart + " = \"" + input + "\"";
     }
