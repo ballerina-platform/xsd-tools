@@ -47,7 +47,7 @@ import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.VERTICAL_BAR;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.WHITESPACE;
 
 /**
- * This class contains util functions necessary for converting XSD to Ballerina Record types.
+ * This class contains util functions for converting XSD to Ballerina Record types.
  *
  * @since 0.1.0
  */

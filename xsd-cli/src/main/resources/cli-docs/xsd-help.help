@@ -21,5 +21,5 @@ EXAMPLE
        in the same directory where the command is executed.
            $ bal xsd schema.xsd
 
-       Generate types from an XSD schema with a specified relative path of the output file
+       Generate types from an XSD schema with a specified relative path of the output file.
            $ bal xsd schema.xsd -o modules/xsd/records.bal
