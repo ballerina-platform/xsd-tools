@@ -106,8 +106,8 @@ public class XsdCmd implements BLauncherCmd {
             String xmlFileContent = Files.readString(Path.of(argList.get(0)));
             Document document = parseXSD(xmlFileContent);
             Response result = XSDToRecord.convert(document);
-            if (!result.getDiagnostics().isEmpty()) {
-                result.getDiagnostics().forEach(xsdDiagnostic -> outStream.println(xsdDiagnostic.toString()));
+            if (!result.diagnostics().isEmpty()) {
+                result.diagnostics().forEach(xsdDiagnostic -> outStream.println(xsdDiagnostic.toString()));
                 exitOnError();
                 return;
             }
@@ -117,7 +117,7 @@ public class XsdCmd implements BLauncherCmd {
             if (parentDirectory != null && !Files.exists(parentDirectory)) {
                 Files.createDirectories(parentDirectory);
             }
-            Files.writeString(destinationFile, result.getTypes());
+            Files.writeString(destinationFile, result.types());
             outStream.println("Output is successfully written to " + destinationFile);
         } catch (ParserConfigurationException | SAXException e) {
             outStream.println("XSD file contains errors. " + e.getLocalizedMessage());
