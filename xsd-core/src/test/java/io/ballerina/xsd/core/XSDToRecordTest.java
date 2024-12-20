@@ -85,9 +85,9 @@ public class XSDToRecordTest {
         String xmlFileContent = Files.readString(sample);
         Document document = parseXSD(xmlFileContent);
         Response result = XSDToRecord.convert(document);
-        Assert.assertTrue(result.getDiagnostics().isEmpty());
+        Assert.assertTrue(result.diagnostics().isEmpty());
         String expectedValue = Files.readString(expected);
-        Assert.assertEquals(result.getTypes(), expectedValue);
+        Assert.assertEquals(result.types(), expectedValue);
     }
 
     private static Document parseXSD(String xsdData) throws Exception {
@@ -104,6 +104,6 @@ public class XSDToRecordTest {
        String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
        Document document = parseXSD(xmlFileContent);
        Response result = XSDToRecord.convert(document);
-       Assert.assertTrue(result.getDiagnostics().isEmpty());
+       Assert.assertTrue(result.diagnostics().isEmpty());
     }
 }
