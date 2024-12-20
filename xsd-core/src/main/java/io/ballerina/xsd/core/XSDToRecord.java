@@ -21,6 +21,7 @@ package io.ballerina.xsd.core;
 import io.ballerina.compiler.syntax.tree.ModuleMemberDeclarationNode;
 import io.ballerina.compiler.syntax.tree.ModulePartNode;
 import io.ballerina.compiler.syntax.tree.NodeParser;
+import io.ballerina.xsd.core.diagnostic.XsdDiagnostic;
 import io.ballerina.xsd.core.visitor.XSDVisitor;
 import io.ballerina.xsd.core.visitor.XSDVisitorImpl;
 import io.ballerina.xsd.core.component.XSDComponent;
@@ -31,6 +32,7 @@ import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -63,7 +65,7 @@ public final class XSDToRecord {
     public static final String EQUAL = "=";
     public static final String TARGET_NAMESPACE = "targetNamespace";
 
-    public static String convert(Document document) throws Exception {
+    public static Response convert(Document document) throws Exception {
         Element rootElement = document.getDocumentElement();
         if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
             throw new Exception(INVALID_XSD_FORMAT_ERROR);
@@ -73,7 +75,9 @@ public final class XSDToRecord {
         Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
         processNodeList(rootElement, nodes, xsdVisitor);
         ModulePartNode modulePartNode = Utils.generateModulePartNode(nodes, xsdVisitor);
-        return Utils.formatModuleParts(modulePartNode);
+        String generatedTypes = Utils.formatModuleParts(modulePartNode);
+        List<XsdDiagnostic> diagnostics = xsdVisitor.getDiagnostics();
+        return new Response(generatedTypes, diagnostics);
     }
 
     private static void processNodeList(Element rootElement, Map<String, ModuleMemberDeclarationNode> nodes,

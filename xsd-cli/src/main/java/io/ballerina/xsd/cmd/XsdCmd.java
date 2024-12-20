@@ -18,6 +18,7 @@
 
 package io.ballerina.xsd.cmd;
 
+import io.ballerina.xsd.core.Response;
 import io.ballerina.xsd.core.XSDToRecord;
 import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
@@ -104,14 +105,19 @@ public class XsdCmd implements BLauncherCmd {
             }
             String xmlFileContent = Files.readString(Path.of(argList.get(0)));
             Document document = parseXSD(xmlFileContent);
-            String result = XSDToRecord.convert(document);
+            Response result = XSDToRecord.convert(document);
+            if (!result.getDiagnostics().isEmpty()) {
+                result.getDiagnostics().forEach(xsdDiagnostic -> outStream.println(xsdDiagnostic.toString()));
+                exitOnError();
+                return;
+            }
             Path destinationFile = Files.exists(Paths.get(outputPath))
                     ? handleFileOverwrite(Paths.get(outputPath), outStream) : Paths.get(outputPath);
             Path parentDirectory = destinationFile.getParent();
             if (parentDirectory != null && !Files.exists(parentDirectory)) {
                 Files.createDirectories(parentDirectory);
             }
-            Files.writeString(destinationFile, result);
+            Files.writeString(destinationFile, result.getTypes());
             outStream.println("Output is successfully written to " + destinationFile);
         } catch (ParserConfigurationException | SAXException e) {
             outStream.println("XSD file contains errors. " + e.getLocalizedMessage());
