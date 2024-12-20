@@ -118,6 +118,9 @@ public class XSDVisitorImpl implements XSDVisitor {
 
     @Override
     public String visit(Element element) throws Exception {
+        if (element.isSubType()) {
+            return this.visit(element, true);
+        }
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
         builder.append(addNamespace(this, getTargetNamespace()));
@@ -158,6 +161,9 @@ public class XSDVisitorImpl implements XSDVisitor {
 
     @Override
     public String visit(ComplexType element) throws Exception {
+        if (element.isSubType()) {
+            return this.visit(element, true);
+        }
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
         builder.append(addNamespace(this, getTargetNamespace()));

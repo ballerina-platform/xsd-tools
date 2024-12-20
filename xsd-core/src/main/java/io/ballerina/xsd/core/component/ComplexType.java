@@ -42,7 +42,7 @@ public class ComplexType implements XSDComponent {
 
     @Override
     public String accept(XSDVisitor xsdVisitor) throws Exception {
-        return isSubType() ? xsdVisitor.visit(this, true) : xsdVisitor.visit(this);
+        return xsdVisitor.visit(this);
     }
 
     @Override
