@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="Vehicle">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element name="Car">
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:element name="Sedan" type="xs:string"/>
+                            <xs:element name="SUV" type="xs:string"/>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Bike">
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:element name="Mountain" type="xs:string"/>
+                            <xs:element name="Road" type="xs:string"/>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

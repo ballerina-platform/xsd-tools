@@ -1,0 +1,9 @@
+[tool]
+id = "xsd"
+
+[[dependency]]
+path = "lib/xsd-cli-@toml.version@.jar"
+
+[[dependency]]
+path = "lib/xsd-core-@toml.version@.jar"
+
