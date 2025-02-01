@@ -1,8 +1,8 @@
 NAME
-       bal xsd - Generate Ballerina types from a XSD file.
+       bal xsd - Generate Ballerina types from an XSD file.
 
 SYNOPSIS
-       bal xsd <source-file-path> [-o | --output] <destination-file-path>
+       bal xsd <source-file-path> [-m | --module] <output-module-name>
 
 DESCRIPTION
        The 'bal xsd' command is used to generate records for a given XSD file.
@@ -11,15 +11,14 @@ OPTIONS
        <source-file-path>
            Path to the XSD file. This is a mandatory input.
 
-       -o, --output <output path>
-           Location of the generated Ballerina source code. If this path is not
-           specified, the output will be written to the same directory from
-           which the command is run.
+       -m, --module <output-module-name>
+           The name of the module in which the Ballerina client and record types are generated.
 
 EXAMPLE
        Generate types from an XSD schema. The output will be saved to the types.bal file
        in the same directory where the command is executed.
            $ bal xsd schema.xsd
 
-       Generate types from an XSD schema with a specified relative path of the output file.
-           $ bal xsd schema.xsd -o modules/xsd/records.bal
+       Generate types from an XSD schema with a specified relative path of the output file. The output will be saved 
+       to the 'temp' module in the Ballerina project.
+           $ bal xsd schema.xsd --module custom
