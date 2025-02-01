@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'checkstyle'
+    id 'com.github.spotbugs'
 }
 
 group = 'io.ballerina'
@@ -10,6 +12,9 @@ repositories {
 }
 
 dependencies {
+    checkstyle project(':checkstyle')
+    checkstyle "com.puppycrawl.tools:checkstyle:${checkstylePluginVersion}"
+
     implementation group: 'org.ballerinalang', name: 'ballerina-lang', version: "${ballerinaLangVersion}"
     implementation group: 'org.ballerinalang', name: 'ballerina-parser', version: "${ballerinaLangVersion}"
     implementation group: 'org.ballerinalang', name: 'formatter-core', version: "${ballerinaLangVersion}"
@@ -24,4 +29,49 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+
+checkstyle {
+    toolVersion "${project.checkstylePluginVersion}"
+    configFile rootProject.file("build-config/checkstyle/build/checkstyle.xml")
+    configProperties = ["suppressionFile" : file("${rootDir}/build-config/checkstyle/build/suppressions.xml")]
+}
+
+def excludePattern = '**/module-info.java'
+tasks.withType(Checkstyle) {
+    exclude excludePattern
+}
+
+checkstyleMain.dependsOn(":checkstyle:downloadCheckstyleRuleFiles")
+checkstyleTest.dependsOn(":checkstyle:downloadCheckstyleRuleFiles")
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+        ]
+        classpath = files()
+    }
+}
+
+spotbugsMain {
+    def classLoader = plugins["com.github.spotbugs"].class.classLoader
+    def SpotBugsConfidence = classLoader.findLoadedClass("com.github.spotbugs.snom.Confidence")
+    def SpotBugsEffort = classLoader.findLoadedClass("com.github.spotbugs.snom.Effort")
+    effort = SpotBugsEffort.MAX
+    reportLevel = SpotBugsConfidence.LOW
+    reportsDir = file("$project.buildDir/reports/spotbugs")
+    reports {
+        html.enabled true
+        text.enabled = true
+    }
+    def excludeFile = file("${rootDir}/build-config/spotbugs-exclude.xml")
+    if(excludeFile.exists()) {
+        excludeFilter = excludeFile
+    }
+}
+
+spotbugsTest {
+    enabled = false
 }

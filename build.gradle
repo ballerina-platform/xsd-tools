@@ -87,7 +87,7 @@ tasks.register('clean') {
 }
 
 tasks.register('build') {
-     dependsOn(":module-ballerina-xsd:build")
+    dependsOn(":module-ballerina-xsd:build")
 }
 
 tasks.register('test') {
