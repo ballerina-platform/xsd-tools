@@ -40,6 +40,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -60,6 +61,10 @@ public class XsdCmd implements BLauncherCmd {
     private static final String FILE_OVERWRITE_PROMPT = "File already exists at %s. Overwrite? (y/N): ";
     public static final String INVALID_BALLERINA_DIRECTORY_ERROR =
             "Invalid Ballerina package directory: %s, cannot find 'Ballerina.toml' file";
+    public static final String INVALID_DIRECTORY_PATH = "Error: Invalid directory path has been provided. " +
+            "Output path '%s' is a file";
+    public static final String TYPES_FILE_NAME = "types.bal";
+    public static final String SLASH = "/";
     private final PrintStream outStream;
     private final boolean exitWhenFinish;
     @CommandLine.Option(names = {"-h", "--help"}, hidden = true)
@@ -68,9 +73,9 @@ public class XsdCmd implements BLauncherCmd {
     @CommandLine.Parameters(description = "Input file path of the XSD schema")
     private final List<String> argList = new ArrayList<>();
 
-    @CommandLine.Option(names = {"-o", "--output"}, description = "Destination file path of the generated types from " +
-            "the XSD file")
-    private String outputPath = "types.bal";
+    @CommandLine.Option(names = {"-m", "--module"}, description = "The name of the module in which the Ballerina " +
+            "client and record types are generated.")
+    private String outputPath = "";
 
     public XsdCmd() {
         this.outStream = System.err;
@@ -89,6 +94,21 @@ public class XsdCmd implements BLauncherCmd {
         Path commandPath = currentDir.resolve("Ballerina.toml");
         if (!Files.exists(commandPath)) {
             outStream.printf((INVALID_BALLERINA_DIRECTORY_ERROR) + "%n", commandPath);
+            exitOnError();
+            return;
+        }
+        Path outputDirPath = Paths.get(outputPath);
+        if (!Objects.equals(outputPath, EMPTY_STRING)) {
+            Path basePath = Paths.get("modules").toAbsolutePath();
+            outputDirPath = basePath.resolve(outputPath).normalize();
+            if (!outputDirPath.startsWith(basePath)) {
+                System.out.printf("Invalid output path: Path traversal detected in '%s'%n", outputPath);
+                exitOnError();
+                return;
+            }
+        }
+        if (Files.exists(outputDirPath) && !Files.isDirectory(outputDirPath)) {
+            outStream.printf((INVALID_DIRECTORY_PATH) + "%n", outputPath);
             exitOnError();
             return;
         }
@@ -111,8 +131,13 @@ public class XsdCmd implements BLauncherCmd {
                 exitOnError();
                 return;
             }
-            Path destinationFile = Files.exists(Paths.get(outputPath))
-                    ? handleFileOverwrite(Paths.get(outputPath), outStream) : Paths.get(outputPath);
+            Path path;
+            if (outputPath.equals(EMPTY_STRING)) {
+                path = Path.of(TYPES_FILE_NAME);
+            } else {
+                path = outputDirPath.resolve(SLASH).resolve(TYPES_FILE_NAME);
+            }
+            Path destinationFile = Files.exists(path) ? handleFileOverwrite(path, outStream) : path;
             Path parentDirectory = destinationFile.getParent();
             if (parentDirectory != null && !Files.exists(parentDirectory)) {
                 Files.createDirectories(parentDirectory);
