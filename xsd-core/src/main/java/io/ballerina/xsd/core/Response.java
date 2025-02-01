@@ -28,5 +28,7 @@ import java.util.List;
  * @param types       The generated types as a string representation.
  * @param diagnostics A list of {@link XsdDiagnostic} objects containing any diagnostic
  *                    messages related to the XSD processing.
+ * 
+ * @since 0.1.0
  */
 public record Response(String types, List<XsdDiagnostic> diagnostics) { }

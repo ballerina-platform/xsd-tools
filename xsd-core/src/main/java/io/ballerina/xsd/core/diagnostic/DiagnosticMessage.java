@@ -22,6 +22,11 @@ import io.ballerina.tools.diagnostics.DiagnosticSeverity;
 
 import java.util.Objects;
 
+/**
+ * Represents an error diagnostic message with a unique code, description, severity, and arguments.
+ *
+ * @since 1.0.0
+ */
 public class DiagnosticMessage {
     private final String code;
     private final String description;
