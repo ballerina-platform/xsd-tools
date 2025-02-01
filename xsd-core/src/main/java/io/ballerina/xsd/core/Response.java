@@ -29,4 +29,4 @@ import java.util.List;
  * @param diagnostics A list of {@link XsdDiagnostic} objects containing any diagnostic
  *                    messages related to the XSD processing.
  */
-public record Response(String types, List<XsdDiagnostic> diagnostics) {}
+public record Response(String types, List<XsdDiagnostic> diagnostics) { }
