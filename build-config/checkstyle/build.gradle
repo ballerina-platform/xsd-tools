@@ -14,6 +14,8 @@
  * limitations under the License.
  *
  */
+import groovy.xml.XmlParser
+import groovy.xml.XmlUtil
 
 plugins {
     id "de.undercouch.download"
@@ -21,6 +23,7 @@ plugins {
 
 apply plugin: 'java'
 
+// Task to download the Checkstyle rule files
 task downloadCheckstyleRuleFiles(type: Download) {
     src([
             'https://raw.githubusercontent.com/wso2/code-quality-tools/v1.4/checkstyle/jdk-17/checkstyle.xml',
@@ -31,16 +34,41 @@ task downloadCheckstyleRuleFiles(type: Download) {
     dest buildDir
 }
 
+// Task to remove <module name="StaticVariableName">
+task modifyCheckstyleConfig {
+    dependsOn downloadCheckstyleRuleFiles
+//    doLast {
+//        File checkstyleFile = file("$project.buildDir/checkstyle.xml")
+//        if (checkstyleFile.exists()) {
+//            // Parse the checkstyle.xml file
+//            def xml = new XmlParser().parse(checkstyleFile)
+//
+//            // Find and remove <module name="StaticVariableName">
+//            xml.module.findAll { it.'@name' == 'StaticVariableName' }.each { staticVariableModule ->
+//                xml.remove(staticVariableModule)
+//            }
+//
+//            // Write the updated XML back to the file
+//            checkstyleFile.text = XmlUtil.serialize(xml)
+//        } else {
+//            throw new GradleException("Checkstyle file not found at $checkstyleFile")
+//        }
+//    }
+}
+
+// Disable jar task
 jar {
     enabled = false
 }
 
+// Disable clean task
 clean {
     enabled = false
 }
 
+// Add modified checkstyle.xml and suppressions.xml as artifacts
 artifacts.add('default', file("$project.buildDir/checkstyle.xml")) {
-    builtBy('downloadCheckstyleRuleFiles')
+    builtBy('modifyCheckstyleConfig')
 }
 
 artifacts.add('default', file("$project.buildDir/suppressions.xml")) {
