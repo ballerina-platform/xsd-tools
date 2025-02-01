@@ -118,7 +118,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     private final Map<String, String> nestedElements = new LinkedHashMap<>();
     private final Map<String, ArrayList<String>> enumerationElements = new LinkedHashMap<>();
     private final List<XsdDiagnostic> diagnostics = new ArrayList<>();
-    public String targetNamespace;
+    private String targetNamespace;
 
     public XSDVisitorImpl() {}
 
