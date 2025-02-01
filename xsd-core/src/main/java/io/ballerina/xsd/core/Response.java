@@ -22,6 +22,11 @@ import io.ballerina.xsd.core.diagnostic.XsdDiagnostic;
 
 import java.util.List;
 
-public record Response(String types, List<XsdDiagnostic> diagnostics) {
-    
-}
+/**
+ * Represents a response that contains the generated types and associated diagnostics.
+ *
+ * @param types       The generated types as a string representation.
+ * @param diagnostics A list of {@link XsdDiagnostic} objects containing any diagnostic
+ *                    messages related to the XSD processing.
+ */
+public record Response(String types, List<XsdDiagnostic> diagnostics) {}
