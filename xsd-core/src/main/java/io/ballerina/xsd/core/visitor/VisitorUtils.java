@@ -117,7 +117,7 @@ public final class VisitorUtils {
         StringBuilder builder = new StringBuilder().append(WHITESPACE).append(EQUAL).append(WHITESPACE);
         switch (type) {
             case INT -> builder.append(value);
-            case STRING -> builder.append(QUOTATION_MARK).append(value).append(QUOTATION_MARK);
+            default -> builder.append(QUOTATION_MARK).append(value).append(QUOTATION_MARK);
         }
         return builder.toString();
     }
@@ -147,15 +147,12 @@ public final class VisitorUtils {
         }
     }
 
-    public static void handleFixedValues(StringBuilder builder, Node typeNode, Node fixedNode) {
-        builder.append(fixedNode != null
-                ? generateFixedValue(deriveType(typeNode), fixedNode.getNodeValue())
-                : deriveType(typeNode)).append(WHITESPACE);
-    }
-
     public static String deriveType(Node node) {
-        String derivedType = node.getNodeValue().contains(COLON) ?
-                node.getNodeValue().substring(node.getNodeValue().indexOf(COLON) + 1) : node.getNodeValue();
+        String derivedType = (node != null)
+                ? node.getNodeValue().contains(COLON)
+                        ? node.getNodeValue().substring(node.getNodeValue().indexOf(COLON) + 1)
+                        : node.getNodeValue()
+                : STRING;
         return typeGenerator(derivedType);
     }
 

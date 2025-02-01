@@ -38,7 +38,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.CLOSE_BRACES;
-import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.CONTENT_FIELD;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.RECORD_WITH_OPEN_BRACE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.SEMICOLON;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.STRING;
@@ -65,29 +64,29 @@ public class Utils {
     }
 
     static void processRecordTypeElements(Map<String, ModuleMemberDeclarationNode> nodes,
-                                          String element, String type) {
+                                          String element, String type, String contentField) {
         String fields = extractSubstring(nodes.get(type).toString(), RECORD_WITH_OPEN_BRACE,
-                               VERTICAL_BAR + CLOSE_BRACES + SEMICOLON);
+                               VERTICAL_BAR + CLOSE_BRACES + SEMICOLON, contentField);
         String extendedValue = nodes.get(element)
-                .toString().replace(type + WHITESPACE + CONTENT_FIELD + SEMICOLON, fields);
+                .toString().replace(type + WHITESPACE + contentField + SEMICOLON, fields);
         ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
         nodes.put(element, moduleNode);
     }
 
     static void processSingleTypeElements(Map<String, ModuleMemberDeclarationNode> nodes,
-                                          String element, String type, String[] tokens) {
+                                          String element, String type, String[] tokens, String contentField) {
         String token = (!nodes.containsKey(type)) || nodes.get(type).toString().contains(XSDVisitorImpl.ENUM)
                 ? STRING : tokens[tokens.length - 2];
-        String rootElement = nodes.get(element).toString().replace(type + WHITESPACE + CONTENT_FIELD,
-                token + WHITESPACE + CONTENT_FIELD);
+        String rootElement = nodes.get(element).toString().replace(type + WHITESPACE + contentField,
+                token + WHITESPACE + contentField);
         ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(rootElement);
         nodes.put(element, moduleNode);
     }
 
-    static String extractSubstring(String baseString, String startToken, String endToken) {
+    static String extractSubstring(String baseString, String startToken, String endToken, String contentField) {
         if (!baseString.contains(startToken)) {
             return baseString.split(WHITESPACE)[baseString.split(WHITESPACE).length - 2] +
-                    WHITESPACE + CONTENT_FIELD + SEMICOLON;
+                    WHITESPACE + contentField + SEMICOLON;
         }
         int startIndex = baseString.indexOf(startToken) + startToken.length();
         int endIndex = baseString.indexOf(endToken, startIndex);
