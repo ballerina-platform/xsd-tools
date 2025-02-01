@@ -28,6 +28,11 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents an error diagnostic message specific to XSD processing.
+ *
+ * @since 1.0.0
+ */
 public class XsdDiagnostic extends Diagnostic {
     private final DiagnosticInfo diagnosticInfo;
     private final Location location;
