@@ -23,8 +23,8 @@ import io.ballerina.xsd.core.Utils;
 import io.ballerina.xsd.core.XSDFactory;
 import io.ballerina.xsd.core.component.ComplexType;
 import io.ballerina.xsd.core.component.Element;
-import io.ballerina.xsd.core.component.XSDComponent;
 import io.ballerina.xsd.core.component.SimpleType;
+import io.ballerina.xsd.core.component.XSDComponent;
 import io.ballerina.xsd.core.diagnostic.DiagnosticMessage;
 import io.ballerina.xsd.core.diagnostic.XsdDiagnostic;
 import org.w3c.dom.Node;
@@ -59,7 +59,6 @@ import static io.ballerina.xsd.core.visitor.VisitorUtils.typeGenerator;
 public class XSDVisitorImpl implements XSDVisitor {
     public static final String PUBLIC = "public";
     public static final String WHITESPACE = " ";
-    public static final String CONTENT_FIELD = "\\#content";
     public static final String SEMICOLON = ";";
     public static final String RECORD = "record";
     public static final String TYPE = "type";
@@ -77,6 +76,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String SEQUENCE = "sequence";
     public static final String CHOICE = "choice";
     public static final String ATTRIBUTE = "attribute";
+    public static final String ALL = "all";
     public static final String COMPLEX_CONTENT = "complexContent";
     public static final String SIMPLE_CONTENT = "simpleContent";
     public static final String EXTENSION = "extension";
@@ -106,6 +106,10 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String XMLDATA_SEQUENCE = "@xmldata:Sequence";
     public static final String SEQUENCE_NAME = "SequenceGroup";
     public static final String XMLDATA_ORDER = "@xmldata:SequenceOrder";
+    public static final String RESTRICTION = "restriction";
+    public static final String CONTENT_FIELD = "\\#content";
+    public static final String LIST = "list";
+    public static final String ITEM_TYPE = "itemType";
 
     private final ArrayList<String> imports = new ArrayList<>();
     private final Map<String, String> extensions = new LinkedHashMap<>();
@@ -113,8 +117,10 @@ public class XSDVisitorImpl implements XSDVisitor {
     private final Map<String, String> nameResolvers = new LinkedHashMap<>();
     private final Map<String, String> nestedElements = new LinkedHashMap<>();
     private final Map<String, ArrayList<String>> enumerationElements = new LinkedHashMap<>();
-    private List<XsdDiagnostic> diagnostics = new ArrayList<>();
+    private final List<XsdDiagnostic> diagnostics = new ArrayList<>();
     public String targetNamespace;
+
+    public XSDVisitorImpl() {}
 
     @Override
     public String visit(Element element) throws Exception {
@@ -142,18 +148,14 @@ public class XSDVisitorImpl implements XSDVisitor {
         } catch (Exception e) {
             diagnostics.add(DiagnosticMessage.xsdToBallerinaError101(e, null));
         }
-        if (nameNode == null && typeNode == null) {
+        if (nameNode == null || typeNode == null) {
             builder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD);
         } else {
             handleFixedValues(node, builder, typeNode);
             handleMaxOccurrences(node, builder);
-            if (nameNode == null) {
-                diagnostics.add(DiagnosticMessage.xsdToBallerinaError102(NAME, null));
-            } else {
-                builder.append(nameNode.getNodeValue());
-                handleMinOccurrences(element, builder);
-                handleDefaultValues(node, builder, typeNode);
-            }
+            builder.append(nameNode.getNodeValue());
+            handleMinOccurrences(element, builder);
+            handleDefaultValues(node, builder, typeNode);
         }
         builder.append(SEMICOLON);
         return builder.toString();
@@ -188,7 +190,8 @@ public class XSDVisitorImpl implements XSDVisitor {
                 case SEQUENCE -> builder.append(visitSequence(childNode, false));
                 case CHOICE -> builder.append(visitChoice(childNode));
                 case ATTRIBUTE -> builder.append(visitAttribute(childNode));
-                case COMPLEX_CONTENT, SIMPLE_CONTENT -> builder.append(visitComplexContent(childNode));
+                case ALL -> builder.append(visitAllContent(childNode, false));
+                default -> builder.append(visitComplexContent(childNode));
             }
         }
         builder.append(VERTICAL_BAR).append(CLOSE_BRACES).append(SEMICOLON);
@@ -260,7 +263,13 @@ public class XSDVisitorImpl implements XSDVisitor {
         Node typeNode = attribute.getAttributes().getNamedItem(TYPE);
         builder.append(ATTRIBUTE_ANNOTATION).append(WHITESPACE);
         Node fixedNode = attribute.getAttributes().getNamedItem(FIXED);
-        handleFixedValues(builder, typeNode, fixedNode);
+        if (fixedNode != null) {
+            builder.append(generateFixedValue(deriveType(typeNode), fixedNode.getNodeValue())).append(WHITESPACE);
+        } else if (attribute.hasChildNodes()) {
+            builder.append(visitAttributeChildNodes(attribute.getChildNodes(), builder)).append(WHITESPACE);
+        } else {
+            builder.append(deriveType(typeNode)).append(WHITESPACE);
+        }
         builder.append(nameNode.getNodeValue());
         Node attributeType = attribute.getAttributes().getNamedItem(USE);
         if (attributeType != null && !attributeType.getNodeValue().equals(REQUIRED)) {
@@ -274,6 +283,29 @@ public class XSDVisitorImpl implements XSDVisitor {
         return builder.toString();
     }
 
+    public String visitAttributeChildNodes(NodeList childNodes, StringBuilder builder) {
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            if (childNodes.item(i).getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            Node childNode = childNodes.item(i);
+            if (childNode.getLocalName().equals(SIMPLE_TYPE)) {
+                for (Node simpleTypeNode : asIterable(childNode.getChildNodes())) {
+                    if (simpleTypeNode.getNodeType() != Node.ELEMENT_NODE) {
+                        continue;
+                    }
+                    if (simpleTypeNode.getLocalName().equals(RESTRICTION)) {
+                        return deriveType(simpleTypeNode.getAttributes().getNamedItem(BASE));
+                    } else if (simpleTypeNode.getLocalName().equals(LIST)) {
+                        return deriveType(simpleTypeNode.getAttributes().getNamedItem(ITEM_TYPE));
+                    }
+                    return STRING;
+                }
+            }
+        }
+        return STRING;
+    }
+
     public String visitComplexContent(Node node) throws Exception {
         StringBuilder builder = new StringBuilder();
         NodeList childNodes = node.getChildNodes();
@@ -281,8 +313,11 @@ public class XSDVisitorImpl implements XSDVisitor {
             if (childNode.getNodeType() == Node.ELEMENT_NODE && EXTENSION.equals(childNode.getLocalName())) {
                 String base = deriveType(childNode.getAttributes().getNamedItem(BASE));
                 builder.append(visitExtension(childNode));
-                String parentNodeName = deriveType(node.getParentNode().getAttributes().getNamedItem(NAME));
-                extensions.put(parentNodeName, base);
+                Node nameNode = node.getParentNode().getAttributes().getNamedItem(NAME);
+                if (nameNode != null) {
+                    String parentNodeName = deriveType(node.getParentNode().getAttributes().getNamedItem(NAME));
+                    extensions.put(parentNodeName, base);
+                }
             }
         }
         return builder.toString();
@@ -299,7 +334,8 @@ public class XSDVisitorImpl implements XSDVisitor {
                     case SEQUENCE -> builder.append(visitSequence(childNode, false));
                     case CHOICE -> builder.append(visitChoice(childNode));
                     case ATTRIBUTE -> builder.append(visitAttribute(childNode));
-                    case COMPLEX_CONTENT, SIMPLE_CONTENT -> builder.append(visitComplexContent(childNode));
+                    case ALL -> builder.append(visitAllContent(childNode, false));
+                    default -> builder.append(visitComplexContent(childNode));
                 }
             }
         }
@@ -343,6 +379,13 @@ public class XSDVisitorImpl implements XSDVisitor {
         return builder.toString();
     }
 
+    public String visitAllContent(Node node, boolean isOptional) throws Exception {
+        NodeList childNodes = node.getChildNodes();
+        StringBuilder childNodeBuilder = new StringBuilder();
+        processAllChildNodes(isOptional, childNodes, childNodeBuilder);
+        return childNodeBuilder.toString();
+    }
+
     private String handleElementsWithChildNodes(Node node, StringBuilder builder) throws Exception {
         Node nameNode = node.getAttributes().getNamedItem(NAME);
         Node typeNode = node.getAttributes().getNamedItem(TYPE);
@@ -379,7 +422,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         StringBuilder builder = new StringBuilder();
         switch (type) {
             case INT -> builder.append(value).append(WHITESPACE);
-            case STRING -> builder.append(QUOTATION_MARK).append(value).append(QUOTATION_MARK).append(WHITESPACE);
+            default -> builder.append(QUOTATION_MARK).append(value).append(QUOTATION_MARK).append(WHITESPACE);
         }
         return builder.toString();
     }
@@ -418,7 +461,8 @@ public class XSDVisitorImpl implements XSDVisitor {
             case SEQUENCE -> builder.append(visitSequence(childNode, false));
             case CHOICE -> builder.append(visitChoice(childNode));
             case ATTRIBUTE -> builder.append(visitAttribute(childNode));
-            case COMPLEX_CONTENT, SIMPLE_CONTENT -> builder.append(visitComplexContent(childNode));
+            case ALL -> builder.append(visitAllContent(childNode, false));
+            default -> builder.append(visitComplexContent(childNode));
         }
     }
 
@@ -484,6 +528,20 @@ public class XSDVisitorImpl implements XSDVisitor {
             stringBuilder.append(orderAnnotation);
             stringBuilder.append(component.get().accept(this));
             order++;
+        }
+    }
+
+    private void processAllChildNodes(boolean isOptional, NodeList childNodes,
+                                      StringBuilder stringBuilder) throws Exception {
+        for (Node childNode : asIterable(childNodes)) {
+            Optional<XSDComponent> component = XSDFactory.generateComponents(childNode);
+            if (component.isEmpty()) {
+                continue;
+            }
+            component.get().setSubType(true);
+            component.get().setOptional(isOptional);
+            stringBuilder.append(addNamespace(this, getTargetNamespace()));
+            stringBuilder.append(component.get().accept(this));
         }
     }
 
