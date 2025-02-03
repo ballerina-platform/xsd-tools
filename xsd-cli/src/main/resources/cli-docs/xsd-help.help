@@ -20,5 +20,5 @@ EXAMPLE
            $ bal xsd schema.xsd
 
        Generate types from an XSD schema with a specified relative path of the output file. The output will be saved 
-       to the 'temp' module in the Ballerina project.
+       to the 'custom' submodule in the Ballerina project.
            $ bal xsd schema.xsd --module custom
