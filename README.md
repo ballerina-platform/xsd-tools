@@ -7,39 +7,82 @@
 
 `XSD` (XML Schema Definition) is an approach to define the structure, elements, and constraints of XML documents. It is widely used for validating the content and structure of XML files.
 
-The Ballerina XSD Tool simplifies the process of generating Ballerina record types from an XSD specification. These generated types helps to integrate with XML-based operations in Ballerina.
+The Ballerina XSD Tool simplifies the generation of Ballerina record types from an XSD specification, improving the user experience when integrating with XML-based operations in Ballerina.
 
-### Command Syntax
+### Installation
 
-The `xsd` command in Ballerina is used for XSD to Ballerina code generation.  
-
-```bash
-bal xsd <xsd-file-path> [--module <output-module-name>]
-```
-
-#### Command Options  
-
-| Option | Description |
-|--------|-------------|
-| `<xsd-file-path>` | (Required) The path to the XSD file |
-| `-m`, `--module`   | The name of the module in which the Ballerina record types are generated |
-
-### Examples
-
-#### 1. Generate types for the given XSD file
-
-This command generates Ballerina record types for all the elements defined in the specified XSD file. The generated files will be placed in the current Ballerina project.
+Execute the command below to pull the XSD tool from Ballerina Central.
 
 ```bash
-bal xsd <source-file-path>
+$ bal tool pull xsd
 ```
 
-#### 2. Generate types in a specific module
+### Usage
+
+The XSD tool allows you to generate Ballerina record types from an XSD specification.
+
+To generate Ballerina types, use the following command. It is mandatory to run the command inside a Ballerina project.
+
+```bash
+$ bal xsd <xsd-file-path> 
+          [--module <output-module-name>]
+```
+
+#### Command options  
+
+| Option | Description | Mandatory/Optional |
+|--------|-------------|--------------------|
+| `<xsd-file-path>` | (Required) The path to the XSD file | Mandatory |
+| `-m`, `--module`   | The name of the module in which the Ballerina record types are generated | Optional |
+
+### Generate types for the given XSD file
+
+Use the following command to generate Ballerina record types for all elements defined in the specified XSD file. By default, the generated `types.bal` file will be placed in the default module of the current Ballerina project.
+
+```bash
+$ bal xsd <source-file-path>
+```
+
+For example,
+
+```bash
+$ bal xsd sample.xsd
+```
+
+If successful, you will see the following output.
+
+```bash
+The 'types.bal' file is written to the default module
+```
+
+#### Generate types in a specific module
 
 To generate the Ballerina record types in a specific module, use the `--module` option.
 
 ```bash
-bal xsd <source-file-path> --module custom 
+$ bal xsd <source-file-path> --module <output-module-name>
+```
+
+For example,
+
+```bash
+$ bal xsd sample.xsd --module custom
+```
+
+This will generate a `types.bal` file inside the `custom` submodule within the Ballerina project.
+
+The following output will be displayed.
+
+```bash
+The 'types.bal' file is written to 'modules/custom'
+```
+
+Upon successful execution, the generated files will include,
+
+```bash
+modules/
+└── custom/
+        └── types.bal
 ```
 
 ## Building from the Source
