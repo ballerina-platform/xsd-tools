@@ -100,10 +100,10 @@ public class XSDToRecordTest {
 
     @org.junit.jupiter.api.Test
     void testXsdSchema() throws Exception {
-       String sourceFile = "hyatt.xsd";
-       String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
-       Document document = parseXSD(xmlFileContent);
-       Response result = XSDToRecord.convert(document);
-       Assert.assertTrue(result.diagnostics().isEmpty());
+        String sourceFile = "10_complex_type_with_extensions.xml";
+        String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
+        Document document = parseXSD(xmlFileContent);
+        Response result = XSDToRecord.convert(document);
+        Assert.assertTrue(result.diagnostics().isEmpty());
     }
 }

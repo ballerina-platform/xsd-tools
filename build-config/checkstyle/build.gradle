@@ -14,6 +14,8 @@
  * limitations under the License.
  *
  */
+import groovy.xml.XmlParser
+import groovy.xml.XmlUtil
 
 plugins {
     id "de.undercouch.download"
@@ -21,6 +23,7 @@ plugins {
 
 apply plugin: 'java'
 
+// Task to download the Checkstyle rule files
 task downloadCheckstyleRuleFiles(type: Download) {
     src([
             'https://raw.githubusercontent.com/wso2/code-quality-tools/v1.4/checkstyle/jdk-17/checkstyle.xml',
@@ -31,14 +34,17 @@ task downloadCheckstyleRuleFiles(type: Download) {
     dest buildDir
 }
 
+// Disable jar task
 jar {
     enabled = false
 }
 
+// Disable clean task
 clean {
     enabled = false
 }
 
+// Add modified checkstyle.xml and suppressions.xml as artifacts
 artifacts.add('default', file("$project.buildDir/checkstyle.xml")) {
     builtBy('downloadCheckstyleRuleFiles')
 }
