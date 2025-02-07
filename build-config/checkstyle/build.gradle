@@ -34,28 +34,6 @@ task downloadCheckstyleRuleFiles(type: Download) {
     dest buildDir
 }
 
-// Task to remove <module name="StaticVariableName">
-task modifyCheckstyleConfig {
-    dependsOn downloadCheckstyleRuleFiles
-//    doLast {
-//        File checkstyleFile = file("$project.buildDir/checkstyle.xml")
-//        if (checkstyleFile.exists()) {
-//            // Parse the checkstyle.xml file
-//            def xml = new XmlParser().parse(checkstyleFile)
-//
-//            // Find and remove <module name="StaticVariableName">
-//            xml.module.findAll { it.'@name' == 'StaticVariableName' }.each { staticVariableModule ->
-//                xml.remove(staticVariableModule)
-//            }
-//
-//            // Write the updated XML back to the file
-//            checkstyleFile.text = XmlUtil.serialize(xml)
-//        } else {
-//            throw new GradleException("Checkstyle file not found at $checkstyleFile")
-//        }
-//    }
-}
-
 // Disable jar task
 jar {
     enabled = false
