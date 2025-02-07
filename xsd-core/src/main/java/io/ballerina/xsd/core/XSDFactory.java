@@ -20,8 +20,8 @@ package io.ballerina.xsd.core;
 
 import io.ballerina.xsd.core.component.ComplexType;
 import io.ballerina.xsd.core.component.Element;
-import io.ballerina.xsd.core.component.XSDComponent;
 import io.ballerina.xsd.core.component.SimpleType;
+import io.ballerina.xsd.core.component.XSDComponent;
 import org.w3c.dom.Node;
 
 import java.util.Optional;
