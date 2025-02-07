@@ -46,7 +46,7 @@ clean {
 
 // Add modified checkstyle.xml and suppressions.xml as artifacts
 artifacts.add('default', file("$project.buildDir/checkstyle.xml")) {
-    builtBy('modifyCheckstyleConfig')
+    builtBy('downloadCheckstyleRuleFiles')
 }
 
 artifacts.add('default', file("$project.buildDir/suppressions.xml")) {
