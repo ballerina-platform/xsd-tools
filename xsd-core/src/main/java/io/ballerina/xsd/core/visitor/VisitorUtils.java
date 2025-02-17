@@ -83,13 +83,13 @@ public final class VisitorUtils {
     public static final String XMLDATA_NAMESPACE = "@xmldata:Namespace";
     public static final String URI = "uri";
     public static final String DURATION = "duration";
+    public static final String UNDERSCORE = "_";
     private static final String INVALID_CHARS_PATTERN = ".*[!@$%^&*()_\\-|/\\\\\\s\\d].*";
     private static final String DIGIT_PATTERN = ".*\\d.*";
     private static final String STARTS_WITH_DIGIT_PATTERN = "^\\d.*";
     private static final String SLASH_PATTERN = "[/\\\\]";
     private static final String WHITESPACE_PATTERN = "\\s";
     private static final String SPECIAL_CHARS_PATTERN = "[!@$%^&*()_\\-|]";
-    private static final String UNDERSCORE = "_";
 
     public static String addNamespace(XSDVisitorImpl xsdVisitor, String namespace) {
         xsdVisitor.addImports(BALLERINA_XML_DATA_MODULE);
