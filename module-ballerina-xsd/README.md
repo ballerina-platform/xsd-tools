@@ -1,4 +1,4 @@
-## Overview
+## Package Overview
 
 `XSD` (XML Schema Definition) is an approach to define the structure, elements, and constraints of XML documents. It is widely used for validating the content and structure of XML files.
 
@@ -9,7 +9,7 @@ The Ballerina XSD Tool simplifies the generation of Ballerina record types from 
 Execute the command below to pull the XSD tool from Ballerina Central.
 
 ```bash
-$ bal tool pull xsd
+$ bal tool pull xsd:1.0.0
 ```
 
 ### Usage
@@ -44,10 +44,16 @@ For example,
 $ bal xsd sample.xsd
 ```
 
-If successful, you will see the following output.
+If the execution is successful, the following output will be displayed.
 
 ```bash
 The 'types.bal' file is written to the default module
+```
+
+The generated files will include,
+
+```bash
+types.bal
 ```
 
 #### Generate types in a specific module
@@ -66,13 +72,13 @@ $ bal xsd sample.xsd --module custom
 
 This will generate a `types.bal` file inside the `custom` submodule within the Ballerina project.
 
-The following output will be displayed.
+Upon successful execution, the following output will be displayed.
 
 ```bash
 The 'types.bal' file is written to 'modules/custom'
 ```
 
-Upon successful execution, the generated files will include,
+The generated files will include,
 
 ```bash
 modules/

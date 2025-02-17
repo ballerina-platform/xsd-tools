@@ -75,3 +75,27 @@ spotbugsMain {
 spotbugsTest {
     enabled = false
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId "io.ballerina"
+            artifactId "xsd-core"
+            version = project.version
+            artifact jar
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ballerina-platform/xsd-tools")
+            credentials {
+                username = System.getenv("packageUser")
+                password = System.getenv("packagePAT")
+            }
+        }
+    }
+}
+
+publish.dependsOn build
