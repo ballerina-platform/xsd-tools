@@ -2,8 +2,8 @@
 id = "xsd"
 
 [[dependency]]
-path = "lib/xsd-cli-@project.version@.jar"
+path = "../xsd-core/build/libs/xsd-cli-@project.version@.jar"
 
 [[dependency]]
-path = "lib/xsd-core-@project.version@.jar"
+path = "../xsd-core/build/libs/xsd-core-@project.version@.jar"
 
