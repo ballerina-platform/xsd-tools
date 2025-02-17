@@ -9,7 +9,7 @@ The Ballerina XSD Tool simplifies the generation of Ballerina record types from 
 Execute the command below to pull the XSD tool from Ballerina Central.
 
 ```bash
-$ bal tool pull xsd:1.0.1
+$ bal tool pull xsd:1.0.2
 ```
 
 ### Usage
