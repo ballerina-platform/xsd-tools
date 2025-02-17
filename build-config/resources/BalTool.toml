@@ -1,0 +1,9 @@
+[tool]
+id = "xsd"
+
+[[dependency]]
+path = "lib/xsd-cli-@project.version@.jar"
+
+[[dependency]]
+path = "lib/xsd-core-@project.version@.jar"
+
