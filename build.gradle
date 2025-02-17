@@ -66,6 +66,33 @@ allprojects {
     }
 }
 
+subprojects {
+    configurations {
+        ballerinaStdLibs
+        jbalTools
+    }
+
+    dependencies {
+        /* JBallerina Tools */
+        jbalTools("org.ballerinalang:jballerina-tools:${ballerinaLangVersion}") {
+            transitive = false
+        }
+    }
+}
+
+tasks.register('build') {
+    dependsOn(":module-ballerina-xsd:build")
+}
+
+tasks.register('clean') {
+    dependsOn(":module-ballerina-xsd:clean")
+}
+
+tasks.register('test') {
+    dependsOn(":module-ballerina-xsd:test")
+    dependsOn(":xsd-core:test")
+}
+
 def moduleVersion = project.version.replace("-SNAPSHOT", "")
 
 release {
@@ -80,19 +107,6 @@ release {
         requireBranch = "release-${moduleVersion}"
         pushToRemote = 'origin'
     }
-}
-
-tasks.register('clean') {
-    dependsOn(":module-ballerina-xsd:clean")
-}
-
-tasks.register('build') {
-    dependsOn(":module-ballerina-xsd:build")
-}
-
-tasks.register('test') {
-    dependsOn(":module-ballerina-xsd:test")
-    dependsOn(":xsd-core:test")
 }
 
 publishToMavenLocal.dependsOn build

@@ -16,6 +16,26 @@
  *  under the License.
  */
 
+pluginManagement {
+    plugins {
+        id "com.github.spotbugs" version "${spotbugsPluginVersion}"
+        id "net.researchgate.release" version "${releasePluginVersion}"
+        id "de.undercouch.download" version "${downloadPluginVersion}"
+        id "io.ballerina.plugin" version "${ballerinaGradlePluginVersion}"
+    }
+
+    repositories {
+        gradlePluginPortal()
+        maven {
+            url = 'https://maven.pkg.github.com/ballerina-platform/*'
+            credentials {
+                username System.getenv("packageUser")
+                password System.getenv("packagePAT")
+            }
+        }
+    }
+}
+
 plugins {
     id "com.gradle.enterprise" version "3.13.2"
 }
@@ -23,12 +43,12 @@ plugins {
 rootProject.name = 'xsd-tools'
 
 include ':checkstyle'
- include ':module-ballerina-xsd'
+include ':module-ballerina-xsd'
 include ':xsd-cli'
 include ':xsd-core'
 
 project(':checkstyle').projectDir = file("build-config${File.separator}checkstyle")
- project(':module-ballerina-xsd').projectDir = file('module-ballerina-xsd')
+project(':module-ballerina-xsd').projectDir = file('module-ballerina-xsd')
 project(':xsd-cli').projectDir = file('xsd-cli')
 project(':xsd-core').projectDir = file('xsd-core')
 
@@ -38,8 +58,3 @@ gradleEnterprise {
         termsOfServiceAgree = 'yes'
     }
 }
-
-include 'xsd-cli:cmd'
-include 'xsd-cli'
-include 'xsd-core'
-include 'module-ballerina-xsd'
