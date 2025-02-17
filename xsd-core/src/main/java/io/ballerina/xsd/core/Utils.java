@@ -55,7 +55,7 @@ public class Utils {
     private Utils() {
     }
 
-    static ModulePartNode generateModulePartNode(Map<String, ModuleMemberDeclarationNode> nodes,
+    public static ModulePartNode generateModulePartNode(Map<String, ModuleMemberDeclarationNode> nodes,
                                                  XSDVisitor xsdVisitor) throws Exception {
         NodeList<ModuleMemberDeclarationNode> moduleMembers = AbstractNodeFactory.createNodeList(nodes.values());
         NodeList<ImportDeclarationNode> imports = getImportDeclarations(xsdVisitor);

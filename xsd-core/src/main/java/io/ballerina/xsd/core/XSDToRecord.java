@@ -91,7 +91,7 @@ public final class XSDToRecord {
         processEnumerations(nodes, xsdVisitor.getEnumerationElements());
     }
 
-    private static void generateNodes(Element rootElement, Map<String, ModuleMemberDeclarationNode> nodes,
+    public static void generateNodes(Element rootElement, Map<String, ModuleMemberDeclarationNode> nodes,
                                       XSDVisitor xsdVisitor) throws Exception {
         for (Node childNode : VisitorUtils.asIterable(rootElement.getChildNodes())) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
@@ -112,7 +112,7 @@ public final class XSDToRecord {
         }
     }
 
-    private static void processRootElements(Map<String, ModuleMemberDeclarationNode> nodes,
+    public static void processRootElements(Map<String, ModuleMemberDeclarationNode> nodes,
                                             Map<String, String> rootElements) {
         for (Map.Entry<String, String> entry : rootElements.entrySet()) {
             String element = entry.getKey();
@@ -126,7 +126,7 @@ public final class XSDToRecord {
         }
     }
 
-    private static void processNestedElements(Map<String, ModuleMemberDeclarationNode> nodes,
+    public static void processNestedElements(Map<String, ModuleMemberDeclarationNode> nodes,
                                               Map<String, String> nestedElements) {
         for (Map.Entry<String, String> entry : nestedElements.entrySet()) {
             String element = entry.getKey();
@@ -136,7 +136,7 @@ public final class XSDToRecord {
         }
     }
 
-    private static void processNameResolvers(Map<String, ModuleMemberDeclarationNode> nodes,
+    public static void processNameResolvers(Map<String, ModuleMemberDeclarationNode> nodes,
                                              Map<String, String> nameResolvers) {
         for (Map.Entry<String, String> entry : nameResolvers.entrySet()) {
             String element = entry.getKey();
@@ -148,7 +148,7 @@ public final class XSDToRecord {
         }
     }
 
-    private static void processExtensions(Map<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
+    public static void processExtensions(Map<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
         Map<String, String> extensions = xsdVisitor.getExtensions();
         for (Map.Entry<String, String> entry : extensions.entrySet()) {
             String key = entry.getKey();
