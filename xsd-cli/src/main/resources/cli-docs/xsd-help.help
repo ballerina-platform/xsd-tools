@@ -5,7 +5,7 @@ SYNOPSIS
        bal xsd <source-path> [-m | --module] <output-module-name>
 
 DESCRIPTION
-       The 'bal xsd' command is used to generate records for a given XSD file.
+       The 'bal xsd' command is used to generate records for given XSD files.
 
 OPTIONS
        <source-path>
