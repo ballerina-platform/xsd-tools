@@ -22,6 +22,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testng.Assert;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -71,7 +73,10 @@ public class XSDToRecordTest {
             new Object[] {"29_element_with_same_type_name.xsd", "29_element_with_same_type_name.bal"},
             new Object[] {"30_complex_type_with_nested_choices.xsd", "30_complex_type_with_nested_choices.bal"},
             new Object[] {"31_elements_with_choice.xsd", "31_elements_with_choice.bal"},
-            new Object[] {"32_elements_with_imports.xsd", "32_elements_with_imports.bal"}
+            new Object[] {"32_elements_with_imports.xsd", "32_elements_with_imports.bal"},
+            new Object[] {"33_elements_with_simple_types.xml", "33_elements_with_simple_types.bal"},
+            new Object[] {"34_elements_with_simple_types.xml", "34_elements_with_simple_types.bal"},
+            new Object[] {"35_unions_of_simple_types.xsd", "35_unions_of_simple_types.bal"}
         );
     }
 
@@ -90,20 +95,25 @@ public class XSDToRecordTest {
         Assert.assertEquals(result.types(), expectedValue);
     }
 
+    private static void removeTextNodes(Node node) {
+        NodeList children = node.getChildNodes();
+        for (int i = children.getLength() - 1; i >= 0; i--) {
+            Node child = children.item(i);
+            if (child.getNodeType() == Node.TEXT_NODE && child.getNodeValue().trim().isEmpty()) {
+                node.removeChild(child);
+            } else if (child.getNodeType() == Node.ELEMENT_NODE) {
+                removeTextNodes(child);
+            }
+        }
+    }
+
     private static Document parseXSD(String xsdData) throws Exception {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xsdData.getBytes(StandardCharsets.UTF_8));
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         dbFactory.setNamespaceAware(true);
         DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
-        return docBuilder.parse(inputStream);
-    }
-
-    @org.junit.jupiter.api.Test
-    void testXsdSchema() throws Exception {
-        String sourceFile = "10_complex_type_with_extensions.xml";
-        String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
-        Document document = parseXSD(xmlFileContent);
-        Response result = XSDToRecord.convert(document);
-        Assert.assertTrue(result.diagnostics().isEmpty());
+        Document document = docBuilder.parse(inputStream);
+        removeTextNodes(document.getDocumentElement());
+        return document;
     }
 }

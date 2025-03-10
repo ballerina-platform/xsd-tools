@@ -1,4 +1,5 @@
 <xs:schema elementFormDefault="qualified" targetNamespace="http://htng.org/PWSWG/2007/02/AsyncHeaders" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://htng.org/PWSWG/2007/02/AsyncHeaders">
+    <xs:element minOccurs="0" maxOccurs="1" name="Address" type="xs:string" targetNamespace="http://www.w3.org/2005/08/addressing"/>
     <xs:import namespace="http://www.w3.org/2005/08/addressing"/>
     <xs:element name="CorrelationID" type="xs:string"/>
     <xs:element name="RelatesToCorrelationID" type="xs:string"/>
