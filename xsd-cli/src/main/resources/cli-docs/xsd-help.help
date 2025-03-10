@@ -15,14 +15,14 @@ OPTIONS
            The name of the module in which the Ballerina client and record types are generated.
 
 EXAMPLE
-       Generate types from an XSD schema. The output will be saved to the types.bal file
-       in the same directory where the command is executed.
+       Generate types from an XSD schema. The output will be saved to the types.bal file 
+       within the default package.
            $ bal xsd schema.xsd
 
-       Generate types from an XSD schema with a specified relative path of the output file. The output will be saved 
-       to the 'custom' submodule in the Ballerina project.
+       Generate types from an XSD schema with a specified relative path of the output file. 
+       The output will be saved to the 'custom' submodule in the Ballerina project.
            $ bal xsd schema.xsd --module custom
 
-       Generate types for all the XSD files in a directory. The output will be saved to the types.bal file
-       in the same directory where the command is executed.
+       Generate types for all XSD files in a directory. A Ballerina file with types for each XSD file 
+       in the directory is generated within the default package.
            $ bal xsd inputs
