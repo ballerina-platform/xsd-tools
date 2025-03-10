@@ -166,7 +166,7 @@ public class XSDVisitorImpl implements XSDVisitor {
             } else {
                 builder.append(deriveType(typeNode)).append(WHITESPACE).append(deriveType(typeNode));
             }
-        } else {
+        } else if (typeNode != null && node.hasAttributes()) {
             handleFixedValues(node, builder, typeNode);
             handleMaxOccurrences(node, builder);
             builder.append(nameNode.getNodeValue());
@@ -182,8 +182,10 @@ public class XSDVisitorImpl implements XSDVisitor {
         stringBuilder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE)
                 .append(nameNode.getNodeValue()).append(WHITESPACE);
         for (Node simpleTypeNode : asIterable(((SimpleType) component).getNode().getChildNodes())) {
-            Node type = simpleTypeNode.getAttributes().getNamedItem(BASE);
-            stringBuilder.append(deriveType(type)).append(WHITESPACE).append(SEMICOLON);
+            if (simpleTypeNode.hasAttributes()) {
+                Node type = simpleTypeNode.getAttributes().getNamedItem(BASE);
+                stringBuilder.append(deriveType(type)).append(WHITESPACE).append(SEMICOLON);
+            }
         }
         nestedElements.put(nameNode.getNodeValue(), stringBuilder.toString());
         return builder.append(WHITESPACE).append(nameNode.getNodeValue()).append(WHITESPACE)
@@ -350,24 +352,23 @@ public class XSDVisitorImpl implements XSDVisitor {
         if (fixedNode != null) {
             builder.append(generateFixedValue(deriveType(typeNode), fixedNode.getNodeValue())).append(WHITESPACE);
         } else if (attribute.hasChildNodes()) {
-            builder.append(visitAttributeChildNodes(attribute.getChildNodes(), builder)).append(WHITESPACE);
+            builder.append(visitAttributeChildNodes(attribute.getChildNodes())).append(WHITESPACE);
         } else {
             builder.append(deriveType(typeNode)).append(WHITESPACE);
         }
         builder.append(nameNode.getNodeValue());
         Node attributeType = attribute.getAttributes().getNamedItem(USE);
-        if (attributeType != null && !attributeType.getNodeValue().equals(REQUIRED)) {
-            builder.append(QUESTION_MARK);
-        }
         Node defaultNode = attribute.getAttributes().getNamedItem(DEFAULT);
         if (defaultNode != null) {
             builder.append(generateDefaultValue(deriveType(typeNode), defaultNode.getNodeValue()));
+        } else if (attributeType != null && !attributeType.getNodeValue().equals(REQUIRED)) {
+            builder.append(QUESTION_MARK);
         }
         builder.append(SEMICOLON);
         return builder.toString();
     }
 
-    public String visitAttributeChildNodes(NodeList childNodes, StringBuilder builder) {
+    public String visitAttributeChildNodes(NodeList childNodes) {
         for (int i = 0; i < childNodes.getLength(); i++) {
             if (childNodes.item(i).getNodeType() != Node.ELEMENT_NODE) {
                 continue;

@@ -143,7 +143,9 @@ public final class XSDToRecord {
             stringBuilder.append(component.get().accept(xsdVisitor));
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
             String name = Utils.extractTypeName(moduleNode.toString().split(WHITESPACE));
-            name = (name == null) ? childNode.getAttributes().getNamedItem(NAME).getNodeValue() : name;
+            if (name == null && childNode.hasAttributes()) {
+                name = childNode.getAttributes().getNamedItem(NAME).getNodeValue();
+            }
             String resolvedName = nodes.containsKey(name) ? Utils.resolveNameConflicts(name, nodes) : name;
             nodes.put(resolvedName, moduleNode);
         }
