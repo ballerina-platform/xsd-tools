@@ -84,10 +84,6 @@ public class XsdCmd implements BLauncherCmd {
             "client and record types are generated.")
     private String outputPath = "";
 
-    @CommandLine.Option(names = {"-d", "--directory"}, description = "The path to the directory where the XSD files " +
-            "are located")
-    private String directory = "";
-
     public XsdCmd() {
         this.outStream = System.err;
         this.exitWhenFinish = true;
@@ -128,18 +124,17 @@ public class XsdCmd implements BLauncherCmd {
             exitOnError();
             return;
         }
-        if (argList.isEmpty() && directory.isEmpty()) {
+        if (argList.isEmpty()) {
             outStream.println("An XSD file path or directory is required to generate the types");
-            outStream.println("e.g: bal xsd <xsd source file path>");
-            outStream.println("e.g: bal xsd --directory <directory path>");
+            outStream.println("e.g: bal xsd <xsd source file/directory path>");
             exitOnError();
             return;
         }
         try {
-            if (!argList.isEmpty()) {
-                handleSingleFiles(outputDirPath);
+            if (!Files.isDirectory(Path.of(argList.get(0)))) {
+                handleSingleFile(outputDirPath);
             } else {
-                handleDirectories(outputDirPath, directory);
+                handleDirectory(outputDirPath, argList.get(0));
             }
         } catch (ParserConfigurationException | SAXException e) {
             outStream.println("XSD file contains errors. " + e.getLocalizedMessage());
@@ -151,31 +146,30 @@ public class XsdCmd implements BLauncherCmd {
         }
     }
 
-    private void handleSingleFiles(Path outputDirPath) throws Exception {
+    private void handleSingleFile(Path outputDirPath) throws Exception {
         if (!Files.exists(Path.of(argList.get(0)))) {
             outStream.println(argList.get(0) + " file does not exist.");
             exitOnError();
             return;
         }
-        for (String xsdFile : argList) {
-            if (!xsdFile.toLowerCase().endsWith(".xsd") || !xsdFile.toLowerCase().endsWith(".xml")) {
-                outStream.println("The provided file is not a XSD/XML file. Please provide a valid XSD file.");
-                exitOnError();
-                return;
-            }
-            String xmlFileContent = Files.readString(Path.of(xsdFile));
-            Document document = parseXSD(xmlFileContent);
-            Response result = XSDToRecord.convert(document);
-            if (!result.diagnostics().isEmpty()) {
-                result.diagnostics().forEach(xsdDiagnostic -> outStream.println(xsdDiagnostic.toString()));
-                exitOnError();
-                return;
-            }
-            writeSourceToFiles(outputDirPath, result, OUTPUT_FILE_NAME + OUTPUT_FILE_EXTENSION);
+        String xsdFile = argList.get(0);
+        if (!xsdFile.endsWith(".xsd") && !xsdFile.endsWith(".xml")) {
+            outStream.println("The provided file is not a XSD/XML file. Please provide a valid XSD file.");
+            exitOnError();
+            return;
         }
+        String xmlFileContent = Files.readString(Path.of(xsdFile));
+        Document document = parseXSD(xmlFileContent);
+        Response result = XSDToRecord.convert(document);
+        if (!result.diagnostics().isEmpty()) {
+            result.diagnostics().forEach(xsdDiagnostic -> outStream.println(xsdDiagnostic.toString()));
+            exitOnError();
+            return;
+        }
+        writeSourceToFiles(outputDirPath, result, OUTPUT_FILE_NAME + OUTPUT_FILE_EXTENSION);
     }
 
-    private void handleDirectories(Path outputDirPath, String directory) throws Exception {
+    private void handleDirectory(Path outputDirPath, String directory) throws Exception {
         File[] directoryFiles;
         try {
             directoryFiles = getXsdFiles(directory);

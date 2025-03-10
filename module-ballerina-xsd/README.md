@@ -56,22 +56,6 @@ The generated files will include,
 types.bal
 ```
 
-### Generate types for the given XSD files directory
-
-Use the following command to generate Ballerina record types from all XSD files in a specified directory. The generated files will be placed in the default module of the current Ballerina project.
-
-```bash
-$ bal xsd --directory <directory-path>
-```
-
-For example,
-
-```bash
-$ bal xsd --directory inputs
-```
-
-If successful, it will generate a separate Ballerina file for each XSD file in the `inputs` directory.
-
 #### Generate types in a specific module
 
 To generate the Ballerina record types in a specific module, use the `--module` option.
