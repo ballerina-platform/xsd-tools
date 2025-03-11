@@ -45,6 +45,7 @@ import static io.ballerina.xsd.core.visitor.VisitorUtils.QUOTATION_MARK;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.WHITESPACE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.ENUM;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.NAME;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.PUBLIC;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.RECORD_WITH_OPEN_BRACE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.SEMICOLON;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.VERTICAL_BAR;
@@ -65,6 +66,7 @@ public final class XSDToRecord {
     public static final String TARGET_NAMESPACE = "targetNamespace";
 
     private static final String CONTENT_FIELD = "\\#content";
+    public static final String FILE_EXTENSION = ".bal";
 
     public static Response convert(Document document) throws Exception {
         Element rootElement = document.getDocumentElement();
@@ -75,10 +77,46 @@ public final class XSDToRecord {
         xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
         Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
         processNodeList(rootElement, nodes, xsdVisitor);
+        return generateTypes(xsdVisitor, nodes);
+    }
+
+    public static Map<String, Response> convert(Map<Document, String> documents) throws Exception {
+        Map<String, Response> typesMap = new LinkedHashMap<>();
+        XSDVisitor xsdVisitor = new XSDVisitorImpl();
+        ArrayList<String> existingTypes = new ArrayList<>();
+        for (Document document : documents.keySet()) {
+            Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
+            Element rootElement = document.getDocumentElement();
+            if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
+                throw new Exception(INVALID_XSD_FORMAT_ERROR);
+            }
+            xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+            xsdVisitor.clearImports();
+            processNodeList(rootElement, nodes, xsdVisitor);
+            handleExistingTypes(documents, typesMap, xsdVisitor, existingTypes, document, nodes);
+        }
+        return typesMap;
+    }
+
+    private static Response generateTypes(XSDVisitor xsdVisitor,
+                                          Map<String, ModuleMemberDeclarationNode> nodes) throws Exception {
         ModulePartNode modulePartNode = Utils.generateModulePartNode(nodes, xsdVisitor);
         String generatedTypes = Utils.formatModuleParts(modulePartNode);
         List<XsdDiagnostic> diagnostics = xsdVisitor.getDiagnostics();
         return new Response(generatedTypes, diagnostics);
+    }
+
+    private static void handleExistingTypes(Map<Document, String> documents, Map<String, Response> typesMap,
+                                            XSDVisitor xsdVisitor, ArrayList<String> existingTypes, Document document,
+                                            Map<String, ModuleMemberDeclarationNode> nodes) throws Exception {
+        for (String type : existingTypes) {
+            nodes.remove(type);
+        }
+        typesMap.put(documents.get(document) + FILE_EXTENSION, generateTypes(xsdVisitor, nodes));
+        existingTypes.addAll(nodes.keySet());
+        for (ArrayList<String> array: xsdVisitor.getEnumerationElements().values()) {
+            existingTypes.addAll(array);
+        }
     }
 
     private static void processNodeList(Element rootElement, Map<String, ModuleMemberDeclarationNode> nodes,
@@ -105,10 +143,11 @@ public final class XSDToRecord {
             stringBuilder.append(component.get().accept(xsdVisitor));
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
             String name = Utils.extractTypeName(moduleNode.toString().split(WHITESPACE));
-            if (name == null) {
+            if (name == null && childNode.hasAttributes()) {
                 name = childNode.getAttributes().getNamedItem(NAME).getNodeValue();
             }
-            nodes.put(nodes.containsKey(name) ? Utils.resolveNameConflicts(name, nodes) : name, moduleNode);
+            String resolvedName = nodes.containsKey(name) ? Utils.resolveNameConflicts(name, nodes) : name;
+            nodes.put(resolvedName, moduleNode);
         }
     }
 
@@ -142,6 +181,7 @@ public final class XSDToRecord {
             String element = entry.getKey();
             String annotation = entry.getValue();
             String node = nodes.get(element).toString();
+            node = node.replace(annotation + WHITESPACE, element + WHITESPACE);
             String newNode = String.format(XMLDATA_NAME_ANNOTATION, annotation) + node;
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(newNode);
             nodes.put(element, moduleNode);
@@ -164,6 +204,9 @@ public final class XSDToRecord {
                 nodes.replace(key, moduleNode);
             } else {
                 ModuleMemberDeclarationNode baseNode = nodes.get(baseValue);
+                if (baseNode == null) {
+                    continue;
+                }
                 ModuleMemberDeclarationNode parentNode = nodes.get(key);
                 String fields = Utils.extractSubstring(baseNode.toString(), RECORD_WITH_OPEN_BRACE,
                         VERTICAL_BAR + CLOSE_BRACES + SEMICOLON, CONTENT_FIELD);
@@ -188,10 +231,18 @@ public final class XSDToRecord {
                 }
                 enumBuilder.append(enumValue).append(COMMA);
             }
-            String enumeration = nodes.get(key).toString();
-            String replacingString = ENUM + WHITESPACE + key + WHITESPACE + OPEN_BRACES;
-            enumeration = enumeration.replace(replacingString, replacingString + enumBuilder.substring(0,
-                    enumBuilder.length() - 1));
+            String enumeration;
+            if (nodes.containsKey(key)) {
+                enumeration = nodes.get(key).toString();
+                String replacingString = ENUM + WHITESPACE + key + WHITESPACE + OPEN_BRACES;
+                enumeration = enumeration.replace(replacingString, replacingString + enumBuilder.substring(0,
+                        enumBuilder.length() - 1));
+                ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(enumeration);
+                nodes.put(key, moduleNode);
+            } else {
+                enumeration = PUBLIC + WHITESPACE + ENUM + WHITESPACE + key + WHITESPACE +
+                        OPEN_BRACES + enumBuilder.substring(0, enumBuilder.length() - 1) + CLOSE_BRACES + SEMICOLON;
+            }
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(enumeration);
             nodes.put(key, moduleNode);
         }

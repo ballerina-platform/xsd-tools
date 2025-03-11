@@ -71,7 +71,10 @@ public class XSDToRecordTest {
             new Object[] {"29_element_with_same_type_name.xsd", "29_element_with_same_type_name.bal"},
             new Object[] {"30_complex_type_with_nested_choices.xsd", "30_complex_type_with_nested_choices.bal"},
             new Object[] {"31_elements_with_choice.xsd", "31_elements_with_choice.bal"},
-            new Object[] {"32_elements_with_imports.xsd", "32_elements_with_imports.bal"}
+            new Object[] {"32_elements_with_imports.xsd", "32_elements_with_imports.bal"},
+            new Object[] {"33_elements_with_simple_types.xml", "33_elements_with_simple_types.bal"},
+            new Object[] {"34_elements_with_simple_types.xml", "34_elements_with_simple_types.bal"},
+            new Object[] {"35_unions_of_simple_types.xsd", "35_unions_of_simple_types.bal"}
         );
     }
 
@@ -96,14 +99,5 @@ public class XSDToRecordTest {
         dbFactory.setNamespaceAware(true);
         DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
         return docBuilder.parse(inputStream);
-    }
-
-    @org.junit.jupiter.api.Test
-    void testXsdSchema() throws Exception {
-        String sourceFile = "10_complex_type_with_extensions.xml";
-        String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve(sourceFile));
-        Document document = parseXSD(xmlFileContent);
-        Response result = XSDToRecord.convert(document);
-        Assert.assertTrue(result.diagnostics().isEmpty());
     }
 }

@@ -1,6 +1,11 @@
 import ballerina/data.xmldata;
 
 @xmldata:Namespace {uri: "http://htng.org/PWSWG/2007/02/AsyncHeaders"}
+public type Address record {|
+    string \#content;
+|};
+
+@xmldata:Namespace {uri: "http://htng.org/PWSWG/2007/02/AsyncHeaders"}
 public type CorrelationID record {|
     string \#content;
 |};
@@ -27,5 +32,5 @@ public type ReplyTo record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://htng.org/PWSWG/2007/02/AsyncHeaders"}
     @xmldata:SequenceOrder {value: 1}
-    string \#content;
+    Address Address;
 |};

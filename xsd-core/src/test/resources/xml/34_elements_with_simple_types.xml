@@ -1,0 +1,16 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://namespace.org/">
+    <xs:element name="TPA_Extensions">
+        <xs:simpleType>
+            <xs:restriction base="xs:decimal">
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:complexType name="VehicleResRSAdditionalInfoType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">The VehicleResRSAdditionalInfoType complex type identifies the supplemental information that is associated with the reservation of a vehicle. </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element ref="TPA_Extensions" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

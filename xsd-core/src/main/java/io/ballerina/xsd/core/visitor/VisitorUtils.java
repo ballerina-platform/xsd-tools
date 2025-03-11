@@ -26,6 +26,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Set;
 
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.EMPTY_STRING;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.generateFixedValue;
@@ -59,6 +61,7 @@ public final class VisitorUtils {
     public static final String LANGUAGE = "language";
     public static final String G_YEAR_MONTH = "gYearMonth";
     public static final String G_YEAR = "gYear";
+    public static final String G_MONTH_DAY = "gMonthDay";
     public static final String STRING = "string";
     public static final String INTEGER = "integer";
     public static final String LONG = "long";
@@ -90,8 +93,12 @@ public final class VisitorUtils {
     private static final String SLASH_PATTERN = "[/\\\\]";
     private static final String WHITESPACE_PATTERN = "\\s";
     private static final String SPECIAL_CHARS_PATTERN = "[!@$%^&*()_\\-|]";
+    public static final String NMTOKEN = "NMTOKEN";
 
     public static String addNamespace(XSDVisitorImpl xsdVisitor, String namespace) {
+        if (Objects.equals(namespace, EMPTY_STRING)) {
+            return EMPTY_STRING;
+        }
         xsdVisitor.addImports(BALLERINA_XML_DATA_MODULE);
         return XMLDATA_NAMESPACE + WHITESPACE + OPEN_BRACES + URI + COLON + QUOTATION_MARK + namespace +
                 QUOTATION_MARK + CLOSE_BRACES;
@@ -115,10 +122,11 @@ public final class VisitorUtils {
 
     public static String generateDefaultValue(String type, String value) {
         StringBuilder builder = new StringBuilder().append(WHITESPACE).append(EQUAL).append(WHITESPACE);
-        switch (type) {
-            case INT -> builder.append(value);
-            default -> builder.append(QUOTATION_MARK).append(value).append(QUOTATION_MARK);
-        }
+        final Set<String> unquotedTypes = Set.of(INT, INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER,
+                POSITIVE_INTEGER, SHORT, UNSIGNED_LONG, UNSIGNED_INT,
+                UNSIGNED_SHORT, BOOLEAN, FLOAT, DOUBLE, DECIMAL
+        );
+        builder.append(unquotedTypes.contains(type) ? value : QUOTATION_MARK + value + QUOTATION_MARK);
         return builder.toString();
     }
 
@@ -147,18 +155,23 @@ public final class VisitorUtils {
         }
     }
 
-    public static String deriveType(Node node) {
-        String derivedType = (node != null)
+    public static String extractType(Node node) {
+        return (node != null)
                 ? node.getNodeValue().contains(COLON)
-                        ? node.getNodeValue().substring(node.getNodeValue().indexOf(COLON) + 1)
-                        : node.getNodeValue()
+                ? node.getNodeValue().substring(node.getNodeValue().indexOf(COLON) + 1)
+                : node.getNodeValue()
                 : STRING;
+    }
+
+    public static String deriveType(Node node) {
+        String derivedType = extractType(node);
         return typeGenerator(derivedType);
     }
 
     public static String typeGenerator(String typeName) {
         switch (typeName) {
-            case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE, DURATION, ANY_URI -> {
+            case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE,
+                    DURATION, ANY_URI, G_MONTH_DAY, NMTOKEN -> {
                 return STRING;
             }
             case INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER, POSITIVE_INTEGER, SHORT,

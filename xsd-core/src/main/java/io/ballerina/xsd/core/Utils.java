@@ -123,6 +123,16 @@ public class Utils {
         return name;
     }
 
+    public static String resolveNameConflicts(String name, ArrayList<?> nodes) {
+        String baseName = name;
+        int counter = 1;
+        while (nodes.contains(name)) {
+            name = baseName + counter;
+            counter++;
+        }
+        return name;
+    }
+
     static String extractTypeName(String[] values) {
         String previous = null;
         for (String current : values) {

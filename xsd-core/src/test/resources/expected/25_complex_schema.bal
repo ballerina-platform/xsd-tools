@@ -2119,6 +2119,9 @@ public type SequenceGroup55 record {|
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
 public type SequenceGroup56 record {|
+    @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
+    @xmldata:SequenceOrder {value: 1}
+    string \#content;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}

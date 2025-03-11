@@ -1,0 +1,8 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://namespace.org/">
+    <xs:element name="PersonAge">
+        <xs:simpleType>
+            <xs:restriction base="xs:decimal">
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+</xs:schema>

@@ -1,0 +1,86 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://namespace.org/" xmlns:tns="http://namespace.org/">
+    <xs:element name="Name" type="tns:MealServiceType"/>
+    <xs:simpleType name="StringLength1to32">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Used for Character Strings, length 1 to 32.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="32"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="MealServiceType">
+        <xs:annotation>
+            <xs:documentation xml:lang="en">Enumerated List (Meal Code in brackets): Breakfast (B); Snack (S); Dinner (D); Hot Meal (H); Lunch (L); Refreshments (R); Complimentary Liquor (C); Meal (M); Liquor for Purchase (P); Food for Purchase (F); Cold Meal (O); No Meal Service (-). Alternately, a String of Length 32 can be used if the above list does not suffice.</xs:documentation>
+        </xs:annotation>
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Breakfast">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies a breakfast meal service.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Snack">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies a snack meal service.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Dinner">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies a dinner meal service.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Hot Meal">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies a hot meal service.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Lunch">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies a lunch meal service.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Refreshments">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies a refreshments meal service.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Complimentary Liquor">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies a complimentary liquor meal service.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Meal">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies a meal service exists.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Liquor for Purchase">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies that liquor is available for purchase.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Food for Purchase">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies that food is available for purchase.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Cold Meal">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies a cold meal service is available.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="No Meal Service">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en">Identifies that no meal service is available.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="StringLength1to32"/>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+</xs:schema>
