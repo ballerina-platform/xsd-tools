@@ -42,6 +42,7 @@ import static io.ballerina.xsd.core.visitor.VisitorUtils.UNBOUNDED;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.addNamespace;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.asIterable;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.deriveType;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.extractType;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.generateDefaultValue;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.handleDefaultValues;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.handleFixedValues;
@@ -164,7 +165,7 @@ public class XSDVisitorImpl implements XSDVisitor {
             if (isSimpleType(deriveType(typeNode))) {
                 builder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD);
             } else {
-                builder.append(deriveType(typeNode)).append(WHITESPACE).append(deriveType(typeNode));
+                builder.append(deriveType(typeNode)).append(WHITESPACE).append(extractType(typeNode));
             }
         } else if (typeNode != null && node.hasAttributes()) {
             handleFixedValues(node, builder, typeNode);
@@ -349,7 +350,10 @@ public class XSDVisitorImpl implements XSDVisitor {
         Node typeNode = attribute.getAttributes().getNamedItem(TYPE);
         builder.append(ATTRIBUTE_ANNOTATION).append(WHITESPACE);
         Node fixedNode = attribute.getAttributes().getNamedItem(FIXED);
-        if (fixedNode != null) {
+        Node defaultNode = attribute.getAttributes().getNamedItem(DEFAULT);
+        if (defaultNode != null) {
+            builder.append(deriveType(typeNode)).append(WHITESPACE);
+        } else if (fixedNode != null) {
             builder.append(generateFixedValue(deriveType(typeNode), fixedNode.getNodeValue())).append(WHITESPACE);
         } else if (attribute.hasChildNodes()) {
             builder.append(visitAttributeChildNodes(attribute.getChildNodes())).append(WHITESPACE);
@@ -358,7 +362,6 @@ public class XSDVisitorImpl implements XSDVisitor {
         }
         builder.append(nameNode.getNodeValue());
         Node attributeType = attribute.getAttributes().getNamedItem(USE);
-        Node defaultNode = attribute.getAttributes().getNamedItem(DEFAULT);
         if (defaultNode != null) {
             builder.append(generateDefaultValue(deriveType(typeNode), defaultNode.getNodeValue()));
         } else if (attributeType != null && !attributeType.getNodeValue().equals(REQUIRED)) {
@@ -558,6 +561,9 @@ public class XSDVisitorImpl implements XSDVisitor {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
+            if (childNode.getLocalName().equals(ANNOTATION)) {
+                continue;
+            }
             if (childNode.getLocalName().equals(SEQUENCE)) {
                 stringBuilder.append(visitSequence(childNode, true));
             } else {
@@ -571,8 +577,18 @@ public class XSDVisitorImpl implements XSDVisitor {
                 if (typeNode == null) {
                     typeNode = nameNode;
                 }
-                stringBuilder.append(deriveType(typeNode)).append(WHITESPACE);
-                stringBuilder.append(nameNode.getNodeValue()).append(QUESTION_MARK).append(SEMICOLON);
+                if (childNode.hasAttributes() && childNode.getAttributes().getNamedItem(REF) != null) {
+                    Node refNode = childNode.getAttributes().getNamedItem(REF);
+                    String derivedType = refNode.getNodeValue().contains(COLON)
+                            ? refNode.getNodeValue().substring(refNode.getNodeValue().indexOf(COLON) + 1)
+                            : refNode.getNodeValue();
+                    stringBuilder.append(derivedType).append(WHITESPACE);
+                    stringBuilder.append(derivedType);
+                } else {
+                    stringBuilder.append(deriveType(typeNode)).append(WHITESPACE);
+                    stringBuilder.append(nameNode == null ? deriveType(typeNode) : nameNode.getNodeValue());
+                }
+                stringBuilder.append(QUESTION_MARK).append(SEMICOLON);
             }
         }
     }

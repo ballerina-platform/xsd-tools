@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Set;
 
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.EMPTY_STRING;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.generateFixedValue;
@@ -121,11 +122,11 @@ public final class VisitorUtils {
 
     public static String generateDefaultValue(String type, String value) {
         StringBuilder builder = new StringBuilder().append(WHITESPACE).append(EQUAL).append(WHITESPACE);
-        if (type.equals(INT)) {
-            builder.append(value);
-        } else {
-            builder.append(QUOTATION_MARK).append(value).append(QUOTATION_MARK);
-        }
+        final Set<String> unquotedTypes = Set.of(INT, INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER,
+                POSITIVE_INTEGER, SHORT, UNSIGNED_LONG, UNSIGNED_INT,
+                UNSIGNED_SHORT, BOOLEAN, FLOAT, DOUBLE, DECIMAL
+        );
+        builder.append(unquotedTypes.contains(type) ? value : QUOTATION_MARK + value + QUOTATION_MARK);
         return builder.toString();
     }
 
@@ -154,12 +155,16 @@ public final class VisitorUtils {
         }
     }
 
-    public static String deriveType(Node node) {
-        String derivedType = (node != null)
+    public static String extractType(Node node) {
+        return (node != null)
                 ? node.getNodeValue().contains(COLON)
-                        ? node.getNodeValue().substring(node.getNodeValue().indexOf(COLON) + 1)
-                        : node.getNodeValue()
+                ? node.getNodeValue().substring(node.getNodeValue().indexOf(COLON) + 1)
+                : node.getNodeValue()
                 : STRING;
+    }
+
+    public static String deriveType(Node node) {
+        String derivedType = extractType(node);
         return typeGenerator(derivedType);
     }
 
