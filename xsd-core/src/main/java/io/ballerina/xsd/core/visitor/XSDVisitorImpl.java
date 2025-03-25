@@ -50,6 +50,7 @@ import static io.ballerina.xsd.core.visitor.VisitorUtils.handleMaxOccurrences;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.handleMinOccurrences;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.isSimpleType;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.convertToCamelCase;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.resolveNames;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.sanitizeString;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.typeGenerator;
 
@@ -170,7 +171,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         } else if (typeNode != null && node.hasAttributes()) {
             handleFixedValues(node, builder, typeNode);
             handleMaxOccurrences(node, builder);
-            builder.append(nameNode.getNodeValue());
+            builder.append(resolveNames(nameNode.getNodeValue()));
             handleMinOccurrences(element, builder);
             handleDefaultValues(node, builder, typeNode);
         }
