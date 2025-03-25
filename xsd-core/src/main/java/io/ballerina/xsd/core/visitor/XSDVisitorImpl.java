@@ -408,9 +408,6 @@ public class XSDVisitorImpl implements XSDVisitor {
         for (Node childNode : asIterable(childNodes)) {
             if (childNode.getNodeType() == Node.ELEMENT_NODE && EXTENSION.equals(childNode.getLocalName())) {
                 String base = deriveType(childNode.getAttributes().getNamedItem(BASE));
-                if (base == null) {
-                    throw new Exception(String.format(ATTRIBUTE_NOT_FOUND_ERROR, BASE));
-                }
                 builder.append(visitExtension(childNode));
                 Node nameNode = node.getParentNode().getAttributes().getNamedItem(NAME);
                 if (nameNode != null) {
