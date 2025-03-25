@@ -248,8 +248,8 @@ public final class VisitorUtils {
         if (input.matches(STARTS_WITH_DIGIT_PATTERN)) {
             input = UNDERSCORE + input;
         }
-        for (String s : Arrays.asList(SLASH_PATTERN, WHITESPACE_PATTERN, SPECIAL_CHARS_PATTERN)) {
-            input = input.replaceAll(s, UNDERSCORE);
+        for (String placeholder : Arrays.asList(SLASH_PATTERN, WHITESPACE_PATTERN, SPECIAL_CHARS_PATTERN)) {
+            input = input.replaceAll(placeholder, UNDERSCORE);
         }
         return input;
     }
