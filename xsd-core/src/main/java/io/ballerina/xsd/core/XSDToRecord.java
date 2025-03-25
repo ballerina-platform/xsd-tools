@@ -42,6 +42,7 @@ import static io.ballerina.xsd.core.visitor.VisitorUtils.CLOSE_BRACES;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.COMMA;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.OPEN_BRACES;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.QUOTATION_MARK;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.STRING;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.WHITESPACE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.ENUM;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.NAME;
@@ -156,11 +157,17 @@ public final class XSDToRecord {
         for (Map.Entry<String, String> entry : rootElements.entrySet()) {
             String element = entry.getKey();
             String type = entry.getValue();
-            String[] tokens = nodes.get(type).toString().split(WHITESPACE);
-            if (!nodes.get(type).toString().contains(RECORD_WITH_OPEN_BRACE)) {
-                Utils.processSingleTypeElements(nodes, element, type, tokens, CONTENT_FIELD);
+            if (nodes.containsKey(type)) {
+                String[] tokens = nodes.get(type).toString().split(WHITESPACE);
+                if (!nodes.get(type).toString().contains(RECORD_WITH_OPEN_BRACE)) {
+                    Utils.processSingleTypeElements(nodes, element, type, tokens, CONTENT_FIELD);
+                } else {
+                    Utils.processRecordTypeElements(nodes, element, type, CONTENT_FIELD);
+                }
             } else {
-                Utils.processRecordTypeElements(nodes, element, type, CONTENT_FIELD);
+                String rootElement = nodes.get(element).toString().replace(type, STRING);
+                ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(rootElement);
+                nodes.put(element, moduleNode);
             }
         }
     }

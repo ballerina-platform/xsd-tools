@@ -94,6 +94,7 @@ public final class VisitorUtils {
     private static final String WHITESPACE_PATTERN = "\\s";
     private static final String SPECIAL_CHARS_PATTERN = "[!@$%^&*()_\\-|]";
     public static final String NMTOKEN = "NMTOKEN";
+    public static final String IDREF = "IDREF";
 
     public static String addNamespace(XSDVisitorImpl xsdVisitor, String namespace) {
         if (Objects.equals(namespace, EMPTY_STRING)) {
@@ -171,7 +172,7 @@ public final class VisitorUtils {
     public static String typeGenerator(String typeName) {
         switch (typeName) {
             case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE,
-                    DURATION, ANY_URI, G_MONTH_DAY, NMTOKEN -> {
+                    DURATION, ANY_URI, G_MONTH_DAY, NMTOKEN, IDREF -> {
                 return STRING;
             }
             case INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER, POSITIVE_INTEGER, SHORT,
@@ -237,5 +238,19 @@ public final class VisitorUtils {
             keyPart = keyPart.replaceAll(s, UNDERSCORE);
         }
         return keyPart + " = \"" + input + "\"";
+    }
+
+    public static String resolveNames(String input) {
+        if (!input.matches(INVALID_CHARS_PATTERN)
+                || (input.matches(DIGIT_PATTERN) && !input.matches(STARTS_WITH_DIGIT_PATTERN))) {
+            return input;
+        }
+        if (input.matches(STARTS_WITH_DIGIT_PATTERN)) {
+            input = UNDERSCORE + input;
+        }
+        for (String placeholder : Arrays.asList(SLASH_PATTERN, WHITESPACE_PATTERN, SPECIAL_CHARS_PATTERN)) {
+            input = input.replaceAll(placeholder, UNDERSCORE);
+        }
+        return input;
     }
 }

@@ -1,0 +1,3 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.namespaces.com" targetNamespace="http://www.namespaces.com">
+	<xsd:element name="xmlBytes" type="xsd:base64Binary"/>
+</xsd:schema>
