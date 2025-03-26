@@ -30,6 +30,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,6 +39,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import static io.ballerina.xsd.core.visitor.VisitorUtils.CLOSE_BRACES;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.COMMA;
@@ -69,16 +74,28 @@ public final class XSDToRecord {
     private static final String CONTENT_FIELD = "\\#content";
     public static final String FILE_EXTENSION = ".bal";
 
+    public static Map<String, ModuleMemberDeclarationNode> fromXsd(String xsdContent) throws Exception {
+        Document document = parseXSD(xsdContent);
+        XSDVisitor xsdVisitor = new XSDVisitorImpl();
+        return generateNodes(document, xsdVisitor);
+    }
+
     public static Response convert(Document document) throws Exception {
+        XSDVisitor xsdVisitor = new XSDVisitorImpl();
+        Map<String, ModuleMemberDeclarationNode> nodes = generateNodes(document, xsdVisitor);
+        return generateTypes(xsdVisitor, nodes);
+    }
+
+    public static Map<String, ModuleMemberDeclarationNode> generateNodes(Document document,
+                                                                         XSDVisitor xsdVisitor) throws Exception {
         Element rootElement = document.getDocumentElement();
         if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
             throw new Exception(INVALID_XSD_FORMAT_ERROR);
         }
-        XSDVisitor xsdVisitor = new XSDVisitorImpl();
         xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
         Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
         processNodeList(rootElement, nodes, xsdVisitor);
-        return generateTypes(xsdVisitor, nodes);
+        return nodes;
     }
 
     public static Map<String, Response> convert(Map<Document, String> documents) throws Exception {
@@ -253,5 +270,13 @@ public final class XSDToRecord {
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(enumeration);
             nodes.put(key, moduleNode);
         }
+    }
+
+    static Document parseXSD(String xsdData) throws Exception {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(xsdData.getBytes(StandardCharsets.UTF_8));
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        dbFactory.setNamespaceAware(true);
+        DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
+        return docBuilder.parse(inputStream);
     }
 }

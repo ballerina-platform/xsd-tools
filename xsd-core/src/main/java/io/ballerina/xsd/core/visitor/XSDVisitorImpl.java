@@ -581,9 +581,6 @@ public class XSDVisitorImpl implements XSDVisitor {
                     processChildNode(childNode, childNodeBuilder);
                 }
                 Node nameNode = childNode.getAttributes().getNamedItem(NAME);
-                if (nameNode == null) {
-                    throw new Exception(String.format(ATTRIBUTE_NOT_FOUND_ERROR, NAME));
-                }
                 Node typeNode = childNode.getAttributes().getNamedItem(TYPE);
                 typeNode = typeNode == null ? nameNode : typeNode;
                 if (childNode.hasAttributes() && childNode.getAttributes().getNamedItem(REF) != null) {
@@ -594,6 +591,9 @@ public class XSDVisitorImpl implements XSDVisitor {
                     stringBuilder.append(derivedType).append(WHITESPACE);
                     stringBuilder.append(derivedType);
                 } else {
+                    if (nameNode == null) {
+                        throw new Exception(String.format(ATTRIBUTE_NOT_FOUND_ERROR, NAME));
+                    }
                     stringBuilder.append(deriveType(typeNode)).append(WHITESPACE);
                     stringBuilder.append(nameNode.getNodeValue());
                 }
