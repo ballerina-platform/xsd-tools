@@ -10,7 +10,7 @@ distribution-version = "2201.11.0"
 [[package]]
 org = "ballerina"
 name = "xsdtool"
-version = "1.0.5"
+version = "1.0.6"
 modules = [
 	{org = "ballerina", packageName = "xsdtool", moduleName = "xsdtool"}
 ]
