@@ -119,6 +119,12 @@ public final class XSDToRecord {
      * @return a map of element names and their corresponding record nodes
      * @throws Exception if an error occurs while parsing the XSD content
      */
+    public static Map<String, ModuleMemberDeclarationNode> generateNodes(String xsdContent) throws Exception {
+        Document document = parseXSD(xsdContent);
+        XSDVisitor xsdVisitor = new XSDVisitorImpl();
+        return generateNodes(document, xsdVisitor);
+    }
+
     /**
      * Generates nodes from the given XSD content.
      *
@@ -127,6 +133,18 @@ public final class XSDToRecord {
      * @return a map of element names and their corresponding record nodes
      * @throws Exception if an error occurs while generating types from the XSD content
      */
+    public static Map<String, ModuleMemberDeclarationNode> generateNodes(Document document,
+                                                                         XSDVisitor xsdVisitor) throws Exception {
+        Element rootElement = document.getDocumentElement();
+        if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
+            throw new Exception(INVALID_XSD_FORMAT_ERROR);
+        }
+        xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+        Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
+        processNodeList(rootElement, nodes, xsdVisitor);
+        return nodes;
+    }
+
     /**
      * Generates nodes from the given XSD content.
      *
@@ -135,12 +153,41 @@ public final class XSDToRecord {
      * @param xsdVisitor The visitor interface to visit the XSD components
      * @throws Exception if an error occurs while generating types from the XSD content
      */
+    public static void generateNodes(Element rootElement, Map<String, ModuleMemberDeclarationNode> nodes,
+                                     XSDVisitor xsdVisitor) throws Exception {
+        for (Node childNode : VisitorUtils.asIterable(rootElement.getChildNodes())) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            Optional<XSDComponent> component = XSDFactory.generateComponents(childNode);
+            if (component.isEmpty()) {
+                continue;
+            }
+            stringBuilder.append(component.get().accept(xsdVisitor));
+            ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
+            String name = Utils.extractTypeName(moduleNode.toString().split(WHITESPACE));
+            if (name == null && childNode.hasAttributes()) {
+                name = childNode.getAttributes().getNamedItem(NAME).getNodeValue();
+            }
+            String resolvedName = nodes.containsKey(name) ? Utils.resolveNameConflicts(name, nodes) : name;
+            nodes.put(resolvedName, moduleNode);
+        }
+    }
+
     /**
      * Generates the residual nodes from the given XSD content.
      *
      * @param nodes The map of element names and their corresponding record nodes
      * @param xsdVisitor The visitor interface to visit the XSD components
      */
+    public static void generateResidualNodes(Map<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
+        processRootElements(nodes, xsdVisitor.getRootElements());
+        processNestedElements(nodes, xsdVisitor.getNestedElements());
+        processNameResolvers(nodes, xsdVisitor.getNameResolvers());
+        processExtensions(nodes, xsdVisitor);
+        processEnumerations(nodes, xsdVisitor.getEnumerationElements());
+    }
 
     private static Response generateTypes(XSDVisitor xsdVisitor,
                                           Map<String, ModuleMemberDeclarationNode> nodes) throws Exception {
@@ -166,36 +213,10 @@ public final class XSDToRecord {
     private static void processNodeList(Element rootElement, Map<String, ModuleMemberDeclarationNode> nodes,
                                         XSDVisitor xsdVisitor) throws Exception {
         generateNodes(rootElement, nodes, xsdVisitor);
-        processRootElements(nodes, xsdVisitor.getRootElements());
-        processNestedElements(nodes, xsdVisitor.getNestedElements());
-        processNameResolvers(nodes, xsdVisitor.getNameResolvers());
-        processExtensions(nodes, xsdVisitor);
-        processEnumerations(nodes, xsdVisitor.getEnumerationElements());
+        generateResidualNodes(nodes, xsdVisitor);
     }
 
-    public static void generateNodes(Element rootElement, Map<String, ModuleMemberDeclarationNode> nodes,
-                                      XSDVisitor xsdVisitor) throws Exception {
-        for (Node childNode : VisitorUtils.asIterable(rootElement.getChildNodes())) {
-            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-            StringBuilder stringBuilder = new StringBuilder();
-            Optional<XSDComponent> component = XSDFactory.generateComponents(childNode);
-            if (component.isEmpty()) {
-                continue;
-            }
-            stringBuilder.append(component.get().accept(xsdVisitor));
-            ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
-            String name = Utils.extractTypeName(moduleNode.toString().split(WHITESPACE));
-            if (name == null && childNode.hasAttributes()) {
-                name = childNode.getAttributes().getNamedItem(NAME).getNodeValue();
-            }
-            String resolvedName = nodes.containsKey(name) ? Utils.resolveNameConflicts(name, nodes) : name;
-            nodes.put(resolvedName, moduleNode);
-        }
-    }
-
-    public static void processRootElements(Map<String, ModuleMemberDeclarationNode> nodes,
+    private static void processRootElements(Map<String, ModuleMemberDeclarationNode> nodes,
                                             Map<String, String> rootElements) {
         for (Map.Entry<String, String> entry : rootElements.entrySet()) {
             String element = entry.getKey();
@@ -215,7 +236,7 @@ public final class XSDToRecord {
         }
     }
 
-    public static void processNestedElements(Map<String, ModuleMemberDeclarationNode> nodes,
+    private static void processNestedElements(Map<String, ModuleMemberDeclarationNode> nodes,
                                               Map<String, String> nestedElements) {
         for (Map.Entry<String, String> entry : nestedElements.entrySet()) {
             String element = entry.getKey();
@@ -225,7 +246,7 @@ public final class XSDToRecord {
         }
     }
 
-    public static void processNameResolvers(Map<String, ModuleMemberDeclarationNode> nodes,
+    private static void processNameResolvers(Map<String, ModuleMemberDeclarationNode> nodes,
                                              Map<String, String> nameResolvers) {
         for (Map.Entry<String, String> entry : nameResolvers.entrySet()) {
             String element = entry.getKey();
@@ -238,7 +259,7 @@ public final class XSDToRecord {
         }
     }
 
-    public static void processExtensions(Map<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
+    private static void processExtensions(Map<String, ModuleMemberDeclarationNode> nodes, XSDVisitor xsdVisitor) {
         Map<String, String> extensions = xsdVisitor.getExtensions();
         for (Map.Entry<String, String> entry : extensions.entrySet()) {
             String key = entry.getKey();
@@ -268,7 +289,7 @@ public final class XSDToRecord {
         }
     }
 
-    public static void processEnumerations(Map<String, ModuleMemberDeclarationNode> nodes,
+    private static void processEnumerations(Map<String, ModuleMemberDeclarationNode> nodes,
                                            Map<String, ArrayList<String>> enumerations) {
         for (Map.Entry<String, ArrayList<String>> entry : enumerations.entrySet()) {
             String key = entry.getKey();
