@@ -74,30 +74,26 @@ public final class XSDToRecord {
     private static final String CONTENT_FIELD = "\\#content";
     public static final String FILE_EXTENSION = ".bal";
 
-    public static Map<String, ModuleMemberDeclarationNode> fromXsd(String xsdContent) throws Exception {
-        Document document = parseXSD(xsdContent);
-        XSDVisitor xsdVisitor = new XSDVisitorImpl();
-        return generateNodes(document, xsdVisitor);
-    }
-
+    /**
+     * Converts the given XSD content into a record containing the generated types and associated diagnostics.
+     *
+     * @param document XSD content in the form of a DOM document
+     * @return a record containing the generated types and associated diagnostics
+     * @throws Exception if an error occurs while parsing the XSD content
+     */
     public static Response convert(Document document) throws Exception {
         XSDVisitor xsdVisitor = new XSDVisitorImpl();
         Map<String, ModuleMemberDeclarationNode> nodes = generateNodes(document, xsdVisitor);
         return generateTypes(xsdVisitor, nodes);
     }
 
-    public static Map<String, ModuleMemberDeclarationNode> generateNodes(Document document,
-                                                                         XSDVisitor xsdVisitor) throws Exception {
-        Element rootElement = document.getDocumentElement();
-        if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
-            throw new Exception(INVALID_XSD_FORMAT_ERROR);
-        }
-        xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
-        Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
-        processNodeList(rootElement, nodes, xsdVisitor);
-        return nodes;
-    }
-
+    /**
+     * Converts a set of XSD documents into a map of file names and their corresponding records.
+     *
+     * @param documents a map of XSD documents and their corresponding file names
+     * @return a map of file names and their corresponding records
+     * @throws Exception if an error occurs while generating types from the XSD content
+     */
     public static Map<String, Response> convert(Map<Document, String> documents) throws Exception {
         Map<String, Response> typesMap = new LinkedHashMap<>();
         XSDVisitor xsdVisitor = new XSDVisitorImpl();
@@ -115,6 +111,36 @@ public final class XSDToRecord {
         }
         return typesMap;
     }
+
+    /**
+     * Generates nodes from the given XSD content.
+     *
+     * @param xsdContent XSD content as a string
+     * @return a map of element names and their corresponding record nodes
+     * @throws Exception if an error occurs while parsing the XSD content
+     */
+    /**
+     * Generates nodes from the given XSD content.
+     *
+     * @param document XSD content in the form of a DOM document
+     * @param xsdVisitor The visitor interface to visit the XSD components
+     * @return a map of element names and their corresponding record nodes
+     * @throws Exception if an error occurs while generating types from the XSD content
+     */
+    /**
+     * Generates nodes from the given XSD content.
+     *
+     * @param rootElement The root element of the XSD content
+     * @param nodes The map of element names and their corresponding record nodes
+     * @param xsdVisitor The visitor interface to visit the XSD components
+     * @throws Exception if an error occurs while generating types from the XSD content
+     */
+    /**
+     * Generates the residual nodes from the given XSD content.
+     *
+     * @param nodes The map of element names and their corresponding record nodes
+     * @param xsdVisitor The visitor interface to visit the XSD components
+     */
 
     private static Response generateTypes(XSDVisitor xsdVisitor,
                                           Map<String, ModuleMemberDeclarationNode> nodes) throws Exception {
