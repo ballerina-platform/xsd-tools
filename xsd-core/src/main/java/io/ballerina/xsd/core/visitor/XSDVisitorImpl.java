@@ -46,6 +46,7 @@ import static io.ballerina.xsd.core.visitor.VisitorUtils.extractType;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.generateDefaultValue;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.handleDefaultValues;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.handleFixedValues;
+import static io.ballerina.xsd.core.visitor.VisitorUtils.handleKeywordNames;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.handleMaxOccurrences;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.handleMinOccurrences;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.isSimpleType;
@@ -116,6 +117,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String ANNOTATION = "annotation";
     public static final String SIMPLE_TYPE_DEFAULT_NAME = "SimpleType";
     public static final String REF = "ref";
+    public static final String SINGLE_QUOTE = "'";
 
     private final ArrayList<String> imports = new ArrayList<>();
     private final Map<String, String> extensions = new LinkedHashMap<>();
@@ -177,7 +179,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         } else if (typeNode != null && node.hasAttributes()) {
             handleFixedValues(node, builder, typeNode);
             handleMaxOccurrences(node, builder);
-            builder.append(resolveNames(nameNode.getNodeValue()));
+            builder.append(resolveNames(VisitorUtils.handleKeywordNames(nameNode)));
             handleMinOccurrences(element, builder);
             handleDefaultValues(node, builder, typeNode);
         }
@@ -186,18 +188,19 @@ public class XSDVisitorImpl implements XSDVisitor {
     }
 
     private String handleNestedSimpleTypes(StringBuilder builder, Node nameNode, XSDComponent component) {
+        String fieldName = VisitorUtils.handleKeywordNames(nameNode);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE)
-                .append(nameNode.getNodeValue()).append(WHITESPACE);
+                .append(fieldName).append(WHITESPACE);
         for (Node simpleTypeNode : asIterable(((SimpleType) component).getNode().getChildNodes())) {
             if (simpleTypeNode.hasAttributes()) {
                 Node type = simpleTypeNode.getAttributes().getNamedItem(BASE);
                 stringBuilder.append(deriveType(type)).append(WHITESPACE).append(SEMICOLON);
             }
         }
-        nestedElements.put(nameNode.getNodeValue(), stringBuilder.toString());
-        return builder.append(WHITESPACE).append(nameNode.getNodeValue()).append(WHITESPACE)
-                .append(nameNode.getNodeValue()).append(SEMICOLON).toString();
+        nestedElements.put(fieldName, stringBuilder.toString());
+        return builder.append(WHITESPACE).append(fieldName).append(WHITESPACE)
+                .append(fieldName).append(SEMICOLON).toString();
     }
 
     @Override
@@ -318,6 +321,9 @@ public class XSDVisitorImpl implements XSDVisitor {
     }
 
     private Node visitNestedElements(Node node, Node nameNode, Node typeNode) throws Exception {
+        if (nameNode == null) {
+            throw new Exception(String.format(ELEMENT_NAME_NOT_FOUND_ERROR, node.getNodeName()));
+        }
         if (typeNode == null && node.hasChildNodes()) {
             typeNode = nameNode;
             for (Node childNode : asIterable(node.getChildNodes())) {
@@ -326,14 +332,15 @@ public class XSDVisitorImpl implements XSDVisitor {
                     continue;
                 }
                 component.get().setNestedElement(true);
-                if (nestedElements.containsKey(nameNode.getNodeValue())) {
-                    String resolvedName = Utils.resolveNameConflicts(nameNode.getNodeValue(), nestedElements);
+                String fieldName = handleKeywordNames(nameNode);
+                if (nestedElements.containsKey(fieldName)) {
+                    String resolvedName = Utils.resolveNameConflicts(fieldName, nestedElements);
                     String element = component.get().accept(this);
                     nestedElements.put(resolvedName, element);
-                    nameResolvers.put(resolvedName, nameNode.getNodeValue());
+                    nameResolvers.put(resolvedName, fieldName);
                 } else {
                     String element = component.get().accept(this);
-                    nestedElements.put(nameNode.getNodeValue(), element);
+                    nestedElements.put(fieldName, element);
                 }
             }
         } else if (typeNode == null && node.hasAttributes()) {
@@ -368,7 +375,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         } else {
             builder.append(deriveType(typeNode)).append(WHITESPACE);
         }
-        builder.append(nameNode.getNodeValue());
+        builder.append(handleKeywordNames(nameNode));
         Node attributeType = attribute.getAttributes().getNamedItem(USE);
         if (defaultNode != null) {
             builder.append(generateDefaultValue(deriveType(typeNode), defaultNode.getNodeValue()));
@@ -488,15 +495,16 @@ public class XSDVisitorImpl implements XSDVisitor {
         if (nameNode == null) {
             throw new Exception(String.format(ATTRIBUTE_NOT_FOUND_ERROR, NAME));
         }
-        if (typeNode != null && typeNode.getNodeValue().equals(nameNode.getNodeValue())) {
-            String resolvedName = resolveTypeNameConflicts(nameNode.getNodeValue(), typeNode.getNodeValue());
-            nameResolvers.put(resolvedName, nameNode.getNodeValue());
+        String fieldName = handleKeywordNames(nameNode);
+        if (typeNode != null && typeNode.getNodeValue().equals(fieldName)) {
+            String resolvedName = resolveTypeNameConflicts(fieldName, typeNode.getNodeValue());
+            nameResolvers.put(resolvedName, fieldName);
             builder.append(resolvedName).append(WHITESPACE);
         } else if (typeNode == null) {
-            builder.append(nameNode.getNodeValue()).append(WHITESPACE);
+            builder.append(fieldName).append(WHITESPACE);
         }
         if (typeNode != null) {
-            builder.append(nameNode.getNodeValue()).append(WHITESPACE);
+            builder.append(fieldName).append(WHITESPACE);
             builder.append(deriveType(typeNode)).append(SEMICOLON).append(NEW_LINE);
         }
         for (Node child : asIterable(node.getChildNodes())) {
@@ -531,7 +539,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     private void setTypeDefinition(ComplexType element, Node node, StringBuilder builder) throws Exception {
         Node nameNode = node.getAttributes().getNamedItem(NAME);
         if (nameNode != null) {
-            builder.append(nameNode.getNodeValue());
+            builder.append(handleKeywordNames(nameNode));
         } else if (element.isNestedElement()) {
             builder.append(getParentNodeName(element));
         } else {
@@ -543,7 +551,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     private String getParentNodeName(ComplexType element) {
         Node parentNode = element.getNode().getParentNode();
         Node nameNode = parentNode.getAttributes().getNamedItem(NAME);
-        return nameNode != null ? nameNode.getNodeValue() : EMPTY_STRING;
+        return nameNode != null ? handleKeywordNames(nameNode) : EMPTY_STRING;
     }
 
     private void processChildNodes(Node node, StringBuilder builder) throws Exception {
@@ -595,7 +603,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                         throw new Exception(String.format(ATTRIBUTE_NOT_FOUND_ERROR, NAME));
                     }
                     stringBuilder.append(deriveType(typeNode)).append(WHITESPACE);
-                    stringBuilder.append(nameNode.getNodeValue());
+                    stringBuilder.append(handleKeywordNames(nameNode));
                 }
                 stringBuilder.append(QUESTION_MARK).append(SEMICOLON);
             }
@@ -711,7 +719,7 @@ public class XSDVisitorImpl implements XSDVisitor {
             if (nameNode == null) {
                 throw new Exception(String.format(ATTRIBUTE_NOT_FOUND_ERROR, NAME));
             }
-            builder.append(nameNode.getNodeValue());
+            builder.append(handleKeywordNames(nameNode));
             builder.append(WHITESPACE);
             Node memberTypesNode = simpleTypeNode.getAttributes().getNamedItem(MEMBER_TYPES);
             if (memberTypesNode == null) {
@@ -738,7 +746,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                     continue;
                 }
                 Node nameNode = childNode.getAttributes().getNamedItem(NAME);
-                String name = (nameNode != null) ? nameNode.getNodeValue() : SIMPLE_TYPE_DEFAULT_NAME;
+                String name = (nameNode != null) ? handleKeywordNames(nameNode) : SIMPLE_TYPE_DEFAULT_NAME;
                 if (simpleTypeNames.contains(name)) {
                     name = Utils.resolveNameConflicts(name, simpleTypeNames);
                 }
@@ -788,7 +796,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         if (nameNode == null) {
             throw new Exception(String.format(REQUIRED_FIELD_NOT_FOUND_ERROR, NAME));
         }
-        String elementName = nameNode.getNodeValue();
+        String elementName = handleKeywordNames(nameNode);
         Node typeNode = element.getAttributes().getNamedItem(TYPE);
         if (typeNode == null) {
             builder.append(SyntaxKind.ANYDATA_KEYWORD.stringValue());
