@@ -126,6 +126,33 @@ public final class XSDToRecord {
     }
 
     /**
+     * Generates nodes from multiple XSD contents
+     *
+     * @param xsdContent XSD content as a string
+     * @return a map of element names and their corresponding record nodes
+     * @throws Exception if an error occurs while parsing the XSD content
+     */
+    public static Response generateNodes(String... xsdContents) throws Exception {
+        XSDVisitor xsdVisitor = new XSDVisitorImpl();
+        Map<String, ModuleMemberDeclarationNode> typesMap = new LinkedHashMap<>();
+        ArrayList<String> existingTypes = new ArrayList<>();
+        for (String xsdContent : xsdContents) {
+            Document document = parseXSD(xsdContent);
+            Element rootElement = document.getDocumentElement();
+            if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
+                throw new Exception(INVALID_XSD_FORMAT_ERROR);
+            }
+            xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+            Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
+            xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+            xsdVisitor.clearImports();
+            processNodeList(rootElement, nodes, xsdVisitor);
+            handleExistingTypes(typesMap, xsdVisitor, existingTypes, nodes);
+        }
+        return generateTypes(xsdVisitor, typesMap);
+    }
+
+    /**
      * Generates nodes from the given XSD content.
      *
      * @param document XSD content in the form of a DOM document
@@ -197,6 +224,19 @@ public final class XSDToRecord {
         return new Response(generatedTypes, diagnostics);
     }
 
+    private static void handleExistingTypes(Map<String, ModuleMemberDeclarationNode> typesMap,
+                                            XSDVisitor xsdVisitor, ArrayList<String> existingTypes,
+                                            Map<String, ModuleMemberDeclarationNode> nodes) {
+        for (String type : existingTypes) {
+            nodes.remove(type);
+        }
+        typesMap.putAll(nodes);
+        existingTypes.addAll(nodes.keySet());
+        for (ArrayList<String> array: xsdVisitor.getEnumerationElements().values()) {
+            existingTypes.addAll(array);
+        }
+    }
+
     private static void handleExistingTypes(Map<Document, String> documents, Map<String, Response> typesMap,
                                             XSDVisitor xsdVisitor, ArrayList<String> existingTypes, Document document,
                                             Map<String, ModuleMemberDeclarationNode> nodes) throws Exception {
@@ -228,7 +268,7 @@ public final class XSDToRecord {
                 } else {
                     Utils.processRecordTypeElements(nodes, element, type, CONTENT_FIELD);
                 }
-            } else {
+            } else if (nodes.containsKey(element)) {
                 String rootElement = nodes.get(element).toString().replace(type, STRING);
                 ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(rootElement);
                 nodes.put(element, moduleNode);
@@ -251,11 +291,13 @@ public final class XSDToRecord {
         for (Map.Entry<String, String> entry : nameResolvers.entrySet()) {
             String element = entry.getKey();
             String annotation = entry.getValue();
-            String node = nodes.get(element).toString();
-            node = node.replace(annotation + WHITESPACE, element + WHITESPACE);
-            String newNode = String.format(XMLDATA_NAME_ANNOTATION, annotation) + node;
-            ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(newNode);
-            nodes.put(element, moduleNode);
+            if (nodes.containsKey(element)) {
+                String node = nodes.get(element).toString();
+                node = node.replace(annotation + WHITESPACE, element + WHITESPACE);
+                String newNode = String.format(XMLDATA_NAME_ANNOTATION, annotation) + node;
+                ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(newNode);
+                nodes.put(element, moduleNode);
+            }
         }
     }
 
