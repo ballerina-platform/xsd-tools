@@ -29,6 +29,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
+import static io.ballerina.xsd.core.Utils.isBallerinaKeyword;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.EMPTY_STRING;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.generateFixedValue;
 
@@ -252,5 +253,11 @@ public final class VisitorUtils {
             input = input.replaceAll(placeholder, UNDERSCORE);
         }
         return input;
+    }
+
+    static String handleKeywordNames(Node nameNode) {
+        String fieldName = nameNode.getNodeValue();
+        fieldName = isBallerinaKeyword(fieldName) ? XSDVisitorImpl.SINGLE_QUOTE + fieldName : fieldName;
+        return fieldName;
     }
 }

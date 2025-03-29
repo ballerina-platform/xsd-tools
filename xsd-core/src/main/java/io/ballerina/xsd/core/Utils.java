@@ -34,7 +34,9 @@ import org.ballerinalang.formatter.core.options.ForceFormattingOptions;
 import org.ballerinalang.formatter.core.options.FormattingOptions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.CLOSE_BRACES;
@@ -142,5 +144,24 @@ public class Utils {
             previous = current;
         }
         return null;
+    }
+
+    public static boolean isBallerinaKeyword(String fieldName) {
+        List<String> keywords = new ArrayList<>(Arrays.asList(
+                "if", "else", "iterator", "try", "catch", "finally", "fork", "join", "all", "some", "while", "foreach",
+                "in", "throw", "return", "returns", "break", "timeout", "transaction", "abort", "retry", "retries",
+                "continue", "bind", "with", "typeof", "enum", "wait", "let", "import", "version", "attach", "as",
+                "native", "handle", "documentation", "lock", "new", "limit", "ascending", "descending", "check",
+                "checkpanic", "panic", "trap", "start", "flush", "done", "untainted", "tainted", "onretry", "committed",
+                "aborted", "scope", "compensate", "compensation", "primarykey", "channel", "abstract", "final",
+                "listener", "client", "is", "forever", "from", "on", "select", "group", "by", "having", "order",
+                "where", "followed", "insert", "into", "update", "set", "for", "window", "query", "annotation",
+                "package", "type", "connector", "service", "action", "worker", "struct", "transformer", "const", "true",
+                "false", "reply", "create", "parameter", "boolean", "int", "float", "string", "var", "any", "anydata",
+                "datatable", "table", "byte", "future", "typedesc", "map", "exception", "json", "xml", "xmlns", "error",
+                "stream", "streamlet", "aggregation", "record", "object", "function", "public", "private", "extern",
+                "resource", "remote"
+        ));
+        return keywords.contains(fieldName);
     }
 }
