@@ -126,9 +126,9 @@ public final class XSDToRecord {
     }
 
     /**
-     * Generates nodes from multiple XSD contents
+     * Generates nodes from multiple XSD contents.
      *
-     * @param xsdContent XSD content as a string
+     * @param xsdContents XSD content as an array of strings
      * @return a map of element names and their corresponding record nodes
      * @throws Exception if an error occurs while parsing the XSD content
      */
