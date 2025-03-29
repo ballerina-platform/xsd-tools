@@ -321,9 +321,6 @@ public class XSDVisitorImpl implements XSDVisitor {
     }
 
     private Node visitNestedElements(Node node, Node nameNode, Node typeNode) throws Exception {
-        if (nameNode == null) {
-            throw new Exception(String.format(ELEMENT_NAME_NOT_FOUND_ERROR, node.getNodeName()));
-        }
         if (typeNode == null && node.hasChildNodes()) {
             typeNode = nameNode;
             for (Node childNode : asIterable(node.getChildNodes())) {
@@ -332,6 +329,9 @@ public class XSDVisitorImpl implements XSDVisitor {
                     continue;
                 }
                 component.get().setNestedElement(true);
+                if (nameNode == null) {
+                    throw new Exception(String.format(ELEMENT_NAME_NOT_FOUND_ERROR, node.getNodeName()));
+                }
                 String fieldName = handleKeywordNames(nameNode);
                 if (nestedElements.containsKey(fieldName)) {
                     String resolvedName = Utils.resolveNameConflicts(fieldName, nestedElements);
