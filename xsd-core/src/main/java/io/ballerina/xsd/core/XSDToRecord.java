@@ -33,6 +33,7 @@ import org.w3c.dom.Node;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -225,7 +226,7 @@ public final class XSDToRecord {
     }
 
     private static void handleExistingTypes(Map<String, ModuleMemberDeclarationNode> typesMap,
-                                            XSDVisitor xsdVisitor, ArrayList<String> existingTypes,
+                                            XSDVisitor xsdVisitor, Collection<String> existingTypes,
                                             Map<String, ModuleMemberDeclarationNode> nodes) {
         for (String type : existingTypes) {
             nodes.remove(type);
@@ -240,9 +241,7 @@ public final class XSDToRecord {
     private static void handleExistingTypes(Map<Document, String> documents, Map<String, Response> typesMap,
                                             XSDVisitor xsdVisitor, ArrayList<String> existingTypes, Document document,
                                             Map<String, ModuleMemberDeclarationNode> nodes) throws Exception {
-        for (String type : existingTypes) {
-            nodes.remove(type);
-        }
+        existingTypes.forEach(nodes.keySet()::remove);
         typesMap.put(documents.get(document) + FILE_EXTENSION, generateTypes(xsdVisitor, nodes));
         existingTypes.addAll(nodes.keySet());
         for (ArrayList<String> array: xsdVisitor.getEnumerationElements().values()) {
