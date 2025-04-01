@@ -18,6 +18,7 @@
 
 package io.ballerina.xsd.core.visitor;
 
+import io.ballerina.compiler.syntax.tree.SyntaxInfo;
 import io.ballerina.xsd.core.component.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -252,5 +253,11 @@ public final class VisitorUtils {
             input = input.replaceAll(placeholder, UNDERSCORE);
         }
         return input;
+    }
+
+    static String handleKeywordNames(Node nameNode) {
+        String fieldName = nameNode.getNodeValue();
+        fieldName = SyntaxInfo.isKeyword(fieldName) ? XSDVisitorImpl.SINGLE_QUOTE + fieldName : fieldName;
+        return fieldName;
     }
 }
