@@ -18,6 +18,7 @@
 
 package io.ballerina.xsd.core.visitor;
 
+import io.ballerina.compiler.syntax.tree.SyntaxInfo;
 import io.ballerina.xsd.core.component.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -29,7 +30,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
 
-import static io.ballerina.xsd.core.Utils.isBallerinaKeyword;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.EMPTY_STRING;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.generateFixedValue;
 
@@ -257,7 +257,7 @@ public final class VisitorUtils {
 
     static String handleKeywordNames(Node nameNode) {
         String fieldName = nameNode.getNodeValue();
-        fieldName = isBallerinaKeyword(fieldName) ? XSDVisitorImpl.SINGLE_QUOTE + fieldName : fieldName;
+        fieldName = SyntaxInfo.isKeyword(fieldName) ? XSDVisitorImpl.SINGLE_QUOTE + fieldName : fieldName;
         return fieldName;
     }
 }

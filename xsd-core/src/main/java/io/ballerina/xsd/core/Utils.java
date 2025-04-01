@@ -34,11 +34,8 @@ import org.ballerinalang.formatter.core.options.ForceFormattingOptions;
 import org.ballerinalang.formatter.core.options.FormattingOptions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.CLOSE_BRACES;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.RECORD_WITH_OPEN_BRACE;
@@ -54,22 +51,6 @@ import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.WHITESPACE;
  * @since 0.1.0
  */
 public class Utils {
-    private static final Set<String> keywords = new HashSet<>(Arrays.asList(
-            "abort", "aborted", "abstract", "action", "aggregation", "all", "annotation", "any", "anydata",
-            "as", "ascending", "attach", "boolean", "break", "by", "byte", "catch", "channel", "check",
-            "checkpanic", "client", "committed", "compensate", "compensation", "connector", "const",
-            "continue", "create", "datatable", "descending", "documentation", "done", "else", "enum",
-            "error", "exception", "extern", "false", "final", "finally", "float", "flush", "followed",
-            "for", "foreach", "forever", "fork", "from", "function", "future", "group", "handle",
-            "having", "if", "import", "in", "insert", "int", "into", "is", "iterator", "join", "json",
-            "let", "limit", "listener", "lock", "map", "native", "new", "object", "on", "onretry",
-            "order", "package", "panic", "parameter", "primarykey", "private", "public", "query",
-            "record", "remote", "reply", "resource", "retry", "retries", "return", "returns", "scope",
-            "select", "service", "set", "some", "start", "stream", "streamlet", "string", "struct",
-            "table", "tainted", "throw", "timeout", "transformer", "transaction", "trap", "true", "try",
-            "type", "typedesc", "typeof", "untainted", "update", "var", "version", "wait", "where",
-            "while", "window", "with", "worker", "xml", "xmlns"
-    ));
 
     private Utils() {
     }
@@ -161,9 +142,5 @@ public class Utils {
             previous = current;
         }
         return null;
-    }
-
-    public static boolean isBallerinaKeyword(String fieldName) {
-        return keywords.contains(fieldName);
     }
 }
