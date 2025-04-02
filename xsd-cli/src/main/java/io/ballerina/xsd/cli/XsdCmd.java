@@ -96,7 +96,8 @@ public class XsdCmd implements BLauncherCmd {
             return;
         }
         if (this.input == null || this.input.isEmpty()) {
-            this.outStream.println("Error: Input XSD file path is required");
+            outStream.println("An XSD file path or directory is required to generate the types");
+            outStream.println("e.g: bal xsd <xsd source file/directory path>");
             exitOnError();
             return;
         }
@@ -124,12 +125,6 @@ public class XsdCmd implements BLauncherCmd {
         }
         if (Files.exists(outputDirPath) && !Files.isDirectory(outputDirPath)) {
             outStream.printf(INVALID_DIRECTORY_PATH + "%n", outputPath);
-            exitOnError();
-            return;
-        }
-        if (input.isEmpty()) {
-            outStream.println("An XSD file path or directory is required to generate the types");
-            outStream.println("e.g: bal xsd <xsd source file/directory path>");
             exitOnError();
             return;
         }
