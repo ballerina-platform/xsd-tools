@@ -74,7 +74,7 @@ public class XsdCmd implements BLauncherCmd {
     @CommandLine.Option(names = {"-h", "--help"}, hidden = true)
     private boolean helpFlag;
 
-    @CommandLine.Parameters(description = "Input file path of the XSD schema")
+    @CommandLine.Parameters(description = "Input file path of the XSD schema", arity = "0..1")
     private String input = "";
 
     @CommandLine.Option(names = {"-m", "--module"}, description = "The name of the module in which the Ballerina " +
@@ -92,6 +92,10 @@ public class XsdCmd implements BLauncherCmd {
             StringBuilder stringBuilder = new StringBuilder();
             printLongDesc(stringBuilder);
             outStream.println(stringBuilder);
+            return;
+        }
+        if (input == null || input.isEmpty()) {
+            outStream.println("Error: Input XSD file path is required");
             return;
         }
         Path currentDir = Paths.get("").toAbsolutePath();
