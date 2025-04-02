@@ -74,7 +74,7 @@ public class XsdCmd implements BLauncherCmd {
     @CommandLine.Option(names = {"-h", "--help"}, hidden = true)
     private boolean helpFlag;
 
-    @CommandLine.Parameters(description = "Input file path of the XSD schema")
+    @CommandLine.Parameters(description = "Input file path of the XSD schema", arity = "0..1")
     private String input = "";
 
     @CommandLine.Option(names = {"-m", "--module"}, description = "The name of the module in which the Ballerina " +
@@ -91,22 +91,28 @@ public class XsdCmd implements BLauncherCmd {
         if (this.helpFlag) {
             StringBuilder stringBuilder = new StringBuilder();
             printLongDesc(stringBuilder);
-            outStream.println(stringBuilder);
+            this.outStream.println(stringBuilder);
+            exitOnError();
+            return;
+        }
+        if (this.input == null || this.input.isEmpty()) {
+            this.outStream.println("Error: Input XSD file path is required");
+            exitOnError();
             return;
         }
         Path currentDir = Paths.get("").toAbsolutePath();
         if (!ProjectUtils.isBallerinaProject(currentDir)) {
-            outStream.printf(INVALID_BALLERINA_DIRECTORY_ERROR + "%n", currentDir);
+            this.outStream.printf(INVALID_BALLERINA_DIRECTORY_ERROR + "%n", currentDir);
             exitOnError();
             return;
         }
         if (!ProjectUtils.validateModuleName(outputPath)) {
-            outStream.println("ERROR: invalid module name : '" + outputPath + "' :\n" +
+            this.outStream.println("ERROR: invalid module name : '" + outputPath + "' :\n" +
                     "module name can only contain alphanumerics, underscores and periods");
             exitOnError();
             return;
         } else if (!ProjectUtils.validateNameLength(outputPath)) {
-            outStream.println("ERROR: invalid module name : '" + outputPath + "' :\n" +
+            this.outStream.println("ERROR: invalid module name : '" + outputPath + "' :\n" +
                     "maximum length of module name is 256 characters");
             exitOnError();
             return;
