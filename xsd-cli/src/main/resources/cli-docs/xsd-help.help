@@ -12,7 +12,7 @@ OPTIONS
            Path to an XSD file or a directory containing XSD files. This is a mandatory input.
 
        -m, --module <output-module-name>
-           The name of the module in which the Ballerina client and record types are generated.
+           The name of the module in which the Ballerina types are generated.
 
 EXAMPLE
        Generate types from an XSD schema. The output will be saved to the types.bal file 
