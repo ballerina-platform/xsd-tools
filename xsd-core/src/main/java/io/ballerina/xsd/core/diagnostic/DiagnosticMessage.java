@@ -58,12 +58,6 @@ public class DiagnosticMessage {
 
     public static XsdDiagnostic xsdToBallerinaError(String message) {
         return new XsdDiagnostic("XSD_TO_BALLERINA_100", message,
-                DiagnosticSeverity.ERROR, null, new Object[]{});
-    }
-
-    public static XsdDiagnostic xsdToBallerinaError101(Exception e, Object[] args) {
-        return new XsdDiagnostic("XSD_TO_BALLERINA_101",
-                String.format("The content of the XSD is not supported. %s", e.getMessage()),
-                DiagnosticSeverity.ERROR, null, args);
+                                 DiagnosticSeverity.ERROR, null, new Object[]{});
     }
 }
