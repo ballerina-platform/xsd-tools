@@ -185,7 +185,12 @@ public class XsdCmd implements BLauncherCmd {
         }
         Map<String, Response> result = XSDToRecord.convert(documents);
         for (Map.Entry<String, Response> entry : result.entrySet()) {
-            writeSourceToFiles(outputDirPath, entry.getValue(), entry.getKey());
+            if (entry.getValue().diagnostics().isEmpty()) {
+                writeSourceToFiles(outputDirPath, entry.getValue(), entry.getKey());
+            } else {
+                outStream.println(String.format("XSD file - %s contains errors.\n Error: \n", entry.getKey()));
+                entry.getValue().diagnostics().forEach(xsdDiagnostic -> outStream.println(xsdDiagnostic.toString()));
+            }
         }
     }
 
