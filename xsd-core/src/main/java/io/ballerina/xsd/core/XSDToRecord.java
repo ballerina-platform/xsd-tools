@@ -100,7 +100,10 @@ public final class XSDToRecord {
         Map<String, Response> typesMap = new LinkedHashMap<>();
         XSDVisitor xsdVisitor = new XSDVisitorImpl();
         ArrayList<String> existingTypes = new ArrayList<>();
-        for (Document document : documents.keySet()) {
+
+        for (Map.Entry<Document, String> entry : documents.entrySet()) {
+            Document document = entry.getKey();
+            String fileName = entry.getValue();
             try {
                 Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
                 Element rootElement = document.getDocumentElement();
@@ -112,11 +115,7 @@ public final class XSDToRecord {
                 processNodeList(rootElement, nodes, xsdVisitor);
                 handleExistingTypes(documents, typesMap, xsdVisitor, existingTypes, document, nodes);
             } catch (Exception e) {
-                String errorMessage = String.format(
-                        "An error occurred while processing XSD contents \nError: %s", e.getMessage()
-                );
-                xsdVisitor.getDiagnostics().add(xsdToBallerinaError(errorMessage));
-                typesMap.put(documents.get(document), new Response(EMPTY_STRING, xsdVisitor.getDiagnostics()));
+                typesMap.put(fileName, new Response(EMPTY_STRING, xsdVisitor.getDiagnostics()));
             }
         }
         return typesMap;
@@ -140,7 +139,6 @@ public final class XSDToRecord {
      *
      * @param xsdContents XSD content as an array of strings
      * @return a map of element names and their corresponding record nodes
-     * @throws Exception if an error occurs while parsing the XSD content
      */
     public static Response generateNodes(String... xsdContents) {
         XSDVisitor xsdVisitor = new XSDVisitorImpl();
@@ -165,9 +163,8 @@ public final class XSDToRecord {
             return generateTypes(xsdVisitor, typesMap);
         } catch (Exception e) {
             String errorMessage = String.format(
-                    "An error occurred while processing XSD contents \nError: %s \nContent:%n%s",
-                    e.getMessage(),
-                    xsdContents[index]
+                    "An error occurred while processing XSD content at index %d.%n Error: %s%n%n XSD Content: %n%s",
+                    index, e.getMessage(), xsdContents[index]
             );
             xsdVisitor.getDiagnostics().add(xsdToBallerinaError(errorMessage));
             return new Response(EMPTY_STRING, xsdVisitor.getDiagnostics());

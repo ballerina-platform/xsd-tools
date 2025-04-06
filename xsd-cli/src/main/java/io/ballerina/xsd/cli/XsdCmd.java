@@ -179,16 +179,21 @@ public class XsdCmd implements BLauncherCmd {
         }
         Map<Document, String> documents = new LinkedHashMap<>();
         for (File file : directoryFiles) {
-            String xmlFileContent = Files.readString(file.toPath());
-            Document document = parseXSD(xmlFileContent);
-            documents.put(document, file.getName().substring(0, file.getName().lastIndexOf('.')));
+            String fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
+            try {
+                String xmlFileContent = Files.readString(file.toPath());
+                Document document = parseXSD(xmlFileContent);
+                documents.put(document, fileName);
+            } catch (Exception e) {
+                outStream.printf("XSD file: %s contains errors.%nError: %s", fileName, e.getLocalizedMessage());
+            }
         }
         Map<String, Response> result = XSDToRecord.convert(documents);
         for (Map.Entry<String, Response> entry : result.entrySet()) {
             if (entry.getValue().diagnostics().isEmpty()) {
                 writeSourceToFiles(outputDirPath, entry.getValue(), entry.getKey());
             } else {
-                outStream.println(String.format("XSD file - %s contains errors.\n Error: \n", entry.getKey()));
+                outStream.printf("XSD file: %s contains errors.%nError: %n", entry.getKey());
                 entry.getValue().diagnostics().forEach(xsdDiagnostic -> outStream.println(xsdDiagnostic.toString()));
             }
         }
