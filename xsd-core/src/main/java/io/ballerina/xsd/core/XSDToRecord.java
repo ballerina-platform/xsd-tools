@@ -212,11 +212,15 @@ public final class XSDToRecord {
             }
             stringBuilder.append(component.get().accept(xsdVisitor));
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
-            String name = Utils.extractTypeName(moduleNode.toString().split(WHITESPACE));
+            String name = Utils.extractTypeName(stringBuilder.toString().split(WHITESPACE));
             if (name == null && childNode.hasAttributes()) {
                 name = childNode.getAttributes().getNamedItem(NAME).getNodeValue();
             }
-            String resolvedName = nodes.containsKey(name) ? Utils.resolveNameConflicts(name, nodes) : name;
+            String resolvedName = name;
+            if (nodes.containsKey(name)) {
+                resolvedName = Utils.resolveNameConflicts(name, nodes);
+                xsdVisitor.getNameResolvers().put(resolvedName, name);
+            }
             nodes.put(resolvedName, moduleNode);
         }
     }
