@@ -63,6 +63,14 @@ public class Utils {
         return NodeFactory.createModulePartNode(imports, moduleMembers, eofToken);
     }
 
+    public static ModulePartNode generateModulePartNodeWithoutImports(Map<String, ModuleMemberDeclarationNode> nodes)
+            throws Exception {
+        NodeList<ModuleMemberDeclarationNode> moduleMembers = AbstractNodeFactory.createNodeList(nodes.values());
+        Token eofToken = AbstractNodeFactory.createIdentifierToken(XSDToRecord.EOF_TOKEN);
+        return NodeFactory.createModulePartNode(AbstractNodeFactory.createNodeList(new ArrayList<>()),
+                                                moduleMembers, eofToken);
+    }
+
     static void processRecordTypeElements(Map<String, ModuleMemberDeclarationNode> nodes,
                                           String element, String type, String contentField) {
         String fields = extractSubstring(nodes.get(type).toString(), RECORD_WITH_OPEN_BRACE,
