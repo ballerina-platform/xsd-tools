@@ -172,6 +172,43 @@ public final class XSDToRecord {
     }
 
     /**
+     * Generates nodes as a syntax tree from multiple XSD contents.
+     *
+     * @param xsdContents XSD content as an array of strings
+     * @return a {@link ModuleNodeResponse} containing the generated nodes as a syntax tree and diagnostics
+     */
+    public static ModuleNodeResponse generateNodes(ArrayList<String> xsdContents) {
+        XSDVisitor xsdVisitor = new XSDVisitorImpl();
+        Map<String, ModuleMemberDeclarationNode> typesMap = new LinkedHashMap<>();
+        ArrayList<String> existingTypes = new ArrayList<>();
+        int index = 0;
+        try {
+            for (String xsdContent : xsdContents) {
+                Document document = parseXSD(xsdContent);
+                Element rootElement = document.getDocumentElement();
+                if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
+                    throw new Exception(INVALID_XSD_FORMAT_ERROR);
+                }
+                xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+                Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
+                xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+                xsdVisitor.clearImports();
+                processNodeList(rootElement, nodes, xsdVisitor);
+                handleExistingTypes(typesMap, xsdVisitor, existingTypes, nodes);
+            }
+            index++;
+            return generateTypesWithoutImports(xsdVisitor, typesMap);
+        } catch (Exception e) {
+            String errorMessage = String.format(
+                    "An error occurred while processing XSD content at index %d.%n Error: %s%n%n XSD Content: %n%s",
+                    index, e.getMessage(), xsdContents.get(index)
+            );
+            xsdVisitor.getDiagnostics().add(xsdToBallerinaError(errorMessage));
+            return new ModuleNodeResponse(null, xsdVisitor.getDiagnostics());
+        }
+    }
+
+    /**
      * Generates nodes from the given XSD content.
      *
      * @param document XSD content in the form of a DOM document
@@ -245,6 +282,14 @@ public final class XSDToRecord {
         String generatedTypes = Utils.formatModuleParts(modulePartNode);
         List<XsdDiagnostic> diagnostics = xsdVisitor.getDiagnostics();
         return new Response(generatedTypes, diagnostics);
+    }
+
+    private static ModuleNodeResponse generateTypesWithoutImports(XSDVisitor xsdVisitor,
+                                                                  Map<String, ModuleMemberDeclarationNode> nodes)
+            throws Exception {
+        ModulePartNode modulePartNode = Utils.generateModulePartNodeWithoutImports(nodes);
+        List<XsdDiagnostic> diagnostics = xsdVisitor.getDiagnostics();
+        return new ModuleNodeResponse(modulePartNode, diagnostics);
     }
 
     private static void handleExistingTypes(Map<String, ModuleMemberDeclarationNode> typesMap,
