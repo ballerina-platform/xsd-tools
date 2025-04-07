@@ -18,6 +18,7 @@
 
 package io.ballerina.xsd.core.visitor;
 
+import io.ballerina.compiler.syntax.tree.SyntaxInfo;
 import io.ballerina.compiler.syntax.tree.SyntaxKind;
 import io.ballerina.xsd.core.Utils;
 import io.ballerina.xsd.core.XSDFactory;
@@ -540,7 +541,14 @@ public class XSDVisitorImpl implements XSDVisitor {
     private void setTypeDefinition(ComplexType element, Node node, StringBuilder builder) throws Exception {
         Node nameNode = node.getAttributes().getNamedItem(NAME);
         if (nameNode != null) {
-            builder.append(handleKeywordNames(nameNode));
+            if (SyntaxInfo.isKeyword(nameNode.getNodeValue())) {
+                String resolvedName = Character.toUpperCase(nameNode.getNodeValue().charAt(0))
+                        + nameNode.getNodeValue().substring(1);
+                nameResolvers.put(resolvedName, nameNode.getNodeValue());
+                builder.append(resolvedName);
+            } else {
+                builder.append(handleKeywordNames(nameNode));
+            }
         } else if (element.isNestedElement()) {
             builder.append(getParentNodeName(element));
         } else {
