@@ -38,6 +38,10 @@
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
+        <Class name="io.ballerina.xsd.core.ModuleNodeResponse" />
+        <Bug pattern="EI_EXPOSE_REP" />
+    </Match>
+    <Match>
         <Class name="io.ballerina.wsdl.core.WsdlToBallerina" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
@@ -71,6 +75,10 @@
     </Match>
     <Match>
         <Class name="io.ballerina.xsd.core.Response" />
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+    <Match>
+        <Class name="io.ballerina.xsd.core.ModuleNodeResponse" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
