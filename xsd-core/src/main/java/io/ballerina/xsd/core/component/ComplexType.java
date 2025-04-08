@@ -18,6 +18,7 @@
 
 package io.ballerina.xsd.core.component;
 
+import io.ballerina.xsd.core.node.Kind;
 import io.ballerina.xsd.core.visitor.XSDVisitor;
 import org.w3c.dom.Node;
 
@@ -73,5 +74,10 @@ public class ComplexType implements XSDComponent {
     @Override
     public void setNestedElement(boolean isNestedElement) {
         this.isNestedElement = isNestedElement;
+    }
+
+    @Override
+    public Kind getKind() {
+        return Kind.COMPLEX_TYPE;
     }
 }

@@ -38,7 +38,7 @@ import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.generateFixedValue;
  *
  * @since 0.1.0
  */
-public final class VisitorUtils {
+public final class Utils {
     public static final String WHITESPACE = " ";
     public static final String EQUAL = "=";
     public static final String DEFAULT = "default";

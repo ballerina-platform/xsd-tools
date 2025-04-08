@@ -26,4 +26,7 @@ module io.ballerina.xsd.core {
     exports io.ballerina.xsd.core.visitor;
     exports io.ballerina.xsd.core.component;
     exports io.ballerina.xsd.core.diagnostic;
+    exports io.ballerina.xsd.core.context;
+    exports io.ballerina.xsd.core.response;
+    exports io.ballerina.xsd.core.node;
 }

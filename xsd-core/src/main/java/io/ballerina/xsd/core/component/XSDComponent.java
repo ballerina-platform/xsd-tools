@@ -18,6 +18,7 @@
 
 package io.ballerina.xsd.core.component;
 
+import io.ballerina.xsd.core.node.Kind;
 import io.ballerina.xsd.core.visitor.XSDVisitor;
 
 /**
@@ -33,4 +34,5 @@ public interface XSDComponent {
     boolean isNestedElement();
     void setOptional(boolean isOptional);
     void setNestedElement(boolean isOptional);
+    Kind getKind();
 }
