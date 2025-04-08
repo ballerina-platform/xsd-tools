@@ -26,6 +26,8 @@ import io.ballerina.compiler.syntax.tree.NodeFactory;
 import io.ballerina.compiler.syntax.tree.NodeList;
 import io.ballerina.compiler.syntax.tree.NodeParser;
 import io.ballerina.compiler.syntax.tree.Token;
+import io.ballerina.xsd.core.node.Kind;
+import io.ballerina.xsd.core.node.MemberNode;
 import io.ballerina.xsd.core.visitor.XSDVisitor;
 import io.ballerina.xsd.core.visitor.XSDVisitorImpl;
 import org.ballerinalang.formatter.core.Formatter;
@@ -55,40 +57,36 @@ public class Utils {
     private Utils() {
     }
 
-    public static ModulePartNode generateModulePartNode(Map<String, ModuleMemberDeclarationNode> nodes,
-                                                 XSDVisitor xsdVisitor) throws Exception {
-        NodeList<ModuleMemberDeclarationNode> moduleMembers = AbstractNodeFactory.createNodeList(nodes.values());
+    public static ModulePartNode generateModulePartNode(Map<String, MemberNode> nodes,
+                                                        XSDVisitor xsdVisitor) throws Exception {
+        NodeList<ModuleMemberDeclarationNode> moduleMembers = AbstractNodeFactory
+                .createNodeList(nodes.values().stream().map(MemberNode::node).toList());
         NodeList<ImportDeclarationNode> imports = getImportDeclarations(xsdVisitor);
         Token eofToken = AbstractNodeFactory.createIdentifierToken(XSDToRecord.EOF_TOKEN);
         return NodeFactory.createModulePartNode(imports, moduleMembers, eofToken);
     }
 
-    public static ModulePartNode generateModulePartNodeWithoutImports(Map<String, ModuleMemberDeclarationNode> nodes)
-            throws Exception {
-        NodeList<ModuleMemberDeclarationNode> moduleMembers = AbstractNodeFactory.createNodeList(nodes.values());
-        Token eofToken = AbstractNodeFactory.createIdentifierToken(XSDToRecord.EOF_TOKEN);
-        return NodeFactory.createModulePartNode(AbstractNodeFactory.createNodeList(new ArrayList<>()),
-                                                moduleMembers, eofToken);
-    }
-
-    static void processRecordTypeElements(Map<String, ModuleMemberDeclarationNode> nodes,
+    static void processRecordTypeElements(Map<String, MemberNode> nodes,
                                           String element, String type, String contentField) {
-        String fields = extractSubstring(nodes.get(type).toString(), RECORD_WITH_OPEN_BRACE,
-                               VERTICAL_BAR + CLOSE_BRACES + SEMICOLON, contentField);
-        String extendedValue = nodes.get(element)
-                .toString().replace(type + WHITESPACE + contentField + SEMICOLON, fields);
-        ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
-        nodes.put(element, moduleNode);
+        if (nodes.containsKey(type) && nodes.containsKey(element)) {
+            String fields = extractSubstring(nodes.get(type).node().toString(), RECORD_WITH_OPEN_BRACE,
+                    VERTICAL_BAR + CLOSE_BRACES + SEMICOLON, contentField);
+            String extendedValue = nodes.get(element).node()
+                    .toString().replace(type + WHITESPACE + contentField + SEMICOLON, fields);
+            ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
+            nodes.put(element, new MemberNode(moduleNode, Kind.ELEMENT));
+        }
     }
 
-    static void processSingleTypeElements(Map<String, ModuleMemberDeclarationNode> nodes,
+    static void processSingleTypeElements(Map<String, MemberNode> nodes,
                                           String element, String type, String[] tokens, String contentField) {
-        String token = (!nodes.containsKey(type)) || nodes.get(type).toString().contains(XSDVisitorImpl.ENUM)
+        String token = (!nodes.containsKey(type) || nodes.get(type).node().toString().contains(XSDVisitorImpl.ENUM))
                 ? STRING : tokens[tokens.length - 2];
-        String rootElement = nodes.get(element).toString().replace(type + WHITESPACE + contentField,
-                token + WHITESPACE + contentField);
-        ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(rootElement);
-        nodes.put(element, moduleNode);
+        if (nodes.containsKey(element)) {
+            String rootElement = nodes.get(element).node().toString()
+                    .replace(type + WHITESPACE + contentField, token + WHITESPACE + contentField);
+            nodes.put(element, new MemberNode(NodeParser.parseModuleMemberDeclaration(rootElement), Kind.ELEMENT));
+        }
     }
 
     static String extractSubstring(String baseString, String startToken, String endToken, String contentField) {
