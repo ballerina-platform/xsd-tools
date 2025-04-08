@@ -3,8 +3,7 @@
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License.
- * You may obtain a copy of the License at
+ * in compliance with the License. You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,10 +15,11 @@
  * under the License.
  */
 
-package io.ballerina.xsd.core;
+package io.ballerina.xsd.core.response;
 
 import io.ballerina.compiler.syntax.tree.ModulePartNode;
-import io.ballerina.xsd.core.diagnostic.XsdDiagnostic;
+import io.ballerina.xsd.core.context.Context;
+import io.ballerina.xsd.core.diagnostic.XSDDiagnostic;
 
 import java.util.List;
 
@@ -27,8 +27,9 @@ import java.util.List;
  * Represents a response that contains the generated syntax tree and associated diagnostics.
  *
  * @param types       The generated types as a {@link ModulePartNode} representation.
- * @param diagnostics A list of {@link XsdDiagnostic} objects containing any diagnostic
+ * @param diagnostics A list of {@link XSDDiagnostic} objects containing any diagnostic
  *                    messages related to the XSD processing.
+ * @param context     The {@link Context} used during the generation of the syntax tree.
  * @since 0.1.0
  */
-public record ModuleNodeResponse(ModulePartNode types, List<XsdDiagnostic> diagnostics) { }
+public record NodeResponse(ModulePartNode types, List<XSDDiagnostic> diagnostics, Context context) { }
