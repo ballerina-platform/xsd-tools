@@ -33,14 +33,14 @@ import java.util.List;
  *
  * @since 1.0.0
  */
-public class XsdDiagnostic extends Diagnostic {
+public class XSDDiagnostic extends Diagnostic {
     private final DiagnosticInfo diagnosticInfo;
     private final Location location;
     private final List<DiagnosticProperty<?>> properties;
     private final String message;
     private final String severity;
 
-    public XsdDiagnostic(String code, String message, DiagnosticSeverity severity,
+    public XSDDiagnostic(String code, String message, DiagnosticSeverity severity,
                          Location location, Object[] args) {
         this.diagnosticInfo = new DiagnosticInfo(code, message, severity);
         this.location = location;
