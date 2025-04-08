@@ -16,9 +16,9 @@
  * under the License.
  */
 
-package io.ballerina.xsd.core;
+package io.ballerina.xsd.core.response;
 
-import io.ballerina.xsd.core.diagnostic.XsdDiagnostic;
+import io.ballerina.xsd.core.diagnostic.XSDDiagnostic;
 
 import java.util.List;
 
@@ -26,9 +26,9 @@ import java.util.List;
  * Represents a response that contains the generated types and associated diagnostics.
  *
  * @param types       The generated types as a string representation.
- * @param diagnostics A list of {@link XsdDiagnostic} objects containing any diagnostic
+ * @param diagnostics A list of {@link XSDDiagnostic} objects containing any diagnostic
  *                    messages related to the XSD processing.
  * 
  * @since 0.1.0
  */
-public record Response(String types, List<XsdDiagnostic> diagnostics) { }
+public record Response(String types, List<XSDDiagnostic> diagnostics) { }
