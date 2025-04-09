@@ -44,12 +44,14 @@ import java.util.Optional;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import static io.ballerina.xsd.core.diagnostic.DiagnosticMessage.xsdToBallerinaError;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.CLOSE_BRACES;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.COMMA;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.OPEN_BRACES;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.QUOTATION_MARK;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.STRING;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.WHITESPACE;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.EMPTY_STRING;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.ENUM;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.NAME;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.PUBLIC;
@@ -93,22 +95,28 @@ public final class XSDToRecord {
      *
      * @param documents a map of XSD documents and their corresponding file names
      * @return a map of file names and their corresponding records
-     * @throws Exception if an error occurs while generating types from the XSD content
      */
-    public static Map<String, Response> convert(Map<Document, String> documents) throws Exception {
+    public static Map<String, Response> convert(Map<Document, String> documents) {
         Map<String, Response> typesMap = new LinkedHashMap<>();
         XSDVisitor xsdVisitor = new XSDVisitorImpl();
         ArrayList<String> existingTypes = new ArrayList<>();
-        for (Document document : documents.keySet()) {
-            Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
-            Element rootElement = document.getDocumentElement();
-            if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
-                throw new Exception(INVALID_XSD_FORMAT_ERROR);
+
+        for (Map.Entry<Document, String> entry : documents.entrySet()) {
+            Document document = entry.getKey();
+            String fileName = entry.getValue();
+            try {
+                Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
+                Element rootElement = document.getDocumentElement();
+                if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
+                    throw new Exception(INVALID_XSD_FORMAT_ERROR);
+                }
+                xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+                xsdVisitor.clearImports();
+                processNodeList(rootElement, nodes, xsdVisitor);
+                handleExistingTypes(documents, typesMap, xsdVisitor, existingTypes, document, nodes);
+            } catch (Exception e) {
+                typesMap.put(fileName, new Response(EMPTY_STRING, xsdVisitor.getDiagnostics()));
             }
-            xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
-            xsdVisitor.clearImports();
-            processNodeList(rootElement, nodes, xsdVisitor);
-            handleExistingTypes(documents, typesMap, xsdVisitor, existingTypes, document, nodes);
         }
         return typesMap;
     }
@@ -131,26 +139,36 @@ public final class XSDToRecord {
      *
      * @param xsdContents XSD content as an array of strings
      * @return a map of element names and their corresponding record nodes
-     * @throws Exception if an error occurs while parsing the XSD content
      */
-    public static Response generateNodes(String... xsdContents) throws Exception {
+    public static Response generateNodes(String... xsdContents) {
         XSDVisitor xsdVisitor = new XSDVisitorImpl();
         Map<String, ModuleMemberDeclarationNode> typesMap = new LinkedHashMap<>();
         ArrayList<String> existingTypes = new ArrayList<>();
-        for (String xsdContent : xsdContents) {
-            Document document = parseXSD(xsdContent);
-            Element rootElement = document.getDocumentElement();
-            if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
-                throw new Exception(INVALID_XSD_FORMAT_ERROR);
+        int index = 0;
+        try {
+            for (String xsdContent : xsdContents) {
+                Document document = parseXSD(xsdContent);
+                Element rootElement = document.getDocumentElement();
+                if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
+                    throw new Exception(INVALID_XSD_FORMAT_ERROR);
+                }
+                xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+                Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
+                xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+                xsdVisitor.clearImports();
+                processNodeList(rootElement, nodes, xsdVisitor);
+                handleExistingTypes(typesMap, xsdVisitor, existingTypes, nodes);
             }
-            xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
-            Map<String, ModuleMemberDeclarationNode> nodes = new LinkedHashMap<>();
-            xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
-            xsdVisitor.clearImports();
-            processNodeList(rootElement, nodes, xsdVisitor);
-            handleExistingTypes(typesMap, xsdVisitor, existingTypes, nodes);
+            index++;
+            return generateTypes(xsdVisitor, typesMap);
+        } catch (Exception e) {
+            String errorMessage = String.format(
+                    "An error occurred while processing XSD content at index %d.%n Error: %s%n%n XSD Content: %n%s",
+                    index, e.getMessage(), xsdContents[index]
+            );
+            xsdVisitor.getDiagnostics().add(xsdToBallerinaError(errorMessage));
+            return new Response(EMPTY_STRING, xsdVisitor.getDiagnostics());
         }
-        return generateTypes(xsdVisitor, typesMap);
     }
 
     /**
@@ -194,11 +212,15 @@ public final class XSDToRecord {
             }
             stringBuilder.append(component.get().accept(xsdVisitor));
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
-            String name = Utils.extractTypeName(moduleNode.toString().split(WHITESPACE));
+            String name = Utils.extractTypeName(stringBuilder.toString().split(WHITESPACE));
             if (name == null && childNode.hasAttributes()) {
                 name = childNode.getAttributes().getNamedItem(NAME).getNodeValue();
             }
-            String resolvedName = nodes.containsKey(name) ? Utils.resolveNameConflicts(name, nodes) : name;
+            String resolvedName = name;
+            if (nodes.containsKey(name)) {
+                resolvedName = Utils.resolveNameConflicts(name, nodes);
+                xsdVisitor.getNameResolvers().put(resolvedName, name);
+            }
             nodes.put(resolvedName, moduleNode);
         }
     }
@@ -262,7 +284,7 @@ public final class XSDToRecord {
             String type = entry.getValue();
             if (nodes.containsKey(type)) {
                 String[] tokens = nodes.get(type).toString().split(WHITESPACE);
-                if (!nodes.get(type).toString().contains(RECORD_WITH_OPEN_BRACE)) {
+                if (!nodes.get(type).toString().contains(RECORD_WITH_OPEN_BRACE) && nodes.containsKey(element)) {
                     Utils.processSingleTypeElements(nodes, element, type, tokens, CONTENT_FIELD);
                 } else {
                     Utils.processRecordTypeElements(nodes, element, type, CONTENT_FIELD);

@@ -25,7 +25,6 @@ import io.ballerina.xsd.core.component.ComplexType;
 import io.ballerina.xsd.core.component.Element;
 import io.ballerina.xsd.core.component.SimpleType;
 import io.ballerina.xsd.core.component.XSDComponent;
-import io.ballerina.xsd.core.diagnostic.DiagnosticMessage;
 import io.ballerina.xsd.core.diagnostic.XsdDiagnostic;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -36,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static io.ballerina.xsd.core.diagnostic.DiagnosticMessage.xsdToBallerinaError;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.MAX_OCCURS;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.MIN_OCCURS;
 import static io.ballerina.xsd.core.visitor.VisitorUtils.UNBOUNDED;
@@ -166,7 +166,8 @@ public class XSDVisitorImpl implements XSDVisitor {
             }
             typeNode = visitNestedElements(node, nameNode, typeNode);
         } catch (Exception e) {
-            diagnostics.add(DiagnosticMessage.xsdToBallerinaError101(e, null));
+            String errorMessage = String.format("The content of the XSD is not supported. %s", e.getMessage());
+            diagnostics.add(xsdToBallerinaError(errorMessage));
         }
         if (nameNode == null && typeNode == null) {
             builder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD);
