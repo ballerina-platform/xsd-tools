@@ -22,7 +22,6 @@ import io.ballerina.compiler.syntax.tree.ModuleMemberDeclarationNode;
 import io.ballerina.compiler.syntax.tree.ModulePartNode;
 import io.ballerina.compiler.syntax.tree.NodeParser;
 import io.ballerina.xsd.core.component.XSDComponent;
-import io.ballerina.xsd.core.context.XSDContext;
 import io.ballerina.xsd.core.diagnostic.XSDDiagnostic;
 import io.ballerina.xsd.core.node.Kind;
 import io.ballerina.xsd.core.node.MemberNode;

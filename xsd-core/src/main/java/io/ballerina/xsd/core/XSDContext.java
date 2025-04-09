@@ -16,9 +16,10 @@
  * under the License.
  */
 
-package io.ballerina.xsd.core.context;
+package io.ballerina.xsd.core;
 
 import io.ballerina.compiler.syntax.tree.ModuleMemberDeclarationNode;
+import io.ballerina.xsd.core.context.Context;
 import io.ballerina.xsd.core.node.Kind;
 import io.ballerina.xsd.core.node.MemberNode;
 import io.ballerina.xsd.core.node.XSDElement;
@@ -34,7 +35,7 @@ import java.util.Objects;
  * Represents the context for processing XSD elements.
  * This class provides methods to manage and retrieve syntax tree nodes and XSD elements.
  */
-public final class XSDContext implements Context {
+final class XSDContext implements Context {
      private final Map<String, MemberNode> nodes = new HashMap<>();
      private final Map<String, XSDElement> nameResolvers = new HashMap<>();
 
@@ -43,7 +44,7 @@ public final class XSDContext implements Context {
         this.nameResolvers.putAll(nameResolvers);
     }
 
-    public static <K, V> K getKeyByValue(Map<K, V> map, V value) {
+    static <K, V> K getKeyByValue(Map<K, V> map, V value) {
         for (Map.Entry<K, V> entry : map.entrySet()) {
             if (Objects.equals(value, entry.getValue())) {
                 return entry.getKey();
