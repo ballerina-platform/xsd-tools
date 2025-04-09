@@ -52,6 +52,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import static io.ballerina.xsd.core.Utils.extractSubstring;
+import static io.ballerina.xsd.core.Utils.formatModuleParts;
 import static io.ballerina.xsd.core.diagnostic.DiagnosticMessage.xsdToBallerinaError;
 import static io.ballerina.xsd.core.visitor.Utils.CLOSE_BRACES;
 import static io.ballerina.xsd.core.visitor.Utils.COMMA;
@@ -59,6 +60,7 @@ import static io.ballerina.xsd.core.visitor.Utils.OPEN_BRACES;
 import static io.ballerina.xsd.core.visitor.Utils.QUOTATION_MARK;
 import static io.ballerina.xsd.core.visitor.Utils.STRING;
 import static io.ballerina.xsd.core.visitor.Utils.WHITESPACE;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.EMPTY_STRING;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.ENUM;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.NAME;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.PUBLIC;
@@ -95,7 +97,7 @@ public final class XSDToRecord {
         XSDVisitor xsdVisitor = new XSDVisitorImpl();
         Map<String, MemberNode> nodes = generateNodes(document, xsdVisitor);
         NodeResponse response = generateTypes(xsdVisitor, nodes);
-        String generatedTypes = io.ballerina.xsd.core.Utils.formatModuleParts(response.types());
+        String generatedTypes = response.types() != null ? formatModuleParts(response.types()) : EMPTY_STRING;
         return new Response(generatedTypes, response.diagnostics());
     }
 
@@ -132,7 +134,7 @@ public final class XSDToRecord {
                     NodeResponse response = entry.getValue();
                     String generatedTypes;
                     try {
-                        generatedTypes = io.ballerina.xsd.core.Utils.formatModuleParts(response.types());
+                        generatedTypes = formatModuleParts(response.types());
                     } catch (FormatterException e) {
                         throw new RuntimeException(e);
                     }
@@ -177,8 +179,8 @@ public final class XSDToRecord {
                 xsdVisitor.clearImports();
                 processNodeList(rootElement, nodes, xsdVisitor);
                 handleExistingTypes(typesMap, xsdVisitor, existingTypes, nodes);
+                index++;
             }
-            index++;
             return generateTypes(xsdVisitor, typesMap);
         } catch (Exception e) {
             String errorMessage = String.format(
