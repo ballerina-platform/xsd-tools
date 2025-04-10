@@ -18,7 +18,7 @@
 package io.ballerina.xsd.core.response;
 
 import io.ballerina.compiler.syntax.tree.ModulePartNode;
-import io.ballerina.xsd.core.context.Context;
+import io.ballerina.xsd.core.context.NodeContext;
 import io.ballerina.xsd.core.diagnostic.XSDDiagnostic;
 
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.List;
  * @param types       The generated types as a {@link ModulePartNode} representation.
  * @param diagnostics A list of {@link XSDDiagnostic} objects containing any diagnostic
  *                    messages related to the XSD processing.
- * @param context     The {@link Context} used during the generation of the syntax tree.
+ * @param nodeContext     The {@link NodeContext} used during the generation of the syntax tree.
  * @since 0.1.0
  */
-public record NodeResponse(ModulePartNode types, List<XSDDiagnostic> diagnostics, Context context) { }
+public record NodeResponse(ModulePartNode types, List<XSDDiagnostic> diagnostics, NodeContext nodeContext) { }

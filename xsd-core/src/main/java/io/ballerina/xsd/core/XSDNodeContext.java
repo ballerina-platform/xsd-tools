@@ -19,7 +19,7 @@
 package io.ballerina.xsd.core;
 
 import io.ballerina.compiler.syntax.tree.ModuleMemberDeclarationNode;
-import io.ballerina.xsd.core.context.Context;
+import io.ballerina.xsd.core.context.NodeContext;
 import io.ballerina.xsd.core.node.Kind;
 import io.ballerina.xsd.core.node.MemberNode;
 import io.ballerina.xsd.core.node.XSDElement;
@@ -32,14 +32,14 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represents the context for processing XSD elements.
+ * Represents the nodeContext for processing XSD elements.
  * This class provides methods to manage and retrieve syntax tree nodes and XSD elements.
  */
-final class XSDContext implements Context {
+final class XSDNodeContext implements NodeContext {
      private final Map<String, MemberNode> nodes = new HashMap<>();
      private final Map<String, XSDElement> nameResolvers = new HashMap<>();
 
-    public XSDContext(Map<String, MemberNode> nodes, Map<String, XSDElement> nameResolvers) {
+    public XSDNodeContext(Map<String, MemberNode> nodes, Map<String, XSDElement> nameResolvers) {
         this.nodes.putAll(nodes);
         this.nameResolvers.putAll(nameResolvers);
     }
@@ -54,7 +54,7 @@ final class XSDContext implements Context {
     }
 
     @Override
-    public ModuleMemberDeclarationNode getSyntaxTreeNode(String element, Kind kind) {
+    public ModuleMemberDeclarationNode findNode(String element, Kind kind) {
         List<MemberNode> memberNodeList = new ArrayList<>();
         if (nodes.containsKey(element)) {
             memberNodeList.add(nodes.get(element));

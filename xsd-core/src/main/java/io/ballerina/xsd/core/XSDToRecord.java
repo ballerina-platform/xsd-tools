@@ -300,7 +300,7 @@ public final class XSDToRecord {
                                               Map<String, MemberNode> nodes) throws Exception {
         ModulePartNode modulePartNode = io.ballerina.xsd.core.Utils.generateModulePartNode(nodes, xsdVisitor);
         List<XSDDiagnostic> diagnostics = xsdVisitor.getDiagnostics();
-        XSDContext xsdContext = new XSDContext(nodes, xsdVisitor.getNameResolvers());
+        XSDNodeContext xsdContext = new XSDNodeContext(nodes, xsdVisitor.getNameResolvers());
         return new NodeResponse(modulePartNode, diagnostics, xsdContext);
     }
 

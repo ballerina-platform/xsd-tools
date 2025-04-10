@@ -22,9 +22,9 @@ import io.ballerina.compiler.syntax.tree.ModuleMemberDeclarationNode;
 import io.ballerina.xsd.core.node.Kind;
 
 /**
- * Represents a context for managing syntax tree nodes and their associated elements.
+ * Represents a nodeContext for managing syntax tree nodes and their associated elements.
  */
-public interface Context {
+public interface NodeContext {
 
     /**
      * Retrieves a syntax tree node for the given element and kind.
@@ -33,5 +33,5 @@ public interface Context {
      * @param kind The kind of the element.
      * @return A {@link ModuleMemberDeclarationNode} representing the syntax tree node.
      */
-    ModuleMemberDeclarationNode getSyntaxTreeNode(String element, Kind kind);
+    ModuleMemberDeclarationNode findNode(String element, Kind kind);
 }
