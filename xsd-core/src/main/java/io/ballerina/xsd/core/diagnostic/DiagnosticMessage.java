@@ -56,8 +56,8 @@ public class DiagnosticMessage {
         return Objects.requireNonNullElse(this.args, new Object[0]).clone();
     }
 
-    public static XsdDiagnostic xsdToBallerinaError(String message) {
-        return new XsdDiagnostic("XSD_TO_BALLERINA_100", message,
+    public static XSDDiagnostic xsdToBallerinaError(String message) {
+        return new XSDDiagnostic("XSD_TO_BALLERINA_100", message,
                                  DiagnosticSeverity.ERROR, null, new Object[]{});
     }
 }

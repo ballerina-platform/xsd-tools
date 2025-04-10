@@ -19,7 +19,7 @@
 package io.ballerina.xsd.cli;
 
 import io.ballerina.projects.util.ProjectUtils;
-import io.ballerina.xsd.core.Response;
+import io.ballerina.xsd.core.response.Response;
 import io.ballerina.xsd.core.XSDToRecord;
 import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
@@ -145,6 +145,9 @@ public class XsdCmd implements BLauncherCmd {
     }
 
     private void handleSingleFile(Path outputDirPath, String fileName) throws Exception {
+        if (Files.notExists(outputDirPath)) {
+            Files.createDirectories(outputDirPath);
+        }
         Path filePath = Path.of(fileName);
         if (!Files.exists(filePath)) {
             outStream.println(fileName + " file does not exist.");

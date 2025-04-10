@@ -18,6 +18,7 @@
 
 package io.ballerina.xsd.core.component;
 
+import io.ballerina.xsd.core.node.Kind;
 import io.ballerina.xsd.core.visitor.XSDVisitor;
 import org.w3c.dom.Node;
 
@@ -52,6 +53,11 @@ public class Element implements XSDComponent {
     @Override
     public void setNestedElement(boolean isNestedElement) {
         this.isNestedElement = isNestedElement;
+    }
+
+    @Override
+    public Kind getKind() {
+        return Kind.ELEMENT;
     }
 
     public Node getNode() {

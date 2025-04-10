@@ -16,16 +16,12 @@
  * under the License.
  */
 
-module io.ballerina.xsd.core {
-    requires java.xml;
-    requires io.ballerina.parser;
-    requires io.ballerina.formatter.core;
-    requires io.ballerina.tools.api;
+package io.ballerina.xsd.core.node;
 
-    exports io.ballerina.xsd.core;
-    exports io.ballerina.xsd.core.visitor;
-    exports io.ballerina.xsd.core.component;
-    exports io.ballerina.xsd.core.diagnostic;
-    exports io.ballerina.xsd.core.context;
-    exports io.ballerina.xsd.core.response;
-}
+/**
+ * Represents an XSD element to represent the type and kind of the XSD element.
+ *
+ * @param type The type of the XSD element
+ * @param kind The {@link Kind} representing the category of the XSD element
+ */
+public record XSDElement(String type, Kind kind) { }

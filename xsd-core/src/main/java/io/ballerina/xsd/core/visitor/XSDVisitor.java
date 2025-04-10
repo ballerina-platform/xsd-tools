@@ -21,7 +21,8 @@ package io.ballerina.xsd.core.visitor;
 import io.ballerina.xsd.core.component.ComplexType;
 import io.ballerina.xsd.core.component.Element;
 import io.ballerina.xsd.core.component.SimpleType;
-import io.ballerina.xsd.core.diagnostic.XsdDiagnostic;
+import io.ballerina.xsd.core.diagnostic.XSDDiagnostic;
+import io.ballerina.xsd.core.node.XSDElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +44,10 @@ public interface XSDVisitor {
     String getTargetNamespace();
     ArrayList<String> getImports();
     Map<String, String> getRootElements();
-    Map<String, String> getExtensions();
-    Map<String, String> getNestedElements();
-    Map<String, String> getNameResolvers();
+    Map<String, XSDElement> getExtensions();
+    Map<String, XSDElement> getNestedElements();
+    Map<String, XSDElement> getNameResolvers();
     Map<String, ArrayList<String>> getEnumerationElements();
-    List<XsdDiagnostic> getDiagnostics();
+    List<XSDDiagnostic> getDiagnostics();
     void clearImports();
 }

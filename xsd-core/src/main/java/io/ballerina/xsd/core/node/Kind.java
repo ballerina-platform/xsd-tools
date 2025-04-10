@@ -16,16 +16,17 @@
  * under the License.
  */
 
-module io.ballerina.xsd.core {
-    requires java.xml;
-    requires io.ballerina.parser;
-    requires io.ballerina.formatter.core;
-    requires io.ballerina.tools.api;
+package io.ballerina.xsd.core.node;
 
-    exports io.ballerina.xsd.core;
-    exports io.ballerina.xsd.core.visitor;
-    exports io.ballerina.xsd.core.component;
-    exports io.ballerina.xsd.core.diagnostic;
-    exports io.ballerina.xsd.core.context;
-    exports io.ballerina.xsd.core.response;
+/**
+ * Enum representing different kinds of XSD components.
+ * This is used to categorize XSD constructs for processing and generation of syntax tree nodes.
+ */
+public enum Kind {
+    ELEMENT,
+    COMPLEX_TYPE,
+    SIMPLE_TYPE,
+    SEQUENCE,
+    CHOICE,
+    ENUM
 }

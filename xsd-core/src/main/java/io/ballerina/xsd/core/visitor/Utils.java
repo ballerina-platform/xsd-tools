@@ -38,7 +38,7 @@ import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.generateFixedValue;
  *
  * @since 0.1.0
  */
-public final class VisitorUtils {
+public final class Utils {
     public static final String WHITESPACE = " ";
     public static final String EQUAL = "=";
     public static final String DEFAULT = "default";
@@ -96,6 +96,8 @@ public final class VisitorUtils {
     private static final String SPECIAL_CHARS_PATTERN = "[!@$%^&*()_\\-|]";
     public static final String NMTOKEN = "NMTOKEN";
     public static final String IDREF = "IDREF";
+    public static final String ANYDATA = "anydata";
+    public static final String ANYTYPE = "anyType";
 
     public static String addNamespace(XSDVisitorImpl xsdVisitor, String namespace) {
         if (Objects.equals(namespace, EMPTY_STRING)) {
@@ -182,6 +184,9 @@ public final class VisitorUtils {
             }
             case BASE64_BINARY -> {
                 return BYTE_ARRAY;
+            }
+            case ANYTYPE -> {
+                return ANYDATA;
             }
             default -> {
                 return typeName;

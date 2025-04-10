@@ -16,16 +16,15 @@
  * under the License.
  */
 
-module io.ballerina.xsd.core {
-    requires java.xml;
-    requires io.ballerina.parser;
-    requires io.ballerina.formatter.core;
-    requires io.ballerina.tools.api;
+package io.ballerina.xsd.core.node;
 
-    exports io.ballerina.xsd.core;
-    exports io.ballerina.xsd.core.visitor;
-    exports io.ballerina.xsd.core.component;
-    exports io.ballerina.xsd.core.diagnostic;
-    exports io.ballerina.xsd.core.context;
-    exports io.ballerina.xsd.core.response;
-}
+import io.ballerina.compiler.syntax.tree.ModuleMemberDeclarationNode;
+
+/**
+ * Represents a member node in the syntax tree.
+ * This record encapsulates a syntax tree node and its associated kind.
+ *
+ * @param node The {@link ModuleMemberDeclarationNode} representing the syntax tree node.
+ * @param kind The {@link Kind} representing the type of the node.
+ */
+public record MemberNode(ModuleMemberDeclarationNode node, Kind kind) { }
