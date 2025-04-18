@@ -34,7 +34,15 @@
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="io.ballerina.xsd.core.Response" />
+        <Class name="io.ballerina.xsd.core.response.Response" />
+        <Bug pattern="EI_EXPOSE_REP" />
+    </Match>
+    <Match>
+        <Class name="io.ballerina.xsd.core.node.MemberNode" />
+        <Bug pattern="EI_EXPOSE_REP" />
+    </Match>
+    <Match>
+        <Class name="io.ballerina.xsd.core.response.NodeResponse" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
@@ -70,7 +78,15 @@
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="io.ballerina.xsd.core.Response" />
+        <Class name="io.ballerina.xsd.core.response.Response" />
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+    <Match>
+        <Class name="io.ballerina.xsd.core.node.MemberNode" />
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+    <Match>
+        <Class name="io.ballerina.xsd.core.response.NodeResponse" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
