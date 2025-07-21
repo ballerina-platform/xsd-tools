@@ -47,6 +47,7 @@ public interface XSDVisitor {
     Map<String, XSDElement> getExtensions();
     Map<String, XSDElement> getNestedElements();
     Map<String, XSDElement> getNameResolvers();
+    Map<String, String> getResolvedNameMeta();
     Map<String, ArrayList<String>> getEnumerationElements();
     List<XSDDiagnostic> getDiagnostics();
     void clearImports();

@@ -277,6 +277,7 @@ public final class XSDToRecord {
             if (nodes.containsKey(name)) {
                 resolvedName = io.ballerina.xsd.core.Utils.resolveNameConflicts(name, nodes);
                 xsdVisitor.getNameResolvers().put(resolvedName, new XSDElement(name, component.get().getKind()));
+                xsdVisitor.getResolvedNameMeta().put(xsdVisitor.getTargetNamespace() + name, resolvedName);
             }
             nodes.put(resolvedName, new MemberNode(moduleNode, component.get().getKind()));
         }
