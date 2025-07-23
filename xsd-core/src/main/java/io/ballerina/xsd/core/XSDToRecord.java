@@ -277,6 +277,7 @@ public final class XSDToRecord {
             if (nodes.containsKey(name)) {
                 resolvedName = io.ballerina.xsd.core.Utils.resolveNameConflicts(name, nodes);
                 xsdVisitor.getNameResolvers().put(resolvedName, new XSDElement(name, component.get().getKind()));
+                xsdVisitor.getResolvedNameMeta().put(xsdVisitor.getTargetNamespace() + name, resolvedName);
             }
             nodes.put(resolvedName, new MemberNode(moduleNode, component.get().getKind()));
         }
@@ -387,7 +388,7 @@ public final class XSDToRecord {
                 continue;
             }
             if (Utils.isSimpleType(baseValue.type()) && nodes.containsKey(key)) {
-                String fields = RECORD_WITH_OPEN_BRACE + baseValue + WHITESPACE + CONTENT_FIELD + SEMICOLON;
+                String fields = RECORD_WITH_OPEN_BRACE + baseValue.type() + WHITESPACE + CONTENT_FIELD + SEMICOLON;
                 String extendedValue = nodes.get(key).node().toString().replace(RECORD_WITH_OPEN_BRACE, fields);
                 ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
                 nodes.replace(key, new MemberNode(moduleNode, Kind.SIMPLE_TYPE));

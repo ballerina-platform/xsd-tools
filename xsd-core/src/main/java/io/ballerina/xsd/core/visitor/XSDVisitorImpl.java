@@ -32,6 +32,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,6 +132,9 @@ public class XSDVisitorImpl implements XSDVisitor {
     private final Map<String, ArrayList<String>> enumerationElements = new LinkedHashMap<>();
     private final List<XSDDiagnostic> diagnostics = new ArrayList<>();
     private String targetNamespace;
+
+    // Metadata to keep resolved name to original name
+    private final Map<String, String> resolvedNameMeta = new HashMap<>();
 
     @Override
     public String visit(Element element) throws Exception {
@@ -342,6 +346,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                     String element = component.get().accept(this);
                     nestedElements.put(resolvedName, new XSDElement(element, component.get().getKind()));
                     nameResolvers.put(resolvedName, new XSDElement(fieldName, component.get().getKind()));
+                    resolvedNameMeta.put(targetNamespace + fieldName, resolvedName);
                 } else {
                     String element = component.get().accept(this);
                     nestedElements.put(fieldName, new XSDElement(element, component.get().getKind()));
@@ -503,6 +508,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         if (typeNode != null && typeNode.getNodeValue().equals(fieldName)) {
             String resolvedName = resolveTypeNameConflicts(fieldName, typeNode.getNodeValue());
             nameResolvers.put(resolvedName, new XSDElement(fieldName, Kind.ELEMENT));
+            resolvedNameMeta.put(targetNamespace + fieldName, resolvedName);
             builder.append(resolvedName).append(WHITESPACE);
         } else if (typeNode == null) {
             builder.append(fieldName).append(WHITESPACE);
@@ -547,6 +553,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                 String resolvedName = Character.toUpperCase(nameNode.getNodeValue().charAt(0))
                         + nameNode.getNodeValue().substring(1);
                 nameResolvers.put(resolvedName, new XSDElement(nameNode.getNodeValue(), Kind.COMPLEX_TYPE));
+                resolvedNameMeta.put(targetNamespace + nameNode.getNodeValue(), resolvedName);
                 builder.append(resolvedName);
             } else {
                 builder.append(handleKeywordNames(nameNode));
@@ -767,6 +774,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                     String element = component.get().accept(this);
                     nestedElements.put(resolvedName, new XSDElement(element, component.get().getKind()));
                     nameResolvers.put(resolvedName, new XSDElement(name, component.get().getKind()));
+                    resolvedNameMeta.put(targetNamespace + name, resolvedName);
                 } else {
                     String element = component.get().accept(this);
                     nestedElements.put(name, new XSDElement(element, component.get().getKind()));
@@ -831,6 +839,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         if (typeName.equals(elementName)) {
             elementName = resolveTypeNameConflicts(elementName, typeName);
             nameResolvers.put(elementName, new XSDElement(typeName, Kind.ELEMENT));
+            resolvedNameMeta.put(targetNamespace + typeName, elementName);
         }
         builder.append(elementName).append(WHITESPACE);
         return elementName;
@@ -877,6 +886,11 @@ public class XSDVisitorImpl implements XSDVisitor {
     @Override
     public Map<String, XSDElement> getNameResolvers() {
         return nameResolvers;
+    }
+
+    @Override
+    public Map<String, String> getResolvedNameMeta() {
+        return resolvedNameMeta;
     }
 
     @Override
