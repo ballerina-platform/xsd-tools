@@ -279,6 +279,12 @@ public final class XSDToRecord {
                 xsdVisitor.getNameResolvers().put(resolvedName, new XSDElement(name, component.get().getKind()));
                 xsdVisitor.getResolvedNameMeta().put(xsdVisitor.getTargetNamespace() + name, resolvedName);
             }
+            Map<String, String> rootElements = xsdVisitor.getRootElements();
+            if (rootElements.containsKey(name)) {
+                String currentValue = rootElements.get(name);
+                xsdVisitor.getRootElements().remove(name);
+                xsdVisitor.getRootElements().put(resolvedName, currentValue);
+            }
             nodes.put(resolvedName, new MemberNode(moduleNode, component.get().getKind()));
         }
     }
