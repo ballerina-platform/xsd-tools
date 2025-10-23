@@ -75,7 +75,8 @@ public class XSDToRecordTest {
             new Object[] {"35_unions_of_simple_types.xsd", "35_unions_of_simple_types.bal"},
             new Object[] {"36_elements_with_byte_type.xsd", "36_elements_with_byte_type.bal"},
             new Object[] {"37_elements_with_nested_complex_type.xml", "37_elements_with_nested_complex_type.bal"},
-            new Object[] {"38_elements_with_double_values.xml", "38_elements_with_double_values.bal"}
+            new Object[] {"38_elements_with_double_values.xml", "38_elements_with_double_values.bal"},
+            new Object[] {"39_elements_with_primitive_types.xsd", "39_elements_with_primitive_types.bal"}
         );
     }
 
