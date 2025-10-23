@@ -182,8 +182,11 @@ public final class Utils {
                     UNSIGNED_LONG, UNSIGNED_INT, UNSIGNED_SHORT, UNSIGNED_BYTE, INT, NON_NEGATIVE_INTEGER -> {
                 return INT;
             }
-            case DOUBLE -> {
+            case DOUBLE, FLOAT -> {
                 return FLOAT;
+            }
+            case DECIMAL -> {
+                return DECIMAL;
             }
             case BASE64_BINARY -> {
                 return BYTE_ARRAY;
