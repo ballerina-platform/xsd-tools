@@ -63,6 +63,13 @@ public final class Utils {
     public static final String G_YEAR_MONTH = "gYearMonth";
     public static final String G_YEAR = "gYear";
     public static final String G_MONTH_DAY = "gMonthDay";
+    public static final String G_DAY = "gDay";
+    public static final String G_MONTH = "gMonth";
+    public static final String NORMALIZED_STRING = "normalizedString";
+    public static final String TOKEN = "token";
+    public static final String NCNAME = "NCName";
+    public static final String QNAME = "QName";
+    public static final String NOTATION = "NOTATION";
     public static final String STRING = "string";
     public static final String INTEGER = "integer";
     public static final String LONG = "long";
@@ -175,7 +182,8 @@ public final class Utils {
     public static String typeGenerator(String typeName) {
         switch (typeName) {
             case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE,
-                    DURATION, ANY_URI, G_MONTH_DAY, NMTOKEN, IDREF -> {
+                    DURATION, ANY_URI, G_MONTH_DAY, NMTOKEN, IDREF, G_DAY, G_MONTH, NORMALIZED_STRING,
+                    TOKEN, NCNAME, QNAME, NOTATION -> {
                 return STRING;
             }
             case INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER, POSITIVE_INTEGER, SHORT,
@@ -184,6 +192,9 @@ public final class Utils {
             }
             case DOUBLE, FLOAT -> {
                 return FLOAT;
+            }
+            case BOOLEAN -> {
+                return BOOLEAN;
             }
             case DECIMAL -> {
                 return DECIMAL;
