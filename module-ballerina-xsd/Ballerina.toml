@@ -2,7 +2,7 @@
 distribution = "2201.11.0"
 org = "ballerina"
 name = "xsdtool"
-version = "1.1.1"
+version = "1.1.2"
 authors = ["Ballerina"]
 keywords = ["xsd", "xsd-tool"]
 repository = "https://github.com/ballerina-platform/xsd-tools"

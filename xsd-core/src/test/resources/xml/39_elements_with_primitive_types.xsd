@@ -1,0 +1,23 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://example.com/types"
+           xmlns="http://example.com/types"
+           elementFormDefault="qualified">
+
+    <!-- String / Name types -->
+    <xs:element name="normalizedString" type="xs:normalizedString"/>
+    <xs:element name="token" type="xs:token"/>
+    <xs:element name="NCName" type="xs:NCName"/>
+    <xs:element name="QName" type="xs:QName"/>
+    <xs:element name="NOTATION" type="xs:NOTATION"/>
+
+    <!-- Date types -->
+    <xs:element name="gDay" type="xs:gDay"/>
+    <xs:element name="gMonth" type="xs:gMonth"/>
+
+    <!-- Binary types -->
+    <xs:element name="hexBinary" type="xs:hexBinary"/>
+
+    <!-- Boolean type -->
+    <xs:element name="booleanValue" type="xs:boolean"/>
+
+</xs:schema>
