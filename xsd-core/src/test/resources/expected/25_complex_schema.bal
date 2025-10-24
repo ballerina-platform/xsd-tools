@@ -493,7 +493,7 @@ public type MandateTypeInformation2 record {|
 public type Max1025Text string;
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
-public type Max10KBinary byte[];
+public type Max10KBinary string;
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
 public type Max128Text string;

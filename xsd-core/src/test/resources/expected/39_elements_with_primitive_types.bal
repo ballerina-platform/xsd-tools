@@ -35,9 +35,8 @@ public type gMonth record {|
     string \#content;
 |};
 
-@xmldata:Name {value: "hexBinary"}
 @xmldata:Namespace {uri: "http://example.com/types"}
-public type string1 record {|
+public type hexBinary record {|
     string \#content;
 |};
 
