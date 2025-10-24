@@ -84,7 +84,8 @@ public final class Utils {
     public static final String UNSIGNED_BYTE = "unsignedByte";
     public static final String INT = "int";
     public static final String BASE64_BINARY = "base64Binary";
-    public static final String BYTE_ARRAY = "byte[]";
+    public static final String HEX_BINARY = "hexBinary";
+    public static final String BYTE = "byte";
     public static final String BOOLEAN = "boolean";
     public static final String FLOAT = "float";
     public static final String DOUBLE = "double";
@@ -103,8 +104,11 @@ public final class Utils {
     private static final String SPECIAL_CHARS_PATTERN = "[!@$%^&*()_\\-|]";
     public static final String NMTOKEN = "NMTOKEN";
     public static final String IDREF = "IDREF";
+    public static final String IDREFS = "IDREFS";
     public static final String ANYDATA = "anydata";
-    public static final String ANYTYPE = "anyType";
+    public static final String ANY_TYPE = "anyType";
+    public static final String ANY_SIMPLE_TYPE = "anySimpleType";
+    public static final String ANY_ATOMIC_TYPE = "anyAtomicType";
 
     public static String addNamespace(XSDVisitorImpl xsdVisitor, String namespace) {
         if (Objects.equals(namespace, EMPTY_STRING)) {
@@ -182,8 +186,8 @@ public final class Utils {
     public static String typeGenerator(String typeName) {
         switch (typeName) {
             case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE,
-                    DURATION, ANY_URI, G_MONTH_DAY, NMTOKEN, IDREF, G_DAY, G_MONTH, NORMALIZED_STRING,
-                    TOKEN, NCNAME, QNAME, NOTATION -> {
+                    DURATION, ANY_URI, G_MONTH_DAY, NMTOKEN, IDREF, IDREFS, G_DAY, G_MONTH, NORMALIZED_STRING,
+                    TOKEN, NCNAME, QNAME, NOTATION, BASE64_BINARY, HEX_BINARY, BYTE -> {
                 return STRING;
             }
             case INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER, POSITIVE_INTEGER, SHORT,
@@ -199,10 +203,7 @@ public final class Utils {
             case DECIMAL -> {
                 return DECIMAL;
             }
-            case BASE64_BINARY -> {
-                return BYTE_ARRAY;
-            }
-            case ANYTYPE -> {
+            case ANY_TYPE, ANY_SIMPLE_TYPE, ANY_ATOMIC_TYPE  -> {
                 return ANYDATA;
             }
             default -> {
