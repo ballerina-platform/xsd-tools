@@ -489,7 +489,7 @@ public type Max1025Text string;
 public type Max105Text string;
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
-public type Max10KBinary byte[];
+public type Max10KBinary string;
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type Max128Text string;
