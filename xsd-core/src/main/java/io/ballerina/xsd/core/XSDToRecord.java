@@ -258,8 +258,32 @@ public final class XSDToRecord {
      */
     public static void generateNodes(Element rootElement, Map<String, MemberNode> nodes,
                                      XSDVisitor xsdVisitor) throws Exception {
+        // First pass: process includes and attributeGroups
         for (Node childNode : Utils.asIterable(rootElement.getChildNodes())) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            String localName = childNode.getLocalName();
+            if ("include".equals(localName)) {
+                // xs:include is already handled by providing multiple XSD contents
+                // This is just to skip it during regular processing
+                continue;
+            }
+            Optional<XSDComponent> component = XSDFactory.generateComponents(childNode);
+            if (component.isPresent() && component.get().getKind() == Kind.ATTRIBUTE_GROUP) {
+                // Process attribute groups first so they can be referenced
+                component.get().accept(xsdVisitor);
+            }
+        }
+        
+        // Second pass: process all other elements
+        for (Node childNode : Utils.asIterable(rootElement.getChildNodes())) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            String localName = childNode.getLocalName();
+            if ("include".equals(localName) || "attributeGroup".equals(localName)) {
+                // Already processed or will be expanded inline
                 continue;
             }
             StringBuilder stringBuilder = new StringBuilder();
@@ -268,6 +292,12 @@ public final class XSDToRecord {
                 continue;
             }
             stringBuilder.append(component.get().accept(xsdVisitor));
+            
+            // Skip empty strings (from attribute groups)
+            if (stringBuilder.toString().trim().isEmpty()) {
+                continue;
+            }
+            
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
             String name = io.ballerina.xsd.core.Utils.extractTypeName(stringBuilder.toString().split(WHITESPACE));
             if (name == null && childNode.hasAttributes()) {

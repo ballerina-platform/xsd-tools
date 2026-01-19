@@ -122,6 +122,12 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String SIMPLE_TYPE_DEFAULT_NAME = "SimpleType";
     public static final String REF = "ref";
     public static final String SINGLE_QUOTE = "'";
+    public static final String ATTRIBUTE_GROUP = "attributeGroup";
+    public static final String ANY = "any";
+    public static final String INCLUDE = "include";
+    public static final String SCHEMA_LOCATION = "schemaLocation";
+    public static final String NAMESPACE = "namespace";
+    public static final String PROCESS_CONTENTS = "processContents";
 
     private final ArrayList<String> imports = new ArrayList<>();
     private final Map<String, XSDElement> extensions = new LinkedHashMap<>();
@@ -130,6 +136,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     private final ArrayList<String> simpleTypeNames = new ArrayList<>();
     private final Map<String, XSDElement> nestedElements = new LinkedHashMap<>();
     private final Map<String, ArrayList<String>> enumerationElements = new LinkedHashMap<>();
+    private final Map<String, XSDElement> attributeGroups = new LinkedHashMap<>();
     private final List<XSDDiagnostic> diagnostics = new ArrayList<>();
     private String targetNamespace;
 
@@ -417,6 +424,31 @@ public class XSDVisitorImpl implements XSDVisitor {
         return STRING;
     }
 
+    public String visitAttributeGroupRef(Node node) throws Exception {
+        StringBuilder builder = new StringBuilder();
+        Node refNode = node.getAttributes().getNamedItem(REF);
+        
+        if (refNode != null) {
+            String refName = refNode.getNodeValue();
+            // Remove namespace prefix if present
+            if (refName.contains(COLON)) {
+                refName = refName.substring(refName.indexOf(COLON) + 1);
+            }
+            
+            // Look up the attribute group definition and expand it inline
+            if (attributeGroups.containsKey(refName)) {
+                builder.append(attributeGroups.get(refName).type());
+            } else {
+                // If not found yet, it might be defined later in the schema
+                // Add a diagnostic warning
+                String errorMessage = String.format("AttributeGroup '%s' referenced but not found", refName);
+                diagnostics.add(xsdToBallerinaError(errorMessage));
+            }
+        }
+        
+        return builder.toString();
+    }
+
     public String visitComplexContent(Node node) throws Exception {
         StringBuilder builder = new StringBuilder();
         NodeList childNodes = node.getChildNodes();
@@ -589,6 +621,7 @@ public class XSDVisitorImpl implements XSDVisitor {
             case CHOICE -> builder.append(visitChoice(childNode));
             case ATTRIBUTE -> builder.append(visitAttribute(childNode));
             case ALL -> builder.append(visitAllContent(childNode, false));
+            case ATTRIBUTE_GROUP -> builder.append(visitAttributeGroupRef(childNode));
             default -> builder.append(visitComplexContent(childNode));
         }
     }
@@ -898,7 +931,63 @@ public class XSDVisitorImpl implements XSDVisitor {
         return enumerationElements;
     }
 
+    @Override
+    public Map<String, XSDElement> getAttributeGroups() {
+        return attributeGroups;
+    }
+
     public List<XSDDiagnostic> getDiagnostics() {
         return diagnostics;
+    }
+
+    @Override
+    public String visit(io.ballerina.xsd.core.component.AttributeGroup attributeGroup) throws Exception {
+        Node node = attributeGroup.getNode();
+        Node nameNode = node.getAttributes().getNamedItem(NAME);
+        
+        // Store the attribute group definition
+        if (nameNode != null) {
+            StringBuilder groupContent = new StringBuilder();
+            for (Node childNode : asIterable(node.getChildNodes())) {
+                if (childNode.getNodeType() == Node.ELEMENT_NODE && ATTRIBUTE.equals(childNode.getLocalName())) {
+                    groupContent.append(visitAttribute(childNode));
+                }
+            }
+            attributeGroups.put(nameNode.getNodeValue(), new XSDElement(groupContent.toString(), 
+                    io.ballerina.xsd.core.node.Kind.ATTRIBUTE_GROUP));
+        }
+        
+        // AttributeGroups don't generate standalone types, they're expanded inline
+        return EMPTY_STRING;
+    }
+
+    @Override
+    public String visit(io.ballerina.xsd.core.component.Any any) throws Exception {
+        Node node = any.getNode();
+        StringBuilder builder = new StringBuilder();
+        
+        Node minOccursNode = node.getAttributes().getNamedItem(MIN_OCCURS);
+        Node maxOccursNode = node.getAttributes().getNamedItem(MAX_OCCURS);
+        
+        String minOccurs = (minOccursNode != null) ? minOccursNode.getNodeValue() : ONE;
+        String maxOccurs = (maxOccursNode != null) ? maxOccursNode.getNodeValue() : ONE;
+        
+        // Map xs:any to xml type in Ballerina
+        builder.append("xml");
+        
+        // Handle multiple occurrences
+        if (UNBOUNDED.equalsIgnoreCase(maxOccurs) || (!maxOccurs.equals(ONE) && !minOccurs.equals(maxOccurs))) {
+            builder.append(EMPTY_ARRAY);
+        }
+        
+        // Make it optional if minOccurs is 0
+        if (minOccurs.equals("0")) {
+            builder.append(QUESTION_MARK);
+        }
+        
+        builder.append(WHITESPACE).append("anyElement");
+        builder.append(SEMICOLON);
+        
+        return builder.toString();
     }
 }

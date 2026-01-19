@@ -76,7 +76,10 @@ public class XSDToRecordTest {
             new Object[] {"36_elements_with_byte_type.xsd", "36_elements_with_byte_type.bal"},
             new Object[] {"37_elements_with_nested_complex_type.xml", "37_elements_with_nested_complex_type.bal"},
             new Object[] {"38_elements_with_double_values.xml", "38_elements_with_double_values.bal"},
-            new Object[] {"39_elements_with_primitive_types.xsd", "39_elements_with_primitive_types.bal"}
+            new Object[] {"39_elements_with_primitive_types.xsd", "39_elements_with_primitive_types.bal"},
+            new Object[] {"43_elements_with_annotation.xsd", "43_elements_with_annotation.bal"},
+            new Object[] {"44_elements_with_attribute_group.xsd", "44_elements_with_attribute_group.bal"},
+            new Object[] {"45_elements_with_any.xsd", "45_elements_with_any.bal"}
         );
     }
 
@@ -93,5 +96,37 @@ public class XSDToRecordTest {
         Assert.assertTrue(result.diagnostics().isEmpty());
         String expectedValue = Files.readString(expected);
         Assert.assertEquals(result.types(), expectedValue);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideIncludeTestPaths")
+    void testXsdWithInclude(String[] xsdFiles, String balFilePath) throws Exception {
+        validateWithInclude(xsdFiles, RES_DIR.resolve(EXPECTED_DIR).resolve(balFilePath));
+    }
+
+    private static Stream<Object[]> provideIncludeTestPaths() {
+        return Stream.of(
+            new Object[] {
+                new String[] {
+                    "46_elements_with_include_base.xsd",
+                    "46_elements_with_include.xsd"
+                },
+                "46_elements_with_include.bal"
+            }
+        );
+    }
+
+    private void validateWithInclude(String[] xsdFiles, Path expected) throws Exception {
+        String[] xsdContents = new String[xsdFiles.length];
+        for (int i = 0; i < xsdFiles.length; i++) {
+            Path xsdPath = RES_DIR.resolve(XML_DIR).resolve(xsdFiles[i]);
+            xsdContents[i] = Files.readString(xsdPath);
+        }
+        var result = XSDToRecord.generateNodes(xsdContents);
+        Assert.assertTrue(result.diagnostics().isEmpty());
+        String generatedTypes = result.types() != null ? 
+            io.ballerina.xsd.core.Utils.formatModuleParts(result.types()) : "";
+        String expectedValue = Files.readString(expected);
+        Assert.assertEquals(generatedTypes, expectedValue);
     }
 }

@@ -1,0 +1,28 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://example.com/schema" elementFormDefault="qualified">
+    <xs:attributeGroup name="CommonAttributes">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="version" type="xs:string" use="optional"/>
+        <xs:attribute name="timestamp" type="xs:dateTime" use="optional"/>
+    </xs:attributeGroup>
+
+    <xs:element name="Product">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="price" type="xs:decimal"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="CommonAttributes"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="Order">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="orderNumber" type="xs:string"/>
+                <xs:element name="total" type="xs:decimal"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="CommonAttributes"/>
+            <xs:attribute name="status" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
