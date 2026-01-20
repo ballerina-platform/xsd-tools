@@ -124,10 +124,6 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String SINGLE_QUOTE = "'";
     public static final String ATTRIBUTE_GROUP = "attributeGroup";
     public static final String ANY = "any";
-    public static final String INCLUDE = "include";
-    public static final String SCHEMA_LOCATION = "schemaLocation";
-    public static final String NAMESPACE = "namespace";
-    public static final String PROCESS_CONTENTS = "processContents";
 
     private final ArrayList<String> imports = new ArrayList<>();
     private final Map<String, XSDElement> extensions = new LinkedHashMap<>();
@@ -248,6 +244,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                 case CHOICE -> builder.append(visitChoice(childNode));
                 case ATTRIBUTE -> builder.append(visitAttribute(childNode));
                 case ALL -> builder.append(visitAllContent(childNode, false));
+                case ATTRIBUTE_GROUP -> builder.append(visitAttributeGroupRef(childNode));
                 default -> builder.append(visitComplexContent(childNode));
             }
         }
@@ -424,7 +421,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         return STRING;
     }
 
-    public String visitAttributeGroupRef(Node node) throws Exception {
+    public String visitAttributeGroupRef(Node node) {
         StringBuilder builder = new StringBuilder();
         Node refNode = node.getAttributes().getNamedItem(REF);
         
@@ -962,7 +959,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     }
 
     @Override
-    public String visit(io.ballerina.xsd.core.component.Any any) throws Exception {
+    public String visit(io.ballerina.xsd.core.component.Any any) {
         Node node = any.getNode();
         StringBuilder builder = new StringBuilder();
         

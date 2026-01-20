@@ -15,7 +15,7 @@ public type Product record {|
 @xmldata:Namespace {uri: "http://example.com/schema"}
 public type Order record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup1 sequenceGroup;
+    SequenceGroup1 sequenceGroup1;
     @xmldata:Attribute
     string id;
     @xmldata:Attribute
@@ -23,7 +23,7 @@ public type Order record {|
     @xmldata:Attribute
     string timestamp?;
     @xmldata:Attribute
-    string status?;
+    string status;
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}

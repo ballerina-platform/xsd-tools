@@ -7,6 +7,11 @@ public type Person record {|
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}
+public enum Status {
+    ACTIVE, INACTIVE
+};
+
+@xmldata:Namespace {uri: "http://example.com/schema"}
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
@@ -15,7 +20,3 @@ public type SequenceGroup record {|
     @xmldata:SequenceOrder {value: 2}
     int age;
 |};
-
-@xmldata:Namespace {uri: "http://example.com/schema"}
-public enum Status {
-}

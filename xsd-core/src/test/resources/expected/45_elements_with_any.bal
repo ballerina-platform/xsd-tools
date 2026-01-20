@@ -9,13 +9,13 @@ public type ExtensibleType record {|
 @xmldata:Namespace {uri: "http://example.com/schema"}
 public type MixedContent record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup1 sequenceGroup;
+    SequenceGroup1 sequenceGroup1;
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}
 public type OpenEnded record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup2 sequenceGroup;
+    SequenceGroup2 sequenceGroup2;
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}

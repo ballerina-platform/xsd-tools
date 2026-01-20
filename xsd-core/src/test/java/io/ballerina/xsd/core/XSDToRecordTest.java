@@ -105,7 +105,7 @@ public class XSDToRecordTest {
     }
 
     private static Stream<Object[]> provideIncludeTestPaths() {
-        return Stream.of(
+        return Stream.<Object[]>of(
             new Object[] {
                 new String[] {
                     "46_elements_with_include_base.xsd",

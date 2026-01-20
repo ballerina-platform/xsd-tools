@@ -682,7 +682,7 @@ public type SequenceGroup20 record {|
 public type SequenceGroup21 record {|
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
     @xmldata:SequenceOrder {value: 1}
-    string \#content;
+    xml anyElement;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
@@ -699,5 +699,5 @@ public type SequenceGroup22 record {|
 public type SequenceGroup23 record {|
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
     @xmldata:SequenceOrder {value: 1}
-    string \#content;
+    xml anyElement;
 |};
