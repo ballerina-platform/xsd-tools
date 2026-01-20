@@ -434,12 +434,30 @@ public final class XSDToRecord {
                     continue;
                 }
                 MemberNode parentNode = nodes.get(key);
-                String fields = extractSubstring(baseNode.node().toString(), RECORD_WITH_OPEN_BRACE,
-                        VERTICAL_BAR + CLOSE_BRACES + SEMICOLON, CONTENT_FIELD);
-                fields = RECORD_WITH_OPEN_BRACE + fields;
-                String extendedValue = parentNode.node().toString().replace(RECORD_WITH_OPEN_BRACE, fields);
-                ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
-                nodes.replace(key, new MemberNode(moduleNode, baseValue.kind()));
+                String baseNodeString = baseNode.node().toString();
+                if (baseNodeString.contains("public enum ")) {
+                    String parentNodeString = parentNode.node().toString();
+                    String namespace = extractNamespaceFromParentNode(parentNodeString);
+                    String enumName = extractEnumNameFromParentNode(parentNodeString);
+                    String enumValues = getEnumValuesFromVisitor(baseValue.type(), xsdVisitor);
+                    StringBuilder enumDeclaration = new StringBuilder();
+                    if (namespace != null && !namespace.isEmpty()) {
+                        enumDeclaration.append(namespace).append("\n");
+                    }
+                    enumDeclaration.append("public enum ").append(enumName).append(" {\n");
+                    enumDeclaration.append("    ").append(enumValues).append("\n");
+                    enumDeclaration.append("};");
+                    ModuleMemberDeclarationNode moduleNode = NodeParser
+                            .parseModuleMemberDeclaration(enumDeclaration.toString());
+                    nodes.replace(key, new MemberNode(moduleNode, Kind.ENUM));
+                } else {
+                    String fields = extractSubstring(baseNodeString, RECORD_WITH_OPEN_BRACE,
+                            VERTICAL_BAR + CLOSE_BRACES + SEMICOLON, CONTENT_FIELD);
+                    fields = RECORD_WITH_OPEN_BRACE + fields;
+                    String extendedValue = parentNode.node().toString().replace(RECORD_WITH_OPEN_BRACE, fields);
+                    ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
+                    nodes.replace(key, new MemberNode(moduleNode, baseValue.kind()));
+                }
             }
         }
     }
@@ -472,6 +490,42 @@ public final class XSDToRecord {
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(enumeration);
             nodes.put(key, new MemberNode(moduleNode, Kind.ENUM));
         }
+    }
+
+    /**
+     * Extracts namespace annotation from parent node string.
+     */
+    private static String extractNamespaceFromParentNode(String parentNodeString) {
+        // Look for @xmldata:Namespace pattern
+        int namespaceStart = parentNodeString.indexOf("@xmldata:Namespace");
+        if (namespaceStart != -1) {
+            int braceStart = parentNodeString.indexOf("{", namespaceStart);
+            int braceEnd = parentNodeString.indexOf("}", braceStart);
+            if (braceStart != -1 && braceEnd != -1) {
+                return parentNodeString.substring(namespaceStart, braceEnd + 1);
+            }
+        }
+        return null;
+    }
+    
+    private static String extractEnumNameFromParentNode(String parentNodeString) {
+        // Look for "public type EnumName record"
+        String[] parts = parentNodeString.split("\\s+");
+        for (int i = 0; i < parts.length - 1; i++) {
+            if ("type".equals(parts[i]) && i + 1 < parts.length) {
+                return parts[i + 1];
+            }
+        }
+        return "UnknownEnum";
+    }
+    
+    private static String getEnumValuesFromVisitor(String enumTypeName, XSDVisitor xsdVisitor) {
+        Map<String, ArrayList<String>> enumerationElements = xsdVisitor.getEnumerationElements();
+        ArrayList<String> enumValues = enumerationElements.get(enumTypeName);
+        if (enumValues != null && !enumValues.isEmpty()) {
+            return String.join(", ", enumValues);
+        }
+        return "";
     }
 
     static Document parseXSD(String xsdData) throws Exception {

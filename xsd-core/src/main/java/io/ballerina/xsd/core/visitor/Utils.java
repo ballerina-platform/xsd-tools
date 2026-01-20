@@ -86,6 +86,7 @@ public final class Utils {
     public static final String BASE64_BINARY = "base64Binary";
     public static final String HEX_BINARY = "hexBinary";
     public static final String BYTE = "byte";
+    public static final String ID = "ID";
     public static final String BOOLEAN = "boolean";
     public static final String FLOAT = "float";
     public static final String DOUBLE = "double";
@@ -187,7 +188,7 @@ public final class Utils {
         switch (typeName) {
             case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE,
                     DURATION, ANY_URI, G_MONTH_DAY, NMTOKEN, IDREF, IDREFS, G_DAY, G_MONTH, NORMALIZED_STRING,
-                    TOKEN, NCNAME, QNAME, NOTATION, BASE64_BINARY, HEX_BINARY, BYTE -> {
+                    TOKEN, NCNAME, QNAME, NOTATION, BASE64_BINARY, HEX_BINARY, BYTE, ID -> {
                 return STRING;
             }
             case INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER, POSITIVE_INTEGER, SHORT,

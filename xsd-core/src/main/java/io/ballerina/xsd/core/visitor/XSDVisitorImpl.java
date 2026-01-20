@@ -625,7 +625,8 @@ public class XSDVisitorImpl implements XSDVisitor {
 
     private void processChildChoiceNodes(NodeList childNodes, StringBuilder stringBuilder) throws Exception {
         for (Node childNode : asIterable(childNodes)) {
-            if (childNode.getNodeType() != Node.ELEMENT_NODE || childNode.getLocalName().equals(ANNOTATION)) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE || childNode.getLocalName().equals(ANNOTATION) ||
+                    childNode.getLocalName().equals("any")) {
                 continue;
             }
             if (childNode.getLocalName().equals(SEQUENCE)) {
@@ -743,8 +744,11 @@ public class XSDVisitorImpl implements XSDVisitor {
         sequenceName = (sequenceName.contains(COLON))
                 ? sequenceName.substring(sequenceName.indexOf(COLON) + 1) : sequenceName;
         builder.append(XMLDATA_SEQUENCE).append(WHITESPACE).append(OPEN_BRACES);
-        builder.append(MIN_OCCURS).append(COLON).append(minOccurrence).append(COMMA);
-        builder.append(MAX_OCCURS).append(COLON).append(maxOccurrence).append(CLOSE_BRACES);
+        builder.append(MIN_OCCURS).append(COLON).append(minOccurrence);
+        if (!(UNBOUNDED.equalsIgnoreCase(maxOccurrence))) {
+            builder.append(COMMA).append(MAX_OCCURS).append(COLON).append(maxOccurrence);
+        }
+        builder.append(CLOSE_BRACES);
         builder.append(sequenceName).append((maxOccurrence.equals(ONE)) ? EMPTY_STRING : EMPTY_ARRAY);
         builder.append(WHITESPACE).append(convertToCamelCase(sequenceName)).append(SEMICOLON);
         return sequenceName;
@@ -832,6 +836,8 @@ public class XSDVisitorImpl implements XSDVisitor {
                     String enumValue = sanitizeString(valueNode.getNodeValue());
                     if (enumValue.equals(EMPTY_STRING)) {
                         continue;
+                    } else if (SyntaxInfo.isKeyword(enumValue)) {
+                        enumValue = SINGLE_QUOTE + enumValue;
                     }
                     enumValues.add(enumValue);
                 }
