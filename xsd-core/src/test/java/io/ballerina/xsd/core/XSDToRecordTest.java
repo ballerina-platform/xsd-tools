@@ -19,7 +19,6 @@
 package io.ballerina.xsd.core;
 
 import io.ballerina.xsd.core.response.Response;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testng.Assert;
@@ -97,14 +96,6 @@ public class XSDToRecordTest {
         Assert.assertTrue(result.diagnostics().isEmpty());
         String expectedValue = Files.readString(expected);
         Assert.assertEquals(result.types(), expectedValue);
-    }
-
-    @Test
-    void testXsdFile() throws Exception {
-        String xmlFileContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve("3_simple_type_with_unions.xml"));
-        Document document = parseXSD(xmlFileContent);
-        Response result = XSDToRecord.convert(document);
-        System.out.println(result.types());
     }
 
     @ParameterizedTest
