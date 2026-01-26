@@ -54,6 +54,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import static io.ballerina.xsd.core.Utils.extractSubstring;
 import static io.ballerina.xsd.core.Utils.formatModuleParts;
 import static io.ballerina.xsd.core.diagnostic.DiagnosticMessage.xsdToBallerinaError;
+import static io.ballerina.xsd.core.visitor.Utils.ANYDATA;
 import static io.ballerina.xsd.core.visitor.Utils.CLOSE_BRACES;
 import static io.ballerina.xsd.core.visitor.Utils.COMMA;
 import static io.ballerina.xsd.core.visitor.Utils.OPEN_BRACES;
@@ -85,6 +86,7 @@ public final class XSDToRecord {
 
     private static final String CONTENT_FIELD = "\\#content";
     public static final String FILE_EXTENSION = ".bal";
+    public static final String STRICT_ANY_PLACEHOLDER = "__STRICT_ANY_PLACEHOLDER__";
 
     /**
      * Converts the given XSD content into a record containing the generated types and associated diagnostics.
@@ -328,6 +330,7 @@ public final class XSDToRecord {
     public static void generateResidualNodes(Map<String, MemberNode> nodes, XSDVisitor xsdVisitor) {
         processRootElements(nodes, xsdVisitor.getRootElements());
         processNestedElements(nodes, xsdVisitor.getNestedElements());
+        processAnyPlaceholders(nodes, xsdVisitor);
         processNameResolvers(nodes, xsdVisitor.getNameResolvers());
         processExtensions(nodes, xsdVisitor);
         processEnumerations(nodes, xsdVisitor.getEnumerationElements());
@@ -398,6 +401,31 @@ public final class XSDToRecord {
             XSDElement xsdElement = entry.getValue();
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(xsdElement.type());
             nodes.put(element, new MemberNode(moduleNode, xsdElement.kind()));
+        }
+    }
+
+    private static void processAnyPlaceholders(Map<String, MemberNode> nodes, XSDVisitor xsdVisitor) {
+        ArrayList<String> complexTypes = xsdVisitor.getComplexTypeNames();
+        ArrayList<String> elements = xsdVisitor.getElementNames();
+        List<String> allTypes = new ArrayList<>();
+        allTypes.addAll(complexTypes);
+        allTypes.addAll(elements);
+        String unionType = allTypes.isEmpty() ? ANYDATA : String.join(VERTICAL_BAR, allTypes);
+        for (Map.Entry<String, MemberNode> entry : nodes.entrySet()) {
+            String nodeString = entry.getValue().node().toString();
+            if (nodeString.contains(STRICT_ANY_PLACEHOLDER)) {
+                String updatedNode = nodeString.replace(STRICT_ANY_PLACEHOLDER, unionType);
+                ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(updatedNode);
+                nodes.put(entry.getKey(), new MemberNode(moduleNode, entry.getValue().kind()));
+            }
+        }
+        Map<String, XSDElement> nestedElements = xsdVisitor.getNestedElements();
+        for (Map.Entry<String, XSDElement> entry : nestedElements.entrySet()) {
+            String nodeString = entry.getValue().type();
+            if (nodeString.contains(STRICT_ANY_PLACEHOLDER)) {
+                String updatedNode = nodeString.replace(STRICT_ANY_PLACEHOLDER, unionType);
+                nestedElements.put(entry.getKey(), new XSDElement(updatedNode, entry.getValue().kind()));
+            }
         }
     }
 

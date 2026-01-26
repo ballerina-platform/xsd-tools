@@ -56,4 +56,8 @@ public interface XSDVisitor {
     Map<String, XSDElement> getAttributeGroups();
     List<XSDDiagnostic> getDiagnostics();
     void clearImports();
+    void addComplexTypeName(String name);
+    void addElementName(String name);
+    ArrayList<String> getComplexTypeNames();
+    ArrayList<String> getElementNames();
 }
