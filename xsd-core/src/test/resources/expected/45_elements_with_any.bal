@@ -19,12 +19,25 @@ public type OpenEnded record {|
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}
+public type Address record {|
+    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
+    SequenceGroup3 sequenceGroup3;
+|};
+
+@xmldata:Namespace {uri: "http://example.com/schema"}
+public type Person record {|
+    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
+    SequenceGroup4 sequenceGroup4;
+|};
+
+@xmldata:Namespace {uri: "http://example.com/schema"}
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
     string fixedField;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Any
     anydata[]? anyElement;
 |};
 
@@ -35,7 +48,8 @@ public type SequenceGroup1 record {|
     string header;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
-    xml? anyElement;
+    @xmldata:Any
+    Address|Person|ExtensibleType|MixedContent|OpenEnded? anyElement;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 3}
     string footer;
@@ -45,5 +59,26 @@ public type SequenceGroup1 record {|
 public type SequenceGroup2 record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
-    xml anyElement;
+    @xmldata:Any
+    anydata anyElement;
+|};
+
+@xmldata:Namespace {uri: "http://example.com/schema"}
+public type SequenceGroup3 record {|
+    @xmldata:Namespace {uri: "http://example.com/schema"}
+    @xmldata:SequenceOrder {value: 1}
+    string street;
+    @xmldata:Namespace {uri: "http://example.com/schema"}
+    @xmldata:SequenceOrder {value: 2}
+    string city;
+|};
+
+@xmldata:Namespace {uri: "http://example.com/schema"}
+public type SequenceGroup4 record {|
+    @xmldata:Namespace {uri: "http://example.com/schema"}
+    @xmldata:SequenceOrder {value: 1}
+    string name;
+    @xmldata:Namespace {uri: "http://example.com/schema"}
+    @xmldata:SequenceOrder {value: 2}
+    int age;
 |};
