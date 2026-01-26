@@ -134,6 +134,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String XML_TYPE = "xml";
     public static final String ANY_ELEMENT = "anyElement";
     public static final String PROCESS_CONTENTS = "processContents";
+    public static final String ANY_ANNOTATION = "@xmldata:Any";
     private final ArrayList<String> imports = new ArrayList<>();
     private final Map<String, XSDElement> extensions = new LinkedHashMap<>();
     private final Map<String, String> rootElements = new LinkedHashMap<>();
@@ -987,6 +988,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         String minOccurs = (minOccursNode != null) ? minOccursNode.getNodeValue() : ONE;
         String maxOccurs = (maxOccursNode != null) ? maxOccursNode.getNodeValue() : ONE;
         String processContents = (processContentsNode != null) ? processContentsNode.getNodeValue() : SKIP_ATTRIBUTE;
+        builder.append(ANY_ANNOTATION).append(NEW_LINE);
         builder.append(STRICT_ATTRIBUTE.equals(processContents) ? STRICT_ANY_PLACEHOLDER : ANYDATA);
         if (!maxOccurs.equals(ONE) && !maxOccurs.equals(ZERO)) {
             builder.append(EMPTY_ARRAY);
