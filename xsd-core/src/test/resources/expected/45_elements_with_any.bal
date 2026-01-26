@@ -25,7 +25,7 @@ public type SequenceGroup record {|
     string fixedField;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
-    xml[]? anyElement;
+    anydata[]? anyElement;
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}

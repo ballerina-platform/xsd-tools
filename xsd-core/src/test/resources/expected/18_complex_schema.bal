@@ -2077,7 +2077,7 @@ public type SequenceGroup55 record {|
 public type SequenceGroup56 record {|
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
     @xmldata:SequenceOrder {value: 1}
-    string \#content;
+    anydata anyElement;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}

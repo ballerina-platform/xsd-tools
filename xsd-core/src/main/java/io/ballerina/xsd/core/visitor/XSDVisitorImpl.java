@@ -427,19 +427,16 @@ public class XSDVisitorImpl implements XSDVisitor {
         
         if (refNode != null) {
             String refName = refNode.getNodeValue();
-            // Remove namespace prefix if present
             if (refName.contains(COLON)) {
                 refName = refName.substring(refName.indexOf(COLON) + 1);
             }
-            
-            // Look up the attribute group definition and expand it inline
             if (attributeGroups.containsKey(refName)) {
                 builder.append(attributeGroups.get(refName).type());
             } else {
-                // If not found yet, it might be defined later in the schema
-                // Add a diagnostic warning
-                String errorMessage = String.format("AttributeGroup '%s' referenced but not found", refName);
-                diagnostics.add(xsdToBallerinaError(errorMessage));
+                // // If not found yet, it might be defined later in the schema
+                // // Add a diagnostic warning
+                // String errorMessage = String.format("AttributeGroup '%s' referenced but not found", refName);
+                // diagnostics.add(xsdToBallerinaError(errorMessage));
             }
         }
         
@@ -968,29 +965,32 @@ public class XSDVisitorImpl implements XSDVisitor {
     public String visit(io.ballerina.xsd.core.component.Any any) {
         Node node = any.getNode();
         StringBuilder builder = new StringBuilder();
-        
+
         Node minOccursNode = node.getAttributes().getNamedItem(MIN_OCCURS);
         Node maxOccursNode = node.getAttributes().getNamedItem(MAX_OCCURS);
-        
+        Node processContentsNode = node.getAttributes().getNamedItem("processContents");
+
         String minOccurs = (minOccursNode != null) ? minOccursNode.getNodeValue() : ONE;
         String maxOccurs = (maxOccursNode != null) ? maxOccursNode.getNodeValue() : ONE;
-        
-        // Map xs:any to xml type in Ballerina
-        builder.append("xml");
-        
-        // Handle multiple occurrences
+        String processContents = (processContentsNode != null) ? processContentsNode.getNodeValue() : "strict";
+
+        // Map xs:any to anydata type if processContents is "lax", otherwise xml type
+        if ("lax".equals(processContents)) {
+            builder.append("anydata");
+        } else {
+            builder.append("xml");
+        }
         if (UNBOUNDED.equalsIgnoreCase(maxOccurs) || (!maxOccurs.equals(ONE) && !minOccurs.equals(maxOccurs))) {
             builder.append(EMPTY_ARRAY);
         }
-        
-        // Make it optional if minOccurs is 0
+
         if (minOccurs.equals("0")) {
             builder.append(QUESTION_MARK);
         }
-        
+
         builder.append(WHITESPACE).append("anyElement");
         builder.append(SEMICOLON);
-        
+
         return builder.toString();
     }
 }

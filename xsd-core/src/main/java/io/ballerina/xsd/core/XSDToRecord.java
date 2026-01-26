@@ -58,11 +58,11 @@ import static io.ballerina.xsd.core.visitor.Utils.CLOSE_BRACES;
 import static io.ballerina.xsd.core.visitor.Utils.COMMA;
 import static io.ballerina.xsd.core.visitor.Utils.OPEN_BRACES;
 import static io.ballerina.xsd.core.visitor.Utils.QUOTATION_MARK;
-import static io.ballerina.xsd.core.visitor.Utils.STRING;
 import static io.ballerina.xsd.core.visitor.Utils.WHITESPACE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.EMPTY_STRING;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.ENUM;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.NAME;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.NEW_LINE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.PUBLIC;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.RECORD_WITH_OPEN_BRACE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.SEMICOLON;
@@ -384,8 +384,8 @@ public final class XSDToRecord {
                     io.ballerina.xsd.core.Utils.processRecordTypeElements(nodes, element, type, CONTENT_FIELD);
                 }
             } else if (nodes.containsKey(element)) {
-                String rootElement = nodes.get(element).node().toString().replace(type, STRING);
-                ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(rootElement);
+                ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(
+                    nodes.get(element).node().toString());
                 nodes.put(element, new MemberNode(moduleNode, Kind.ELEMENT));
             }
         }
@@ -435,7 +435,7 @@ public final class XSDToRecord {
                 }
                 MemberNode parentNode = nodes.get(key);
                 String baseNodeString = baseNode.node().toString();
-                if (baseNodeString.contains("public enum ")) {
+                if (baseNodeString.contains(PUBLIC + WHITESPACE + ENUM + WHITESPACE)) {
                     String parentNodeString = parentNode.node().toString();
                     String namespace = extractNamespaceFromParentNode(parentNodeString);
                     String enumName = extractEnumNameFromParentNode(parentNodeString);
@@ -444,15 +444,16 @@ public final class XSDToRecord {
                     if (namespace != null && !namespace.isEmpty()) {
                         enumDeclaration.append(namespace).append("\n");
                     }
-                    enumDeclaration.append("public enum ").append(enumName).append(" {\n");
-                    enumDeclaration.append("    ").append(enumValues).append("\n");
-                    enumDeclaration.append("};");
+                    enumDeclaration.append(PUBLIC).append(WHITESPACE).append(ENUM).append(WHITESPACE).append(enumName)
+                            .append(WHITESPACE).append(OPEN_BRACES).append(NEW_LINE);
+                    enumDeclaration.append(WHITESPACE).append(enumValues).append(NEW_LINE);
+                    enumDeclaration.append(CLOSE_BRACES).append(SEMICOLON);
                     ModuleMemberDeclarationNode moduleNode = NodeParser
                             .parseModuleMemberDeclaration(enumDeclaration.toString());
                     nodes.replace(key, new MemberNode(moduleNode, Kind.ENUM));
                 } else {
-                    String fields = extractSubstring(baseNodeString, RECORD_WITH_OPEN_BRACE,
-                            VERTICAL_BAR + CLOSE_BRACES + SEMICOLON, CONTENT_FIELD);
+                    String fields = extractSubstring(baseNodeString, RECORD_WITH_OPEN_BRACE, VERTICAL_BAR
+                            + CLOSE_BRACES + SEMICOLON, CONTENT_FIELD);
                     fields = RECORD_WITH_OPEN_BRACE + fields;
                     String extendedValue = parentNode.node().toString().replace(RECORD_WITH_OPEN_BRACE, fields);
                     ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
