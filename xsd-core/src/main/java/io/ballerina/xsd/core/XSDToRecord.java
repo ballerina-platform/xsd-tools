@@ -52,6 +52,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import static io.ballerina.xsd.core.Utils.extractSubstring;
+import static io.ballerina.xsd.core.Utils.extractTypeName;
 import static io.ballerina.xsd.core.Utils.formatModuleParts;
 import static io.ballerina.xsd.core.diagnostic.DiagnosticMessage.xsdToBallerinaError;
 import static io.ballerina.xsd.core.visitor.Utils.ANYDATA;
@@ -67,6 +68,7 @@ import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.NEW_LINE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.PUBLIC;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.RECORD_WITH_OPEN_BRACE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.SEMICOLON;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.TYPE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.VERTICAL_BAR;
 
 /**
@@ -87,6 +89,9 @@ public final class XSDToRecord {
     private static final String CONTENT_FIELD = "\\#content";
     public static final String FILE_EXTENSION = ".bal";
     public static final String STRICT_ANY_PLACEHOLDER = "__STRICT_ANY_PLACEHOLDER__";
+    public static final String INCLUDE = "include";
+    public static final String ATTRIBUTE_GROUP = "attributeGroup";
+    public static final String NAMESPACE_ANNOTATION = "@xmldata:Namespace";
 
     /**
      * Converts the given XSD content into a record containing the generated types and associated diagnostics.
@@ -260,32 +265,26 @@ public final class XSDToRecord {
      */
     public static void generateNodes(Element rootElement, Map<String, MemberNode> nodes,
                                      XSDVisitor xsdVisitor) throws Exception {
-        // First pass: process includes and attributeGroups
         for (Node childNode : Utils.asIterable(rootElement.getChildNodes())) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
             String localName = childNode.getLocalName();
-            if ("include".equals(localName)) {
-                // xs:include is already handled by providing multiple XSD contents
-                // This is just to skip it during regular processing
+            if (INCLUDE.equals(localName)) {
+                // xs:include is already handled by providing multiple XSD files in a single directory
                 continue;
             }
             Optional<XSDComponent> component = XSDFactory.generateComponents(childNode);
             if (component.isPresent() && component.get().getKind() == Kind.ATTRIBUTE_GROUP) {
-                // Process attribute groups first so they can be referenced
                 component.get().accept(xsdVisitor);
             }
         }
-        
-        // Second pass: process all other elements
         for (Node childNode : Utils.asIterable(rootElement.getChildNodes())) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
             String localName = childNode.getLocalName();
-            if ("include".equals(localName) || "attributeGroup".equals(localName)) {
-                // Already processed or will be expanded inline
+            if (INCLUDE.equals(localName) || ATTRIBUTE_GROUP.equals(localName)) {
                 continue;
             }
             StringBuilder stringBuilder = new StringBuilder();
@@ -294,14 +293,11 @@ public final class XSDToRecord {
                 continue;
             }
             stringBuilder.append(component.get().accept(xsdVisitor));
-            
-            // Skip empty strings (from attribute groups)
             if (stringBuilder.toString().trim().isEmpty()) {
                 continue;
             }
-            
             ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(stringBuilder.toString());
-            String name = io.ballerina.xsd.core.Utils.extractTypeName(stringBuilder.toString().split(WHITESPACE));
+            String name = extractTypeName(stringBuilder.toString().split(WHITESPACE));
             if (name == null && childNode.hasAttributes()) {
                 name = childNode.getAttributes().getNamedItem(NAME).getNodeValue();
             }
@@ -464,15 +460,15 @@ public final class XSDToRecord {
                 MemberNode parentNode = nodes.get(key);
                 String baseNodeString = baseNode.node().toString();
                 if (baseNodeString.contains(PUBLIC + WHITESPACE + ENUM + WHITESPACE)) {
-                    String parentNodeString = parentNode.node().toString();
-                    String namespace = extractNamespaceFromParentNode(parentNodeString);
-                    String enumName = extractEnumNameFromParentNode(parentNodeString);
+                    String namespace = extractNamespaceFromParentNode(parentNode);
+                    String enumName = extractEnumNameFromParentNode(parentNode);
                     String enumValues = getEnumValuesFromVisitor(baseValue.type(), xsdVisitor);
                     StringBuilder enumDeclaration = new StringBuilder();
                     if (namespace != null && !namespace.isEmpty()) {
                         enumDeclaration.append(namespace).append("\n");
                     }
-                    enumDeclaration.append(PUBLIC).append(WHITESPACE).append(ENUM).append(WHITESPACE).append(enumName)
+                    enumDeclaration.append(PUBLIC).append(WHITESPACE).append(ENUM).append(WHITESPACE)
+                            .append((enumName == null) ? key : enumName)
                             .append(WHITESPACE).append(OPEN_BRACES).append(NEW_LINE);
                     enumDeclaration.append(WHITESPACE).append(enumValues).append(NEW_LINE);
                     enumDeclaration.append(CLOSE_BRACES).append(SEMICOLON);
@@ -521,15 +517,15 @@ public final class XSDToRecord {
         }
     }
 
-    /**
-     * Extracts namespace annotation from parent node string.
-     */
-    private static String extractNamespaceFromParentNode(String parentNodeString) {
-        // Look for @xmldata:Namespace pattern
-        int namespaceStart = parentNodeString.indexOf("@xmldata:Namespace");
+    private static String extractNamespaceFromParentNode(MemberNode parentNode) {
+        if (parentNode == null) {
+            return null;
+        }
+        String parentNodeString = parentNode.toString();
+        int namespaceStart = parentNodeString.indexOf(NAMESPACE_ANNOTATION);
         if (namespaceStart != -1) {
-            int braceStart = parentNodeString.indexOf("{", namespaceStart);
-            int braceEnd = parentNodeString.indexOf("}", braceStart);
+            int braceStart = parentNodeString.indexOf(OPEN_BRACES, namespaceStart);
+            int braceEnd = parentNodeString.indexOf(CLOSE_BRACES, braceStart);
             if (braceStart != -1 && braceEnd != -1) {
                 return parentNodeString.substring(namespaceStart, braceEnd + 1);
             }
@@ -537,24 +533,26 @@ public final class XSDToRecord {
         return null;
     }
     
-    private static String extractEnumNameFromParentNode(String parentNodeString) {
-        // Look for "public type EnumName record"
-        String[] parts = parentNodeString.split("\\s+");
-        for (int i = 0; i < parts.length - 1; i++) {
-            if ("type".equals(parts[i]) && i + 1 < parts.length) {
-                return parts[i + 1];
+    private static String extractEnumNameFromParentNode(MemberNode parentNode) {
+        if (parentNode != null) {
+            String parentNodeString = parentNode.toString();
+            String[] parts = parentNodeString.split("\\s+");
+            for (int i = 0; i < parts.length - 1; i++) {
+                if (TYPE.equals(parts[i]) && i + 1 < parts.length) {
+                    return parts[i + 1];
+                }
             }
         }
-        return "UnknownEnum";
+        return null;
     }
     
     private static String getEnumValuesFromVisitor(String enumTypeName, XSDVisitor xsdVisitor) {
         Map<String, ArrayList<String>> enumerationElements = xsdVisitor.getEnumerationElements();
         ArrayList<String> enumValues = enumerationElements.get(enumTypeName);
         if (enumValues != null && !enumValues.isEmpty()) {
-            return String.join(", ", enumValues);
+            return String.join(COMMA + WHITESPACE, enumValues);
         }
-        return "";
+        return EMPTY_STRING;
     }
 
     static Document parseXSD(String xsdData) throws Exception {

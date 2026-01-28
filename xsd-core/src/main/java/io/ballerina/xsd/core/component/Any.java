@@ -25,7 +25,7 @@ import org.w3c.dom.Node;
 /**
  * Represents an any element in the XSD schema.
  *
- * @since 0.1.0
+ * @since 1.1.4
  */
 public class Any implements XSDComponent {
     private final Node node;

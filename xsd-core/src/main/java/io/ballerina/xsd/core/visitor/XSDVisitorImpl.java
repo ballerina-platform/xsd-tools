@@ -452,14 +452,8 @@ public class XSDVisitorImpl implements XSDVisitor {
             }
             if (attributeGroups.containsKey(refName)) {
                 builder.append(attributeGroups.get(refName).type());
-            } else {
-                // // If not found yet, it might be defined later in the schema
-                // // Add a diagnostic warning
-                // String errorMessage = String.format("AttributeGroup '%s' referenced but not found", refName);
-                // diagnostics.add(xsdToBallerinaError(errorMessage));
             }
         }
-        
         return builder.toString();
     }
 
