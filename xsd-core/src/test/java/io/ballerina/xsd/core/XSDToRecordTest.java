@@ -81,12 +81,12 @@ public class XSDToRecordTest {
             new Object[] {new String[] {"38_elements_with_double_values.xml"}, "38_elements_with_double_values.bal"},
             new Object[] {new String[] {"39_elements_with_primitive_types.xsd"},
                     "39_elements_with_primitive_types.bal"},
-            new Object[] {new String[] {"43_elements_with_annotation.xsd"}, "43_elements_with_annotation.bal"},
-            new Object[] {new String[] {"44_elements_with_attribute_group.xsd"},
-                    "44_elements_with_attribute_group.bal"},
-            new Object[] {new String[] {"45_elements_with_any.xsd"}, "45_elements_with_any.bal"},
-            new Object[] {new String[] {"46_elements_with_include_base.xsd", "46_elements_with_include.xsd"},
-                    "46_elements_with_include.bal"}
+            new Object[] {new String[] {"40_elements_with_annotation.xsd"}, "40_elements_with_annotation.bal"},
+            new Object[] {new String[] {"41_elements_with_attribute_group.xsd"},
+                    "41_elements_with_attribute_group.bal"},
+            new Object[] {new String[] {"42_elements_with_any.xsd"}, "42_elements_with_any.bal"},
+            new Object[] {new String[] {"43_elements_with_include_base.xsd", "43_elements_with_include.xsd"},
+                    "43_elements_with_include.bal"}
         );
     }
 
