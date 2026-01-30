@@ -983,11 +983,13 @@ public class XSDVisitorImpl implements XSDVisitor {
         String maxOccurs = (maxOccursNode != null) ? maxOccursNode.getNodeValue() : ONE;
         String processContents = (processContentsNode != null) ? processContentsNode.getNodeValue() : SKIP_ATTRIBUTE;
         builder.append(ANY_ANNOTATION).append(NEW_LINE);
-        builder.append(STRICT_ATTRIBUTE.equals(processContents) ? STRICT_ANY_PLACEHOLDER : ANYDATA);
-        if (!maxOccurs.equals(ONE) && !maxOccurs.equals(ZERO)) {
+        boolean isStrictAny = STRICT_ATTRIBUTE.equals(processContents);
+        builder.append(isStrictAny ? STRICT_ANY_PLACEHOLDER : ANYDATA);
+        boolean isArray = !maxOccurs.equals(ONE) && !maxOccurs.equals(ZERO);
+        if (isArray) {
             builder.append(EMPTY_ARRAY);
         }
-        if (minOccurs.equals(ZERO)) {
+        if (minOccurs.equals(ZERO) && (isStrictAny || isArray)) {
             builder.append(QUESTION_MARK);
         }
         builder.append(WHITESPACE).append(ANY_ELEMENT);
