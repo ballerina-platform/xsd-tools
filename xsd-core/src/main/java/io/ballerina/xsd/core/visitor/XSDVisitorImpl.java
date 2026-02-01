@@ -979,7 +979,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         Node maxOccursNode = node.getAttributes().getNamedItem(MAX_OCCURS);
         Node processContentsNode = node.getAttributes().getNamedItem(PROCESS_CONTENTS);
 
-        String minOccurs = (minOccursNode != null) ? minOccursNode.getNodeValue() : ONE;
+        String minOccurs = (minOccursNode != null) ? minOccursNode.getNodeValue() : ZERO;
         String maxOccurs = (maxOccursNode != null) ? maxOccursNode.getNodeValue() : ONE;
         String processContents = (processContentsNode != null) ? processContentsNode.getNodeValue() : SKIP_ATTRIBUTE;
         builder.append(ANY_ANNOTATION).append(NEW_LINE);
@@ -989,7 +989,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         if (isArray) {
             builder.append(EMPTY_ARRAY);
         }
-        if (minOccurs.equals(ZERO) && (isStrictAny || isArray)) {
+        if (minOccurs.equals(ZERO) || isArray) {
             builder.append(QUESTION_MARK);
         }
         builder.append(WHITESPACE).append(ANY_ELEMENT);
