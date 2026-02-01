@@ -60,7 +60,7 @@ public type SequenceGroup2 record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
     @xmldata:Any
-    anydata anyElement;
+    anydata? anyElement;
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}

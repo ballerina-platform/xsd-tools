@@ -2023,7 +2023,7 @@ public type SequenceGroup54 record {|
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
     @xmldata:SequenceOrder {value: 1}
     @xmldata:Any
-    anydata anyElement;
+    anydata? anyElement;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
