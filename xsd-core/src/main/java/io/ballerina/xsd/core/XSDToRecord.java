@@ -538,7 +538,7 @@ public final class XSDToRecord {
             String parentNodeString = parentNode.toString();
             String[] parts = parentNodeString.split("\\s+");
             for (int i = 0; i < parts.length - 1; i++) {
-                if (TYPE.equals(parts[i]) && i + 1 < parts.length) {
+                if (TYPE.equals(parts[i])) {
                     return parts[i + 1];
                 }
             }

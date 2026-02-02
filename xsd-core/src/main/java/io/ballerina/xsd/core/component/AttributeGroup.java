@@ -37,6 +37,7 @@ public class AttributeGroup implements XSDComponent {
         this.node = node;
     }
 
+    @Override
     public boolean isOptional() {
         return isOptional;
     }
@@ -46,6 +47,7 @@ public class AttributeGroup implements XSDComponent {
         return isNestedElement;
     }
 
+    @Override
     public void setOptional(boolean optional) {
         isOptional = optional;
     }

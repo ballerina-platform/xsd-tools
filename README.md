@@ -26,8 +26,7 @@ The tool supports the following XSD elements and constructs:
 | `xs:extension` | Type extensions | Record extension |
 | `xs:restriction` | Type restrictions | Constrained types |
 | `xs:enumeration` | Enumeration values | Ballerina enums |
-| `xs:any` | Wildcard elements | `xml` type |
-| `xs:annotation` | Documentation/metadata | Gracefully ignored |
+| `xs:any` | Wildcard elements | `@xmldata:Any`-annotated field of type `anydata` or union of known element/complex-type records |
 | `xs:include` | Schema includes | Multi-file processing |
 
 ### Installation
