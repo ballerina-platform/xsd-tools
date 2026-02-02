@@ -4,6 +4,26 @@
 
 The Ballerina XSD Tool simplifies the generation of Ballerina record types from an XSD specification, improving the user experience when integrating with XML-based operations in Ballerina.
 
+### Supported XSD Features
+
+The tool supports the following XSD elements and constructs:
+
+| Feature | Description | Ballerina Mapping |
+|---------|-------------|-------------------|
+| `xs:element` | Element definitions | Record fields |
+| `xs:complexType` | Complex type definitions | Ballerina records |
+| `xs:simpleType` | Simple type definitions | Type aliases |
+| `xs:sequence` | Ordered element groups | Sequence records with `@xmldata:Sequence` |
+| `xs:choice` | Choice element groups | Choice records with `@xmldata:Choice` |
+| `xs:all` | Unordered element groups | Records with all fields |
+| `xs:attribute` | Attributes | Fields with `@xmldata:Attribute` |
+| `xs:attributeGroup` | Reusable attribute groups | Expanded inline as attributes |
+| `xs:extension` | Type extensions | Record extension |
+| `xs:restriction` | Type restrictions | Constrained types |
+| `xs:enumeration` | Enumeration values | Ballerina enums |
+| `xs:any` | Wildcard elements | `@xmldata:Any`-annotated field of type `anydata` or union of known element/complex-type records |
+| `xs:include` | Schema includes | Multi-file processing |
+
 ### Installation
 
 Execute the command below to pull the XSD tool from Ballerina Central.

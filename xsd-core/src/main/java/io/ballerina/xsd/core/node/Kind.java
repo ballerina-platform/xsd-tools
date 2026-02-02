@@ -28,5 +28,7 @@ public enum Kind {
     SIMPLE_TYPE,
     SEQUENCE,
     CHOICE,
-    ENUM
+    ENUM,
+    ATTRIBUTE_GROUP,
+    ANY
 }

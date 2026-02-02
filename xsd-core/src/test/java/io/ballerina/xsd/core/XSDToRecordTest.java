@@ -18,18 +18,15 @@
 
 package io.ballerina.xsd.core;
 
-import io.ballerina.xsd.core.response.Response;
+import io.ballerina.xsd.core.response.NodeResponse;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testng.Assert;
-import org.w3c.dom.Document;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
-
-import static io.ballerina.xsd.core.XSDToRecord.parseXSD;
 
 public class XSDToRecordTest {
     private static final Path RES_DIR = Paths.get("src/test/resources/").toAbsolutePath();
@@ -38,60 +35,77 @@ public class XSDToRecordTest {
 
     private static Stream<Object[]> provideTestPaths() {
         return Stream.of(
-            new Object[] {"1_simple_type_with_restrictions.xml", "1_simple_type_with_restrictions.bal"},
-            new Object[] {"2_simple_type_with_enumerations.xml", "2_simple_type_with_enumerations.bal"},
-            new Object[] {"3_simple_type_with_unions.xml", "3_simple_type_with_unions.bal"},
-            new Object[] {"4_elements_simple.xml", "4_elements_simple.bal"},
-            new Object[] {"5_elements_with_simple_type.xml", "5_elements_with_simple_type.bal"},
-            new Object[] {"6_elements_with_complex_type.xml", "6_elements_with_complex_type.bal"},
-            new Object[] {"7_elements_with_choice.xml", "7_elements_with_choice.bal"},
-            new Object[] {"8_elements_with_sequence.xml", "8_elements_with_sequence.bal"},
-            new Object[] {"9_complex_type_with_nested_fields.xml", "9_complex_type_with_nested_fields.bal"},
-            new Object[] {"10_complex_type_with_extensions.xml", "10_complex_type_with_extensions.bal"},
-            new Object[] {"11_complex_type_with_extensions.xml", "11_complex_type_with_extensions.bal"},
-            new Object[] {"12_elements_with_default_values.xml", "12_elements_with_default_values.bal"},
-            new Object[] {"13_elements_with_fixed_values.xml", "13_elements_with_fixed_values.bal"},
-            new Object[] {"14_elements_with_multiple_complex_types.xml", "14_elements_with_multiple_complex_types.bal"},
-            new Object[] {"15_elements_with_occurrences.xml", "15_elements_with_occurrences.bal"},
-            new Object[] {"16_elements_with_required_fields.xml", "16_elements_with_required_fields.bal"},
-            new Object[] {"17_simple_type_with_extensions.xml", "17_simple_type_with_extensions.bal"},
-            new Object[] {"18_complex_schema.xsd", "18_complex_schema.bal"},
-            new Object[] {"19_complex_type_with_extensions.xml", "19_complex_type_with_extensions.bal"},
-            new Object[] {"20_elements_with_attributes.xml", "20_elements_with_attributes.bal"},
-            new Object[] {"21_attributes_with_default_values.xml", "21_attributes_with_default_values.bal"},
-            new Object[] {"22_attributes_with_fixed_values.xml", "22_attributes_with_fixed_values.bal"},
-            new Object[] {"23_complex_schema.xsd", "23_complex_schema.bal"},
-            new Object[] {"24_complex_schema.xsd", "24_complex_schema.bal"},
-            new Object[] {"25_complex_schema.xsd", "25_complex_schema.bal"},
-            new Object[] {"26_complex_schema.xsd", "26_complex_schema.bal"},
-            new Object[] {"27_complex_schema.xsd", "27_complex_schema.bal"},
-            new Object[] {"28_complex_schema.xsd", "28_complex_schema.bal"},
-            new Object[] {"29_element_with_same_type_name.xsd", "29_element_with_same_type_name.bal"},
-            new Object[] {"30_complex_type_with_nested_choices.xsd", "30_complex_type_with_nested_choices.bal"},
-            new Object[] {"31_elements_with_choice.xsd", "31_elements_with_choice.bal"},
-            new Object[] {"32_elements_with_imports.xsd", "32_elements_with_imports.bal"},
-            new Object[] {"33_elements_with_simple_types.xml", "33_elements_with_simple_types.bal"},
-            new Object[] {"34_elements_with_simple_types.xml", "34_elements_with_simple_types.bal"},
-            new Object[] {"35_unions_of_simple_types.xsd", "35_unions_of_simple_types.bal"},
-            new Object[] {"36_elements_with_byte_type.xsd", "36_elements_with_byte_type.bal"},
-            new Object[] {"37_elements_with_nested_complex_type.xml", "37_elements_with_nested_complex_type.bal"},
-            new Object[] {"38_elements_with_double_values.xml", "38_elements_with_double_values.bal"},
-            new Object[] {"39_elements_with_primitive_types.xsd", "39_elements_with_primitive_types.bal"}
+            new Object[] {new String[] {"1_simple_type_with_restrictions.xml"}, "1_simple_type_with_restrictions.bal"},
+            new Object[] {new String[] {"2_simple_type_with_enumerations.xml"}, "2_simple_type_with_enumerations.bal"},
+            new Object[] {new String[] {"3_simple_type_with_unions.xml"}, "3_simple_type_with_unions.bal"},
+            new Object[] {new String[] {"4_elements_simple.xml"}, "4_elements_simple.bal"},
+            new Object[] {new String[] {"5_elements_with_simple_type.xml"}, "5_elements_with_simple_type.bal"},
+            new Object[] {new String[] {"6_elements_with_complex_type.xml"}, "6_elements_with_complex_type.bal"},
+            new Object[] {new String[] {"7_elements_with_choice.xml"}, "7_elements_with_choice.bal"},
+            new Object[] {new String[] {"8_elements_with_sequence.xml"}, "8_elements_with_sequence.bal"},
+            new Object[] {new String[] {"9_complex_type_with_nested_fields.xml"},
+                    "9_complex_type_with_nested_fields.bal"},
+            new Object[] {new String[] {"10_complex_type_with_extensions.xml"}, "10_complex_type_with_extensions.bal"},
+            new Object[] {new String[] {"11_complex_type_with_extensions.xml"}, "11_complex_type_with_extensions.bal"},
+            new Object[] {new String[] {"12_elements_with_default_values.xml"}, "12_elements_with_default_values.bal"},
+            new Object[] {new String[] {"13_elements_with_fixed_values.xml"}, "13_elements_with_fixed_values.bal"},
+            new Object[] {new String[] {"14_elements_with_multiple_complex_types.xml"},
+                    "14_elements_with_multiple_complex_types.bal"},
+            new Object[] {new String[] {"15_elements_with_occurrences.xml"}, "15_elements_with_occurrences.bal"},
+            new Object[] {new String[] {"16_elements_with_required_fields.xml"},
+                    "16_elements_with_required_fields.bal"},
+            new Object[] {new String[] {"17_simple_type_with_extensions.xml"}, "17_simple_type_with_extensions.bal"},
+            new Object[] {new String[] {"18_complex_schema.xsd"}, "18_complex_schema.bal"},
+            new Object[] {new String[] {"19_complex_type_with_extensions.xml"}, "19_complex_type_with_extensions.bal"},
+            new Object[] {new String[] {"20_elements_with_attributes.xml"}, "20_elements_with_attributes.bal"},
+            new Object[] {new String[] {"21_attributes_with_default_values.xml"},
+                    "21_attributes_with_default_values.bal"},
+            new Object[] {new String[] {"22_attributes_with_fixed_values.xml"}, "22_attributes_with_fixed_values.bal"},
+            new Object[] {new String[] {"23_complex_schema.xsd"}, "23_complex_schema.bal"},
+            new Object[] {new String[] {"24_complex_schema.xsd"}, "24_complex_schema.bal"},
+            new Object[] {new String[] {"25_complex_schema.xsd"}, "25_complex_schema.bal"},
+            new Object[] {new String[] {"26_complex_schema.xsd"}, "26_complex_schema.bal"},
+            new Object[] {new String[] {"27_complex_schema.xsd"}, "27_complex_schema.bal"},
+            new Object[] {new String[] {"28_complex_schema.xsd"}, "28_complex_schema.bal"},
+            new Object[] {new String[] {"29_element_with_same_type_name.xsd"}, "29_element_with_same_type_name.bal"},
+            new Object[] {new String[] {"30_complex_type_with_nested_choices.xsd"},
+                    "30_complex_type_with_nested_choices.bal"},
+            new Object[] {new String[] {"31_elements_with_choice.xsd"}, "31_elements_with_choice.bal"},
+            new Object[] {new String[] {"32_elements_with_imports.xsd"}, "32_elements_with_imports.bal"},
+            new Object[] {new String[] {"33_elements_with_simple_types.xml"}, "33_elements_with_simple_types.bal"},
+            new Object[] {new String[] {"34_elements_with_simple_types.xml"}, "34_elements_with_simple_types.bal"},
+            new Object[] {new String[] {"35_unions_of_simple_types.xsd"}, "35_unions_of_simple_types.bal"},
+            new Object[] {new String[] {"36_elements_with_byte_type.xsd"}, "36_elements_with_byte_type.bal"},
+            new Object[] {new String[] {"37_elements_with_nested_complex_type.xml"},
+                    "37_elements_with_nested_complex_type.bal"},
+            new Object[] {new String[] {"38_elements_with_double_values.xml"}, "38_elements_with_double_values.bal"},
+            new Object[] {new String[] {"39_elements_with_primitive_types.xsd"},
+                    "39_elements_with_primitive_types.bal"},
+            new Object[] {new String[] {"40_elements_with_annotation.xsd"}, "40_elements_with_annotation.bal"},
+            new Object[] {new String[] {"41_elements_with_attribute_group.xsd"},
+                    "41_elements_with_attribute_group.bal"},
+            new Object[] {new String[] {"42_elements_with_any.xsd"}, "42_elements_with_any.bal"},
+            new Object[] {new String[] {"43_elements_with_include_base.xsd", "43_elements_with_include.xsd"},
+                    "43_elements_with_include.bal"}
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideTestPaths")
-    void testXsdToRecord(String xmlFilePath, String balFilePath) throws Exception {
-        validate(RES_DIR.resolve(XML_DIR).resolve(xmlFilePath), RES_DIR.resolve(EXPECTED_DIR).resolve(balFilePath));
+    void testXsdToRecord(String[] xsdFiles, String balFilePath) throws Exception {
+        validate(xsdFiles, RES_DIR.resolve(EXPECTED_DIR).resolve(balFilePath));
     }
 
-    private void validate(Path sample, Path expected) throws Exception {
-        String xmlFileContent = Files.readString(sample);
-        Document document = parseXSD(xmlFileContent);
-        Response result = XSDToRecord.convert(document);
+    private void validate(String[] xsdFiles, Path expected) throws Exception {
+        String[] xsdContents = new String[xsdFiles.length];
+        for (int i = 0; i < xsdFiles.length; i++) {
+            Path xsdPath = RES_DIR.resolve(XML_DIR).resolve(xsdFiles[i]);
+            xsdContents[i] = Files.readString(xsdPath);
+        }
+        NodeResponse result = XSDToRecord.generateNodes(xsdContents);
         Assert.assertTrue(result.diagnostics().isEmpty());
+        String generatedTypes = Utils.formatModuleParts(result.types());
         String expectedValue = Files.readString(expected);
-        Assert.assertEquals(result.types(), expectedValue);
+        Assert.assertEquals(generatedTypes, expectedValue);
     }
 }

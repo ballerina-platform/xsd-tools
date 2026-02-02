@@ -1953,7 +1953,8 @@ public type SequenceGroup52 record {|
 public type SequenceGroup53 record {|
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.027.001.10"}
     @xmldata:SequenceOrder {value: 1}
-    string \#content;
+    @xmldata:Any
+    anydata? anyElement;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.027.001.10"}

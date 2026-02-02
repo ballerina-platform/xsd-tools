@@ -18,6 +18,8 @@
 
 package io.ballerina.xsd.core.visitor;
 
+import io.ballerina.xsd.core.component.Any;
+import io.ballerina.xsd.core.component.AttributeGroup;
 import io.ballerina.xsd.core.component.ComplexType;
 import io.ballerina.xsd.core.component.Element;
 import io.ballerina.xsd.core.component.SimpleType;
@@ -40,6 +42,8 @@ public interface XSDVisitor {
     String visit(ComplexType element, boolean isSubType) throws Exception;
     String visit(SimpleType element) throws Exception;
     String visit(SimpleType element, boolean isSubType) throws Exception;
+    String visit(AttributeGroup attributeGroup) throws Exception;
+    String visit(Any any) throws Exception;
     void setTargetNamespace(String targetNamespace);
     String getTargetNamespace();
     ArrayList<String> getImports();
@@ -49,6 +53,11 @@ public interface XSDVisitor {
     Map<String, XSDElement> getNameResolvers();
     Map<String, String> getResolvedNameMeta();
     Map<String, ArrayList<String>> getEnumerationElements();
+    Map<String, XSDElement> getAttributeGroups();
     List<XSDDiagnostic> getDiagnostics();
     void clearImports();
+    void addComplexTypeName(String name);
+    void addElementName(String name);
+    ArrayList<String> getComplexTypeNames();
+    ArrayList<String> getElementNames();
 }

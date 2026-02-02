@@ -1,0 +1,45 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://example.com/schema" elementFormDefault="qualified">
+    <xs:annotation>
+        <xs:documentation>
+            This schema defines sample types with annotations for testing documentation support
+        </xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="Person">
+        <xs:annotation>
+            <xs:documentation>Person element with name and age</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>The person's full name</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="age" type="xs:int">
+                    <xs:annotation>
+                        <xs:documentation>The person's age in years</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="Status">
+        <xs:annotation>
+            <xs:documentation>Status enumeration type</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ACTIVE">
+                <xs:annotation>
+                    <xs:documentation>Active status</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="INACTIVE">
+                <xs:annotation>
+                    <xs:documentation>Inactive status</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

@@ -1890,7 +1890,8 @@ public type SequenceGroup53 record {|
 public type SequenceGroup54 record {|
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pain.008.001.11"}
     @xmldata:SequenceOrder {value: 1}
-    string \#content;
+    @xmldata:Any
+    anydata? anyElement;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pain.008.001.11"}
