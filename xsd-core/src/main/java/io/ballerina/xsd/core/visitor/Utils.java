@@ -104,6 +104,7 @@ public final class Utils {
     private static final String WHITESPACE_PATTERN = "\\s";
     private static final String SPECIAL_CHARS_PATTERN = "[!@$%^&*()_\\-|]";
     public static final String NMTOKEN = "NMTOKEN";
+    public static final String NMTOKENS = "NMTOKENS";
     public static final String IDREF = "IDREF";
     public static final String IDREFS = "IDREFS";
     public static final String ANYDATA = "anydata";
@@ -187,7 +188,7 @@ public final class Utils {
     public static String typeGenerator(String typeName) {
         switch (typeName) {
             case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE,
-                    DURATION, ANY_URI, G_MONTH_DAY, NMTOKEN, IDREF, IDREFS, G_DAY, G_MONTH, NORMALIZED_STRING,
+                    DURATION, ANY_URI, G_MONTH_DAY, NMTOKEN, NMTOKENS, IDREF, IDREFS, G_DAY, G_MONTH, NORMALIZED_STRING,
                     TOKEN, NCNAME, QNAME, NOTATION, BASE64_BINARY, HEX_BINARY, BYTE, ID -> {
                 return STRING;
             }
