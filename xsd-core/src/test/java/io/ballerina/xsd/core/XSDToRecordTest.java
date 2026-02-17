@@ -86,7 +86,9 @@ public class XSDToRecordTest {
                     "41_elements_with_attribute_group.bal"},
             new Object[] {new String[] {"42_elements_with_any.xsd"}, "42_elements_with_any.bal"},
             new Object[] {new String[] {"43_elements_with_include_base.xsd", "43_elements_with_include.xsd"},
-                    "43_elements_with_include.bal"}
+                    "43_elements_with_include.bal"},
+            new Object[] {new String[] {"44_elements_with_builtin_string_types.xsd"},
+                    "44_elements_with_builtin_string_types.bal"}
         );
     }
 

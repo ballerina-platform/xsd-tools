@@ -1,0 +1,6 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://namespace.org/">
+    <xs:element name="TokenList" type="xs:NMTOKENS"/>
+    <xs:element name="EntityRef" type="xs:ENTITY"/>
+    <xs:element name="EntityRefs" type="xs:ENTITIES"/>
+    <xs:element name="NameVal" type="xs:Name"/>
+</xs:schema>
