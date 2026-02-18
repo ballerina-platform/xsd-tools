@@ -3,7 +3,7 @@ import ballerina/data.xmldata;
 @xmldata:Namespace {uri: "http://tempuri.org/"}
 public type Add record {|
     @xmldata:Attribute
-    10 value;
+    10 value?;
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup sequenceGroup;
 |};

@@ -23,7 +23,7 @@ public type Order record {|
     @xmldata:Attribute
     string timestamp?;
     @xmldata:Attribute
-    string status;
+    string status?;
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}
