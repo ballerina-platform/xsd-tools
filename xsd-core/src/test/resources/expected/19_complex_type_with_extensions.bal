@@ -3,7 +3,7 @@ import ballerina/data.xmldata;
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type PersonBase record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup3 sequenceGroup3;
+    SequenceGroup3 sequenceGroup3?;
     @xmldata:Attribute
     int id;
     @xmldata:Attribute
@@ -13,7 +13,7 @@ public type PersonBase record {|
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type Employee record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup3 sequenceGroup3;
+    SequenceGroup3 sequenceGroup3?;
     @xmldata:Attribute
     int id;
     @xmldata:Attribute
@@ -52,7 +52,7 @@ public type SequenceGroup record {|
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type Address record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup sequenceGroup;
+    SequenceGroup sequenceGroup?;
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
@@ -71,7 +71,7 @@ public type SequenceGroup1 record {|
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type ContactInfo record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup1 sequenceGroup1;
+    SequenceGroup1 sequenceGroup1?;
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
@@ -90,7 +90,7 @@ public type SequenceGroup2 record {|
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type EmergencyContact record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup2 sequenceGroup2;
+    SequenceGroup2 sequenceGroup2?;
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}

@@ -39,7 +39,7 @@ public type AddressType3Choice record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type AmendmentInformationDetails15 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup sequenceGroup;
+    SequenceGroup sequenceGroup?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -63,13 +63,13 @@ public type BranchAndFinancialInstitutionIdentification8 record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type BranchData5 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup2 sequenceGroup2;
+    SequenceGroup2 sequenceGroup2?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type CashAccount40 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup3 sequenceGroup3;
+    SequenceGroup3 sequenceGroup3?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -122,7 +122,7 @@ public type ClearingSystemMemberIdentification2 record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type Contact13 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup6 sequenceGroup6;
+    SequenceGroup6 sequenceGroup6?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -136,13 +136,13 @@ public enum CreditDebitCode {
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type CreditTransferMandateData1 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup7 sequenceGroup7;
+    SequenceGroup7 sequenceGroup7?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type CreditorReferenceInformation3 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup8 sequenceGroup8;
+    SequenceGroup8 sequenceGroup8?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -217,7 +217,7 @@ public type DocumentAmountType1Choice record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type DocumentLineIdentification1 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup16 sequenceGroup16;
+    SequenceGroup16 sequenceGroup16?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -346,7 +346,7 @@ public type FinancialIdentificationSchemeName1Choice record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type FinancialInstitutionIdentification23 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup22 sequenceGroup22;
+    SequenceGroup22 sequenceGroup22?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -473,7 +473,7 @@ public type MandateRelatedData3Choice record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type MandateRelatedInformation16 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup34 sequenceGroup34;
+    SequenceGroup34 sequenceGroup34?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -485,7 +485,7 @@ public type MandateSetupReason1Choice record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type MandateTypeInformation2 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup35 sequenceGroup35;
+    SequenceGroup35 sequenceGroup35?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -547,7 +547,7 @@ public type NumberOfTransactionsPerStatus5 record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type OrganisationIdentification39 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup37 sequenceGroup37;
+    SequenceGroup37 sequenceGroup37?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -577,7 +577,7 @@ public type OriginalGroupInformation29 record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type OriginalTransactionReference42 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup41 sequenceGroup41;
+    SequenceGroup41 sequenceGroup41?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -601,7 +601,7 @@ public type Party52Choice record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type PartyIdentification272 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup43 sequenceGroup43;
+    SequenceGroup43 sequenceGroup43?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -612,13 +612,13 @@ public enum PaymentMethod4Code {
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type PaymentTransaction161 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup44 sequenceGroup44;
+    SequenceGroup44 sequenceGroup44?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type PaymentTypeInformation27 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup45 sequenceGroup45;
+    SequenceGroup45 sequenceGroup45?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -627,7 +627,7 @@ public type PercentageRate decimal;
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type PersonIdentification18 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup46 sequenceGroup46;
+    SequenceGroup46 sequenceGroup46?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -642,7 +642,7 @@ public type PhoneNumber string;
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type PostalAddress27 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup47 sequenceGroup47;
+    SequenceGroup47 sequenceGroup47?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -676,19 +676,19 @@ public type Purpose2Choice record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type ReferredDocumentInformation8 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup49 sequenceGroup49;
+    SequenceGroup49 sequenceGroup49?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type RemittanceAmount4 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup50 sequenceGroup50;
+    SequenceGroup50 sequenceGroup50?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type RemittanceInformation22 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup51 sequenceGroup51;
+    SequenceGroup51 sequenceGroup51?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -722,13 +722,13 @@ public type StatusReason6Choice record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type StatusReasonInformation14 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup53 sequenceGroup53;
+    SequenceGroup53 sequenceGroup53?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type StructuredRemittanceInformation18 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup54 sequenceGroup54;
+    SequenceGroup54 sequenceGroup54?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
@@ -746,43 +746,43 @@ public type SupplementaryDataEnvelope1 record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type TaxAmount3 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup57 sequenceGroup57;
+    SequenceGroup57 sequenceGroup57?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type TaxAuthorisation1 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup58 sequenceGroup58;
+    SequenceGroup58 sequenceGroup58?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type TaxData1 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup59 sequenceGroup59;
+    SequenceGroup59 sequenceGroup59?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type TaxParty1 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup60 sequenceGroup60;
+    SequenceGroup60 sequenceGroup60?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type TaxParty2 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup61 sequenceGroup61;
+    SequenceGroup61 sequenceGroup61?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type TaxPeriod3 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup62 sequenceGroup62;
+    SequenceGroup62 sequenceGroup62?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}
 public type TaxRecord3 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup63 sequenceGroup63;
+    SequenceGroup63 sequenceGroup63?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:pacs.002.001.14"}

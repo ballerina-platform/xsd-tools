@@ -522,7 +522,8 @@ public class XSDVisitorImpl implements XSDVisitor {
         processChildNodes(isOptional, childNodes, childNodeBuilder);
         this.addImports(BALLERINA_XML_DATA_MODULE);
         stringBuilder.append(addNamespace(this, getTargetNamespace()));
-        String sequenceName = applySequenceAnnotation(node, builder);
+        boolean allChildrenOptional = areAllChildrenOptional(childNodes);
+        String sequenceName = applySequenceAnnotation(node, builder, allChildrenOptional);
         generateSequenceType(stringBuilder, childNodeBuilder, sequenceName);
         if (nestedElements.containsKey(sequenceName)) {
             sequenceName = resolveNameConflicts(sequenceName, nestedElements);
@@ -745,7 +746,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         }
     }
 
-    private String applySequenceAnnotation(Node node, StringBuilder builder) {
+    private String applySequenceAnnotation(Node node, StringBuilder builder, boolean allChildrenOptional) {
         Node maxOccurrenceNode = node.getAttributes().getNamedItem(MAX_OCCURS);
         Node minOccurrenceNode = node.getAttributes().getNamedItem(MIN_OCCURS);
         String maxOccurrence = (maxOccurrenceNode != null) ? maxOccurrenceNode.getNodeValue() : ONE;
@@ -761,8 +762,30 @@ public class XSDVisitorImpl implements XSDVisitor {
         }
         builder.append(CLOSE_BRACES);
         builder.append(sequenceName).append((maxOccurrence.equals(ONE)) ? EMPTY_STRING : EMPTY_ARRAY);
-        builder.append(WHITESPACE).append(convertToCamelCase(sequenceName)).append(SEMICOLON);
+        builder.append(WHITESPACE).append(convertToCamelCase(sequenceName));
+        if (allChildrenOptional) {
+            builder.append(QUESTION_MARK);
+        }
+        builder.append(SEMICOLON);
         return sequenceName;
+    }
+
+    private boolean areAllChildrenOptional(NodeList childNodes) {
+        boolean hasElement = false;
+        for (Node child : asIterable(childNodes)) {
+            if (child.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            if (!ELEMENT.equals(child.getLocalName())) {
+                continue;
+            }
+            hasElement = true;
+            Node minOccursAttr = child.getAttributes().getNamedItem(MIN_OCCURS);
+            if (minOccursAttr == null || !ZERO.equals(minOccursAttr.getNodeValue())) {
+                return false;
+            }
+        }
+        return hasElement;
     }
 
     private static void processSimpleType(StringBuilder builder, String name, Node simpleTypeNode) {
