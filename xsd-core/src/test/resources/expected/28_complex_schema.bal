@@ -23,7 +23,7 @@ public type ActiveOrHistoricCurrencyAndAmount_SimpleType decimal;
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
 public type ActiveOrHistoricCurrencyAndAmount record {|
-    decimal \#content;
+    decimal \#content?;
     @xmldata:Attribute
     ActiveOrHistoricCurrencyCode Ccy;
 |};

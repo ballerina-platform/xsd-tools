@@ -196,10 +196,10 @@ public class XSDVisitorImpl implements XSDVisitor {
             diagnostics.add(xsdToBallerinaError(errorMessage));
         }
         if (nameNode == null && typeNode == null) {
-            builder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD);
+            builder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD).append(QUESTION_MARK);
         } else if (nameNode == null) {
             if (isSimpleType(deriveType(typeNode))) {
-                builder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD);
+                builder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD).append(QUESTION_MARK);
             } else {
                 builder.append(deriveType(typeNode)).append(WHITESPACE).append(extractType(typeNode));
             }
@@ -748,7 +748,8 @@ public class XSDVisitorImpl implements XSDVisitor {
         if (order == 0) {
             stringBuilder.append(addNamespace(this, getTargetNamespace()));
             stringBuilder.append(XMLDATA_ORDER + WHITESPACE + OPEN_BRACES + VALUE + COLON + ONE + CLOSE_BRACES);
-            stringBuilder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD).append(SEMICOLON);
+            stringBuilder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD)
+                .append(QUESTION_MARK).append(SEMICOLON);
         }
     }
 
@@ -950,7 +951,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     private void appendRecordStructure(String typeName, StringBuilder builder) {
         builder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(VERTICAL_BAR)
                 .append(WHITESPACE).append(typeGenerator(typeName)).append(WHITESPACE).append(CONTENT_FIELD)
-                .append(SEMICOLON).append(WHITESPACE).append(VERTICAL_BAR).append(CLOSE_BRACES);
+                .append(QUESTION_MARK).append(SEMICOLON).append(WHITESPACE).append(VERTICAL_BAR).append(CLOSE_BRACES);
     }
 
     public void addImports(String module) {

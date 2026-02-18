@@ -2,17 +2,17 @@ import ballerina/data.xmldata;
 
 @xmldata:Namespace {uri: "http://htng.org/PWSWG/2007/02/AsyncHeaders"}
 public type Address record {|
-    string \#content;
+    string \#content?;
 |};
 
 @xmldata:Namespace {uri: "http://htng.org/PWSWG/2007/02/AsyncHeaders"}
 public type CorrelationID record {|
-    string \#content;
+    string \#content?;
 |};
 
 @xmldata:Namespace {uri: "http://htng.org/PWSWG/2007/02/AsyncHeaders"}
 public type RelatesToCorrelationID record {|
-    string \#content;
+    string \#content?;
 |};
 
 @xmldata:Name {value: "ReplyTo"}
