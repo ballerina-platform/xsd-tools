@@ -45,7 +45,7 @@ public type Divide record {|
 @xmldata:Namespace {uri: "http://tempuri.org/"}
 public type DivideResponse record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup7 sequenceGroup7;
+    SequenceGroup7 sequenceGroup7?;
 |};
 
 @xmldata:Namespace {uri: "http://tempuri.org/"}

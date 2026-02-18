@@ -75,13 +75,13 @@ public type BranchAndFinancialInstitutionIdentification8 record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
 public type BranchData5 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup3 sequenceGroup3;
+    SequenceGroup3 sequenceGroup3?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
 public type CashAccount40 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup4 sequenceGroup4;
+    SequenceGroup4 sequenceGroup4?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
@@ -105,7 +105,7 @@ public type ClearingSystemMemberIdentification2 record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
 public type Contact13 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup6 sequenceGroup6;
+    SequenceGroup6 sequenceGroup6?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
@@ -182,7 +182,7 @@ public type FinancialIdentificationSchemeName1Choice record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
 public type FinancialInstitutionIdentification23 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup10 sequenceGroup10;
+    SequenceGroup10 sequenceGroup10?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
@@ -285,7 +285,7 @@ public enum NamePrefix2Code {
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
 public type OrganisationIdentification39 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup18 sequenceGroup18;
+    SequenceGroup18 sequenceGroup18?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
@@ -315,13 +315,13 @@ public type Party52Choice record {|
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
 public type PartyIdentification272 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup20 sequenceGroup20;
+    SequenceGroup20 sequenceGroup20?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
 public type PersonIdentification18 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup21 sequenceGroup21;
+    SequenceGroup21 sequenceGroup21?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
@@ -336,7 +336,7 @@ public type PhoneNumber string;
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
 public type PostalAddress27 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup22 sequenceGroup22;
+    SequenceGroup22 sequenceGroup22?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.060.001.07"}
