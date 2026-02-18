@@ -135,6 +135,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String ANY_ELEMENT = "anyElement";
     public static final String PROCESS_CONTENTS = "processContents";
     public static final String ANY_ANNOTATION = "@xmldata:Any";
+    public static final String COMPLEX_CONTENT = "complexContent";
     private final ArrayList<String> imports = new ArrayList<>();
     private final Map<String, XSDElement> extensions = new LinkedHashMap<>();
     private final Map<String, String> rootElements = new LinkedHashMap<>();
@@ -574,10 +575,6 @@ public class XSDVisitorImpl implements XSDVisitor {
         return builder.toString();
     }
 
-    /**
-     * If the given node is a complexType with complexContent/restriction, returns the base attribute Node
-     * so the parent element field can use the base type directly. Returns null otherwise.
-     */
     private static Node extractComplexContentRestrictionBase(Node complexTypeNode) {
         if (!COMPLEX_TYPE.equals(complexTypeNode.getLocalName())) {
             return null;
@@ -586,13 +583,13 @@ public class XSDVisitorImpl implements XSDVisitor {
             if (child.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
-            if ("complexContent".equals(child.getLocalName())) {
-                for (Node grandChild : asIterable(child.getChildNodes())) {
-                    if (grandChild.getNodeType() != Node.ELEMENT_NODE) {
+            if (COMPLEX_CONTENT.equals(child.getLocalName())) {
+                for (Node childNode : asIterable(child.getChildNodes())) {
+                    if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                         continue;
                     }
-                    if (RESTRICTION.equals(grandChild.getLocalName())) {
-                        return grandChild.getAttributes().getNamedItem(BASE);
+                    if (RESTRICTION.equals(childNode.getLocalName())) {
+                        return childNode.getAttributes().getNamedItem(BASE);
                     }
                 }
             }
