@@ -29,7 +29,7 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 public class XSDToRecordTest {
-    private static final Path RES_DIR = Paths.get("xsd-core/src/test/resources/").toAbsolutePath();
+    private static final Path RES_DIR = Paths.get("src/test/resources/").toAbsolutePath();
     private static final String XML_DIR = "xml";
     private static final String EXPECTED_DIR = "expected";
 
