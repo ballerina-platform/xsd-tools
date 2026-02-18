@@ -1,0 +1,16 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://namespace.org/">
+    <xs:complexType name="Item">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="name" type="xs:string"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="price" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Order">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="id" type="xs:int"/>
+            <xs:element minOccurs="1" maxOccurs="1" name="total" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Item" type="Item"/>
+    <xs:element name="Order" type="Order"/>
+</xs:schema>
