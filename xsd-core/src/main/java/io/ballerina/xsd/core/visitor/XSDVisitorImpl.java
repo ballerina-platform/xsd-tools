@@ -360,10 +360,15 @@ public class XSDVisitorImpl implements XSDVisitor {
                 if (component.isEmpty()) {
                     continue;
                 }
-                component.get().setNestedElement(true);
                 if (nameNode == null) {
                     throw new Exception(String.format(ELEMENT_NAME_NOT_FOUND_ERROR, node.getNodeName()));
                 }
+                Node restrictionBase = extractComplexContentRestrictionBase(childNode);
+                if (restrictionBase != null) {
+                    typeNode = restrictionBase;
+                    continue;
+                }
+                component.get().setNestedElement(true);
                 String fieldName = handleKeywordNames(nameNode);
                 if (nestedElements.containsKey(fieldName)) {
                     String resolvedName = resolveNameConflicts(fieldName, nestedElements);
@@ -569,6 +574,32 @@ public class XSDVisitorImpl implements XSDVisitor {
         return builder.toString();
     }
 
+    /**
+     * If the given node is a complexType with complexContent/restriction, returns the base attribute Node
+     * so the parent element field can use the base type directly. Returns null otherwise.
+     */
+    private static Node extractComplexContentRestrictionBase(Node complexTypeNode) {
+        if (!COMPLEX_TYPE.equals(complexTypeNode.getLocalName())) {
+            return null;
+        }
+        for (Node child : asIterable(complexTypeNode.getChildNodes())) {
+            if (child.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            if ("complexContent".equals(child.getLocalName())) {
+                for (Node grandChild : asIterable(child.getChildNodes())) {
+                    if (grandChild.getNodeType() != Node.ELEMENT_NODE) {
+                        continue;
+                    }
+                    if (RESTRICTION.equals(grandChild.getLocalName())) {
+                        return grandChild.getAttributes().getNamedItem(BASE);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     private static String resolveTypeNameConflicts(String name, String typeName) {
         StringBuilder resolvedName = new StringBuilder(name);
         if (resolvedName.toString().equals(typeName)) {
@@ -751,6 +782,9 @@ public class XSDVisitorImpl implements XSDVisitor {
         Node minOccurrenceNode = node.getAttributes().getNamedItem(MIN_OCCURS);
         String maxOccurrence = (maxOccurrenceNode != null) ? maxOccurrenceNode.getNodeValue() : ONE;
         String minOccurrence = (minOccurrenceNode != null) ? minOccurrenceNode.getNodeValue() : ONE;
+        if (allChildrenOptional) {
+            minOccurrence = ZERO;
+        }
         String sequenceName = (nestedElements.containsKey(SEQUENCE_NAME))
                 ? resolveNameConflicts(SEQUENCE_NAME, nestedElements) : SEQUENCE_NAME;
         sequenceName = (sequenceName.contains(COLON))
@@ -773,10 +807,8 @@ public class XSDVisitorImpl implements XSDVisitor {
     private boolean areAllChildrenOptional(NodeList childNodes) {
         boolean hasElement = false;
         for (Node child : asIterable(childNodes)) {
-            if (child.getNodeType() != Node.ELEMENT_NODE) {
-                continue;
-            }
-            if (!ELEMENT.equals(child.getLocalName())) {
+            if (child.getNodeType() != Node.ELEMENT_NODE
+                    || ANNOTATION.equals(child.getLocalName())) {
                 continue;
             }
             hasElement = true;

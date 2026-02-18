@@ -2,7 +2,7 @@ import ballerina/data.xmldata;
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type Item record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
     SequenceGroup sequenceGroup?;
 |};
 
@@ -15,7 +15,7 @@ public type Order record {|
 @xmldata:Name {value: "Item"}
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type Item1 record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
     SequenceGroup sequenceGroup?;
 |};
 

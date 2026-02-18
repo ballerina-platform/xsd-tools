@@ -18,13 +18,13 @@ public type RelatesToCorrelationID record {|
 @xmldata:Name {value: "ReplyTo"}
 @xmldata:Namespace {uri: "http://htng.org/PWSWG/2007/02/AsyncHeaders"}
 public type ReplyTo1 record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
     SequenceGroup sequenceGroup?;
 |};
 
 @xmldata:Namespace {uri: "http://htng.org/PWSWG/2007/02/AsyncHeaders"}
 public type ReplyTo record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
     SequenceGroup sequenceGroup?;
 |};
 
