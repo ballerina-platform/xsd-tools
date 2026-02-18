@@ -104,12 +104,24 @@ public final class Utils {
     private static final String WHITESPACE_PATTERN = "\\s";
     private static final String SPECIAL_CHARS_PATTERN = "[!@$%^&*()_\\-|]";
     public static final String NMTOKEN = "NMTOKEN";
+    public static final String NMTOKENS = "NMTOKENS";
+    public static final String ENTITY = "ENTITY";
+    public static final String ENTITIES = "ENTITIES";
+    public static final String NAME = "Name";
     public static final String IDREF = "IDREF";
     public static final String IDREFS = "IDREFS";
     public static final String ANYDATA = "anydata";
     public static final String ANY_TYPE = "anyType";
     public static final String ANY_SIMPLE_TYPE = "anySimpleType";
     public static final String ANY_ATOMIC_TYPE = "anyAtomicType";
+    private static final Set<String> SIMPLE_TYPES = Set.of(
+            TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE, DURATION,
+            INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER, POSITIVE_INTEGER, SHORT,
+            UNSIGNED_LONG, UNSIGNED_INT, UNSIGNED_SHORT, UNSIGNED_BYTE, INT, BASE64_BINARY,
+            BOOLEAN, FLOAT, DOUBLE, DECIMAL, ANY_URI, NON_NEGATIVE_INTEGER, G_MONTH_DAY, G_DAY,
+            G_MONTH, NORMALIZED_STRING, TOKEN, NCNAME, QNAME, NOTATION, NMTOKEN, NMTOKENS,
+            IDREF, IDREFS, ID, HEX_BINARY, BYTE, NAME, ENTITY, ENTITIES
+    );
 
     public static String addNamespace(XSDVisitorImpl xsdVisitor, String namespace) {
         if (Objects.equals(namespace, EMPTY_STRING)) {
@@ -186,9 +198,9 @@ public final class Utils {
 
     public static String typeGenerator(String typeName) {
         switch (typeName) {
-            case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE,
-                    DURATION, ANY_URI, G_MONTH_DAY, NMTOKEN, IDREF, IDREFS, G_DAY, G_MONTH, NORMALIZED_STRING,
-                    TOKEN, NCNAME, QNAME, NOTATION, BASE64_BINARY, HEX_BINARY, BYTE, ID -> {
+            case TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE, DURATION, ANY_URI, G_MONTH_DAY,
+                    NMTOKEN, NMTOKENS, IDREF, IDREFS, G_DAY, G_MONTH, NORMALIZED_STRING, TOKEN, NCNAME, QNAME,
+                    NOTATION, BASE64_BINARY, HEX_BINARY, BYTE, ID, NAME, ENTITY, ENTITIES -> {
                 return STRING;
             }
             case INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER, POSITIVE_INTEGER, SHORT,
@@ -215,13 +227,7 @@ public final class Utils {
 
     public static boolean isSimpleType(String type) {
         String typeName = type.contains(COLON) ? type.substring(type.indexOf(COLON) + 1) : type;
-        String[] simpleTypes = {
-                TIME, DATE_TIME, DATE, G_YEAR_MONTH, G_YEAR, STRING, LANGUAGE, DURATION,
-                INTEGER, LONG, NEGATIVE_INTEGER, NON_POSITIVE_INTEGER, POSITIVE_INTEGER, SHORT,
-                UNSIGNED_LONG, UNSIGNED_INT, UNSIGNED_SHORT,
-                UNSIGNED_BYTE, INT, BASE64_BINARY, BOOLEAN, FLOAT, DOUBLE, DECIMAL, ANY_URI, NON_NEGATIVE_INTEGER
-        };
-        return Arrays.stream(simpleTypes).toList().contains(typeName);
+        return SIMPLE_TYPES.contains(typeName);
     }
 
     public static Iterable<Node> asIterable(NodeList nodeList) {
