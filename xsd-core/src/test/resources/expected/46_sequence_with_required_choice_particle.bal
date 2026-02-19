@@ -17,5 +17,6 @@ public type Order1 record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string note?;
 |};

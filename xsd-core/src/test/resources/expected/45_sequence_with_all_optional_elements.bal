@@ -30,9 +30,11 @@ public type Order1 record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string name?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     decimal price?;
 |};
 
@@ -40,8 +42,10 @@ public type SequenceGroup record {|
 public type SequenceGroup1 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     int id?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     decimal total;
 |};

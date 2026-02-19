@@ -16,9 +16,11 @@ public type AddResponse record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://example.com/CalculatorService"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     float a;
     @xmldata:Namespace {uri: "http://example.com/CalculatorService"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     float b;
 |};
 
@@ -26,5 +28,6 @@ public type SequenceGroup record {|
 public type SequenceGroup1 record {|
     @xmldata:Namespace {uri: "http://example.com/CalculatorService"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     float result;
 |};

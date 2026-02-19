@@ -32,5 +32,6 @@ public type ReplyTo record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://htng.org/PWSWG/2007/02/AsyncHeaders"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     Address Address;
 |};

@@ -45,6 +45,7 @@ import static io.ballerina.xsd.core.diagnostic.DiagnosticMessage.xsdToBallerinaE
 import static io.ballerina.xsd.core.visitor.Utils.ANYDATA;
 import static io.ballerina.xsd.core.visitor.Utils.MAX_OCCURS;
 import static io.ballerina.xsd.core.visitor.Utils.MIN_OCCURS;
+import static io.ballerina.xsd.core.visitor.Utils.INT_MAX_VALUE;
 import static io.ballerina.xsd.core.visitor.Utils.UNBOUNDED;
 import static io.ballerina.xsd.core.visitor.Utils.ZERO;
 import static io.ballerina.xsd.core.visitor.Utils.addNamespace;
@@ -118,6 +119,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String XMLDATA_SEQUENCE = "@xmldata:Sequence";
     public static final String SEQUENCE_NAME = "SequenceGroup";
     public static final String XMLDATA_ORDER = "@xmldata:SequenceOrder";
+    public static final String XMLDATA_ELEMENT = "@xmldata:Element";
     public static final String RESTRICTION = "restriction";
     public static final String CONTENT_FIELD = "\\#content";
     public static final String LIST = "list";
@@ -709,9 +711,8 @@ public class XSDVisitorImpl implements XSDVisitor {
                 ? resolveNameConflicts(CHOICE_NAME, nestedElements) : CHOICE_NAME;
         builder.append(XMLDATA_CHOICE).append(WHITESPACE).append(OPEN_BRACES);
         builder.append(MIN_OCCURS).append(COLON).append(minOccurrence);
-        if (!(UNBOUNDED.equalsIgnoreCase(maxOccurrence))) {
-            builder.append(COMMA).append(MAX_OCCURS).append(COLON).append(maxOccurrence);
-        }
+        builder.append(COMMA).append(MAX_OCCURS).append(COLON)
+                .append(UNBOUNDED.equalsIgnoreCase(maxOccurrence) ? INT_MAX_VALUE : maxOccurrence);
         builder.append(CLOSE_BRACES);
         builder.append(choiceName).append((maxOccurrence.equals(ONE)) ? EMPTY_STRING : EMPTY_ARRAY);
         builder.append(WHITESPACE).append(convertToCamelCase(choiceName)).append(SEMICOLON);
@@ -740,6 +741,17 @@ public class XSDVisitorImpl implements XSDVisitor {
             stringBuilder.append(addNamespace(this, getTargetNamespace()));
             String orderAnnotation = XMLDATA_ORDER + WHITESPACE + OPEN_BRACES + VALUE + COLON + order + CLOSE_BRACES;
             stringBuilder.append(orderAnnotation);
+            String minOccurs = childNode.getAttributes() != null
+                    && childNode.getAttributes().getNamedItem(MIN_OCCURS) != null
+                    ? childNode.getAttributes().getNamedItem(MIN_OCCURS).getNodeValue() : ONE;
+            String maxOccurs = childNode.getAttributes() != null
+                    && childNode.getAttributes().getNamedItem(MAX_OCCURS) != null
+                    ? childNode.getAttributes().getNamedItem(MAX_OCCURS).getNodeValue() : ONE;
+            String maxOccursValue = UNBOUNDED.equalsIgnoreCase(maxOccurs) ? INT_MAX_VALUE : maxOccurs;
+            String elementAnnotation = XMLDATA_ELEMENT + WHITESPACE + OPEN_BRACES
+                    + MIN_OCCURS + COLON + minOccurs
+                    + COMMA + WHITESPACE + MAX_OCCURS + COLON + maxOccursValue + CLOSE_BRACES;
+            stringBuilder.append(elementAnnotation);
             stringBuilder.append(component.get().accept(this));
         }
         if (order == 0) {
@@ -789,9 +801,8 @@ public class XSDVisitorImpl implements XSDVisitor {
                 ? sequenceName.substring(sequenceName.indexOf(COLON) + 1) : sequenceName;
         builder.append(XMLDATA_SEQUENCE).append(WHITESPACE).append(OPEN_BRACES);
         builder.append(MIN_OCCURS).append(COLON).append(minOccurrence);
-        if (!(UNBOUNDED.equalsIgnoreCase(maxOccurrence))) {
-            builder.append(COMMA).append(MAX_OCCURS).append(COLON).append(maxOccurrence);
-        }
+        builder.append(COMMA).append(MAX_OCCURS).append(COLON)
+                .append(UNBOUNDED.equalsIgnoreCase(maxOccurrence) ? INT_MAX_VALUE : maxOccurrence);
         builder.append(CLOSE_BRACES);
         builder.append(sequenceName).append((maxOccurrence.equals(ONE)) ? EMPTY_STRING : EMPTY_ARRAY);
         builder.append(WHITESPACE).append(convertToCamelCase(sequenceName));

@@ -13,15 +13,19 @@ public type PhoneNumberType string;
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string street;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string city;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 3}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string zipCode;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 4}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string country;
 |};
 
@@ -35,14 +39,18 @@ public type Employee record {|
 public type SequenceGroup1 record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string name;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string email;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 3}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     AddressType address;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 4}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     PhoneNumberType phone;
 |};

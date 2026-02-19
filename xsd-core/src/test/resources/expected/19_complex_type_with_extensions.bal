@@ -37,15 +37,19 @@ public type Employee1 record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Street?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string City?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 3}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string State?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 4}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string PostalCode?;
 |};
 
@@ -59,12 +63,15 @@ public type Address record {|
 public type SequenceGroup1 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     Address Address?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Phone?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 3}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Email?;
 |};
 
@@ -78,12 +85,15 @@ public type ContactInfo record {|
 public type SequenceGroup2 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Name?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Relation?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 3}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Phone?;
 |};
 
@@ -97,8 +107,10 @@ public type EmergencyContact record {|
 public type SequenceGroup3 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     ContactInfo ContactInfo?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     EmergencyContact EmergencyContact?;
 |};

@@ -52,9 +52,11 @@ public type DivideResponse record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int intA;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int intB;
 |};
 
@@ -62,6 +64,7 @@ public type SequenceGroup record {|
 public type SequenceGroup1 record {|
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int AddResult;
 |};
 
@@ -69,9 +72,11 @@ public type SequenceGroup1 record {|
 public type SequenceGroup2 record {|
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int intA;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int intB;
 |};
 
@@ -79,6 +84,7 @@ public type SequenceGroup2 record {|
 public type SequenceGroup3 record {|
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int SubtractResult;
 |};
 
@@ -86,9 +92,11 @@ public type SequenceGroup3 record {|
 public type SequenceGroup4 record {|
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int intA;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int intB;
 |};
 
@@ -96,6 +104,7 @@ public type SequenceGroup4 record {|
 public type SequenceGroup5 record {|
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int MultiplyResult;
 |};
 
@@ -103,9 +112,11 @@ public type SequenceGroup5 record {|
 public type SequenceGroup6 record {|
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int intA;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int intB;
 |};
 
@@ -113,5 +124,6 @@ public type SequenceGroup6 record {|
 public type SequenceGroup7 record {|
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     int DivideResult?;
 |};

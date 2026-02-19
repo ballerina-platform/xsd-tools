@@ -35,6 +35,7 @@ public type OTA_HotelResNotifRQ record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://www.opentravel.org/OTA/2003/05"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string Source;
 |};
 
@@ -42,6 +43,7 @@ public type SequenceGroup record {|
 public type SequenceGroup1 record {|
     @xmldata:Namespace {uri: "http://www.opentravel.org/OTA/2003/05"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string ResGlobalInfo?;
 |};
 
@@ -49,6 +51,7 @@ public type SequenceGroup1 record {|
 public type SequenceGroup2 record {|
     @xmldata:Namespace {uri: "http://www.opentravel.org/OTA/2003/05"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 4294967295}
     HotelReservationType[] HotelReservation;
 |};
 
@@ -56,8 +59,10 @@ public type SequenceGroup2 record {|
 public type SequenceGroup3 record {|
     @xmldata:Namespace {uri: "http://www.opentravel.org/OTA/2003/05"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     POS_Type POS?;
     @xmldata:Namespace {uri: "http://www.opentravel.org/OTA/2003/05"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     HotelReservationsType HotelReservations?;
 |};

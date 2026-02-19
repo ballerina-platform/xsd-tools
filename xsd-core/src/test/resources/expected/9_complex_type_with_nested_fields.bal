@@ -10,6 +10,7 @@ public type World record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string Landmark;
 |};
 
@@ -23,6 +24,7 @@ public type City record {|
 public type SequenceGroup1 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     City City;
 |};
 
@@ -36,6 +38,7 @@ public type State record {|
 public type SequenceGroup2 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     State State;
 |};
 
@@ -49,6 +52,7 @@ public type Country record {|
 public type SequenceGroup3 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     Country Country;
 |};
 
@@ -62,5 +66,6 @@ public type Continent record {|
 public type SequenceGroup4 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     Continent Continent;
 |};
