@@ -792,6 +792,16 @@ public class XSDVisitorImpl implements XSDVisitor {
         Node minOccurrenceNode = node.getAttributes().getNamedItem(MIN_OCCURS);
         String maxOccurrence = (maxOccurrenceNode != null) ? maxOccurrenceNode.getNodeValue() : ONE;
         String minOccurrence = (minOccurrenceNode != null) ? minOccurrenceNode.getNodeValue() : ONE;
+
+        if (maxOccurrenceNode == null) {
+            Node singleChild = getSingleChildElement(node);
+            if (singleChild != null) {
+                Node childMaxOccurs = singleChild.getAttributes().getNamedItem(MAX_OCCURS);
+                if (childMaxOccurs != null) {
+                    maxOccurrence = childMaxOccurs.getNodeValue();
+                }
+            }
+        }
         if (allChildrenOptional) {
             minOccurrence = ZERO;
         }
@@ -827,6 +837,24 @@ public class XSDVisitorImpl implements XSDVisitor {
             }
         }
         return hasElement;
+    }
+
+    private Node getSingleChildElement(Node node) {
+        NodeList childNodes = node.getChildNodes();
+        Node singleElement = null;
+        int elementCount = 0;
+        for (Node child : asIterable(childNodes)) {
+            if (child.getNodeType() != Node.ELEMENT_NODE
+                    || ANNOTATION.equals(child.getLocalName())) {
+                continue;
+            }
+            elementCount++;
+            singleElement = child;
+            if (elementCount > 1) {
+                return null;
+            }
+        }
+        return singleElement;
     }
 
     private static void processSimpleType(StringBuilder builder, String name, Node simpleTypeNode) {
