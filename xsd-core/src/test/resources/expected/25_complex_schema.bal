@@ -866,7 +866,7 @@ public type SequenceGroup record {|
     PaymentComplementaryInformation11 Inf;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 5}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     SupplementaryData1[] SplmtryData?;
 |};
 
@@ -1122,7 +1122,7 @@ public type SequenceGroup8 record {|
     Max70Text Dept?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 12}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     OtherContact1[] Othr?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 13}
@@ -1330,7 +1330,7 @@ public type SequenceGroup18 record {|
 public type SequenceGroup19 record {|
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 1}
-    @xmldata:Element {minOccurs: 1, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 65535}
     DocumentLineIdentification1[] Id;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 2}
@@ -1744,7 +1744,7 @@ public type SequenceGroup38 record {|
     LEIIdentifier LEI?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 3}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     GenericOrganisationIdentification3[] Othr?;
 |};
 
@@ -2060,11 +2060,11 @@ public type SequenceGroup43 record {|
     CashAccount40 PrvsInstgAgt3Acct?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 36}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     InstructionForNextAgent1[] InstrForNxtAgt?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 37}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     InstructionForCreditorAgent3[] InstrForCdtrAgt?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 38}
@@ -2088,7 +2088,7 @@ public type SequenceGroup44 record {|
     ClearingChannel2Code ClrChanl?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 3}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     ServiceLevel8Choice[] SvcLvl?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 4}
@@ -2112,7 +2112,7 @@ public type SequenceGroup45 record {|
     DateAndPlaceOfBirth1 DtAndPlcOfBirth?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 2}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     GenericPersonIdentification2[] Othr?;
 |};
 
@@ -2244,7 +2244,7 @@ public type SequenceGroup48 record {|
     DateAndType1 RltdDt?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 4}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     DocumentLineInformation2[] LineDtls?;
 |};
 
@@ -2252,11 +2252,11 @@ public type SequenceGroup48 record {|
 public type SequenceGroup49 record {|
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 1}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     DocumentAmount1[] RmtAmtAndTp?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 2}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     DocumentAdjustment1[] AdjstmntAmtAndRsn?;
 |};
 
@@ -2264,11 +2264,11 @@ public type SequenceGroup49 record {|
 public type SequenceGroup50 record {|
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 1}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     Max140Text[] Ustrd?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 2}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     StructuredRemittanceInformation18[] Strd?;
 |};
 
@@ -2280,7 +2280,7 @@ public type SequenceGroup51 record {|
     Max35Text RmtId?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 2}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     RemittanceLocationData2[] RmtLctnDtls?;
 |};
 
@@ -2352,7 +2352,7 @@ public type SequenceGroup53 record {|
 public type SequenceGroup54 record {|
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 1}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     ReferredDocumentInformation8[] RfrdDocInf?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 2}
@@ -2421,7 +2421,7 @@ public type SequenceGroup57 record {|
     ActiveOrHistoricCurrencyAndAmount TtlAmt?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 4}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     TaxRecordDetails3[] Dtls?;
 |};
 
@@ -2481,7 +2481,7 @@ public type SequenceGroup59 record {|
     Number SeqNb?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.028.001.12"}
     @xmldata:SequenceOrder {value: 11}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     TaxRecord3[] Rcrd?;
 |};
 

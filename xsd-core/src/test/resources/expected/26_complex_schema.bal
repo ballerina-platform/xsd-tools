@@ -418,7 +418,7 @@ public type SequenceGroup5 record {|
     Max70Text Dept?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
     @xmldata:SequenceOrder {value: 12}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     OtherContact1[] Othr?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
     @xmldata:SequenceOrder {value: 13}
@@ -470,7 +470,7 @@ public type SequenceGroup8 record {|
     ProprietaryData7 Dplct;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
     @xmldata:SequenceOrder {value: 4}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     SupplementaryData1[] SplmtryData?;
 |};
 
@@ -586,7 +586,7 @@ public type SequenceGroup14 record {|
     LEIIdentifier LEI?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
     @xmldata:SequenceOrder {value: 3}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     GenericOrganisationIdentification3[] Othr?;
 |};
 
@@ -658,7 +658,7 @@ public type SequenceGroup17 record {|
     DateAndPlaceOfBirth1 DtAndPlcOfBirth?;
     @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
     @xmldata:SequenceOrder {value: 2}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     GenericPersonIdentification2[] Othr?;
 |};
 

@@ -18,11 +18,11 @@ public type SequenceGroup record {|
     int intB;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 3}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     int[] intC?;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 4}
-    @xmldata:Element {minOccurs: 1, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 65535}
     string[] stringA;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 5}

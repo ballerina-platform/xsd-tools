@@ -38,7 +38,7 @@ public type SequenceGroup record {|
     string fixedField;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
-    @xmldata:Element {minOccurs: 0, maxOccurs: 4294967295}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     @xmldata:Any
     anydata[]? anyElement;
 |};
