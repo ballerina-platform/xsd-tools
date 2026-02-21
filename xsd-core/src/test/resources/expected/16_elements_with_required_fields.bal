@@ -10,8 +10,10 @@ public type person record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string name;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string address;
 |};

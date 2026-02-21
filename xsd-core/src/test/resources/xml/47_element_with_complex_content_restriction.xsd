@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.opentravel.org/OTA/2003/05"
+           xmlns:tns="http://www.opentravel.org/OTA/2003/05"
+           elementFormDefault="qualified">
+
+    <xs:complexType name="POS_Type">
+        <xs:sequence>
+            <xs:element name="Source" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HotelReservationType">
+        <xs:sequence>
+            <xs:element name="ResGlobalInfo" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HotelReservationsType">
+        <xs:sequence>
+            <xs:element name="HotelReservation" type="tns:HotelReservationType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="OTA_HotelResNotifRQ" type="tns:OTA_HotelResNotifRQ"/>
+    <xs:complexType name="OTA_HotelResNotifRQ">
+        <xs:sequence>
+            <xs:element name="POS" type="tns:POS_Type" minOccurs="0"/>
+            <xs:element name="HotelReservations" minOccurs="0">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:restriction base="tns:HotelReservationsType">
+                            <xs:sequence>
+                                <xs:element name="HotelReservation" type="tns:HotelReservationType" minOccurs="0"/>
+                            </xs:sequence>
+                        </xs:restriction>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

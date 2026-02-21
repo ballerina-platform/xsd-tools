@@ -88,7 +88,13 @@ public class XSDToRecordTest {
             new Object[] {new String[] {"43_elements_with_include_base.xsd", "43_elements_with_include.xsd"},
                     "43_elements_with_include.bal"},
             new Object[] {new String[] {"44_elements_with_builtin_string_types.xsd"},
-                    "44_elements_with_builtin_string_types.bal"}
+                    "44_elements_with_builtin_string_types.bal"},
+            new Object[] {new String[] {"45_sequence_with_all_optional_elements.xsd"},
+                    "45_sequence_with_all_optional_elements.bal"},
+            new Object[] {new String[] {"46_sequence_with_required_choice_particle.xsd"},
+                    "46_sequence_with_required_choice_particle.bal"},
+            new Object[] {new String[] {"47_element_with_complex_content_restriction.xsd"},
+                    "47_element_with_complex_content_restriction.bal"}
         );
     }
 

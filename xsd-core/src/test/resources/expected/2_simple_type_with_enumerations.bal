@@ -7,5 +7,5 @@ public enum AddressType2Code {
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type Address record {|
-    string \#content;
+    string \#content?;
 |};

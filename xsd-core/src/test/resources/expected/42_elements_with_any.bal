@@ -34,9 +34,11 @@ public type Person record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string fixedField;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     @xmldata:Any
     anydata[]? anyElement;
 |};
@@ -45,13 +47,16 @@ public type SequenceGroup record {|
 public type SequenceGroup1 record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string header;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     @xmldata:Any
     Address|Person|ExtensibleType|MixedContent|OpenEnded? anyElement;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 3}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string footer;
 |};
 
@@ -59,6 +64,7 @@ public type SequenceGroup1 record {|
 public type SequenceGroup2 record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     @xmldata:Any
     anydata? anyElement;
 |};
@@ -67,9 +73,11 @@ public type SequenceGroup2 record {|
 public type SequenceGroup3 record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string street;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string city;
 |};
 
@@ -77,8 +85,10 @@ public type SequenceGroup3 record {|
 public type SequenceGroup4 record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string name;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int age;
 |};

@@ -54,6 +54,7 @@ public final class Utils {
     public static final String MAX_OCCURS = "maxOccurs";
     public static final String MIN_OCCURS = "minOccurs";
     public static final String UNBOUNDED = "unbounded";
+    public static final String INT_MAX_VALUE = "65535";
     public static final String COMMA = ",";
     public static final String COLON = ":";
     public static final String TIME = "time";

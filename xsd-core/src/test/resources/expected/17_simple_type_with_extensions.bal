@@ -5,7 +5,7 @@ public type ActiveCurrencyAndAmount_SimpleType decimal;
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type ActiveCurrencyAndAmount record {|
-    decimal \#content;
+    decimal \#content?;
     @xmldata:Attribute
     ActiveCurrencyCode Ccy;
 |};

@@ -2,7 +2,7 @@ import ballerina/data.xmldata;
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type PersonAge record {|
-    decimal \#content;
+    decimal \#content?;
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}

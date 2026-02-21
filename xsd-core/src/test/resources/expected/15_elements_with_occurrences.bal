@@ -10,20 +10,26 @@ public type Add record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     int intA?;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     int intB;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 3}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     int[] intC?;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 4}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 65535}
     string[] stringA;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 5}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 5}
     int[] intD?;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 6}
+    @xmldata:Element {minOccurs: 2, maxOccurs: 5}
     string[] stringB;
 |};

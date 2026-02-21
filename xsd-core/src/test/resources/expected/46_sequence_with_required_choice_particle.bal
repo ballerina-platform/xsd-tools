@@ -1,14 +1,14 @@
 import ballerina/data.xmldata;
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
-public type Person record {|
+public type Order record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup sequenceGroup;
 |};
 
-@xmldata:Name {value: "Person"}
+@xmldata:Name {value: "Order"}
 @xmldata:Namespace {uri: "http://namespace.org/"}
-public type Person1 record {|
+public type Order1 record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup sequenceGroup;
 |};
@@ -17,10 +17,6 @@ public type Person1 record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
-    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
-    string name;
-    @xmldata:Namespace {uri: "http://namespace.org/"}
-    @xmldata:SequenceOrder {value: 2}
-    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
-    string address;
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
+    string note?;
 |};

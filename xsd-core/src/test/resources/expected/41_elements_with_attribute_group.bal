@@ -23,16 +23,18 @@ public type Order record {|
     @xmldata:Attribute
     string timestamp?;
     @xmldata:Attribute
-    string status;
+    string status?;
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string name;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     decimal price;
 |};
 
@@ -40,8 +42,10 @@ public type SequenceGroup record {|
 public type SequenceGroup1 record {|
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     string orderNumber;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     decimal total;
 |};

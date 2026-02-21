@@ -66,6 +66,7 @@ import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.ENUM;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.NAME;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.NEW_LINE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.PUBLIC;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.QUESTION_MARK;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.RECORD_WITH_OPEN_BRACE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.SEMICOLON;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.TYPE;
@@ -448,7 +449,8 @@ public final class XSDToRecord {
                 continue;
             }
             if (Utils.isSimpleType(baseValue.type()) && nodes.containsKey(key)) {
-                String fields = RECORD_WITH_OPEN_BRACE + baseValue.type() + WHITESPACE + CONTENT_FIELD + SEMICOLON;
+                String fields = RECORD_WITH_OPEN_BRACE + baseValue.type() + WHITESPACE + CONTENT_FIELD 
+                    + QUESTION_MARK + SEMICOLON;
                 String extendedValue = nodes.get(key).node().toString().replace(RECORD_WITH_OPEN_BRACE, fields);
                 ModuleMemberDeclarationNode moduleNode = NodeParser.parseModuleMemberDeclaration(extendedValue);
                 nodes.replace(key, new MemberNode(moduleNode, Kind.SIMPLE_TYPE));

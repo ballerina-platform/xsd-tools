@@ -2,7 +2,7 @@ import ballerina/data.xmldata;
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type Name record {|
-    SimpleType|SimpleType1 \#content;
+    SimpleType|SimpleType1 \#content?;
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}

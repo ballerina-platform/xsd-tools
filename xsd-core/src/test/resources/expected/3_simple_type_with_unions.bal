@@ -5,5 +5,5 @@ public type ID string|int;
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type Person record {|
-    string \#content;
+    string \#content?;
 |};

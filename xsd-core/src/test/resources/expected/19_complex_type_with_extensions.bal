@@ -2,8 +2,8 @@ import ballerina/data.xmldata;
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type PersonBase record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup3 sequenceGroup3;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
+    SequenceGroup3 sequenceGroup3?;
     @xmldata:Attribute
     int id;
     @xmldata:Attribute
@@ -12,8 +12,8 @@ public type PersonBase record {|
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type Employee record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup3 sequenceGroup3;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
+    SequenceGroup3 sequenceGroup3?;
     @xmldata:Attribute
     int id;
     @xmldata:Attribute
@@ -37,68 +37,80 @@ public type Employee1 record {|
 public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Street?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string City?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 3}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string State?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 4}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string PostalCode?;
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type Address record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup sequenceGroup;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
+    SequenceGroup sequenceGroup?;
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type SequenceGroup1 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     Address Address?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Phone?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 3}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Email?;
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type ContactInfo record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup1 sequenceGroup1;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
+    SequenceGroup1 sequenceGroup1?;
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type SequenceGroup2 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Name?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Relation?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 3}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     string Phone?;
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type EmergencyContact record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup2 sequenceGroup2;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
+    SequenceGroup2 sequenceGroup2?;
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
 public type SequenceGroup3 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     ContactInfo ContactInfo?;
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
+    @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     EmergencyContact EmergencyContact?;
 |};
