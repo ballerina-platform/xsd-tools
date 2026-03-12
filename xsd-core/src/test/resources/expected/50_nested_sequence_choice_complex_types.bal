@@ -82,6 +82,22 @@ public type SequenceGroup3 record {|
 |};
 
 @xmldata:Namespace {uri: "http://namespace.org/"}
+public type ChoiceOption record {|
+    @xmldata:Namespace {uri: "http://namespace.org/"}
+    string bankTransfer?;
+    @xmldata:Namespace {uri: "http://namespace.org/"}
+    string paypal?;
+|};
+
+@xmldata:Namespace {uri: "http://namespace.org/"}
+public type ChoiceOption1 record {|
+    @xmldata:Namespace {uri: "http://namespace.org/"}
+    string creditCard?;
+    @xmldata:Choice {minOccurs: 1, maxOccurs: 1}
+    ChoiceOption choiceOption;
+|};
+
+@xmldata:Namespace {uri: "http://namespace.org/"}
 public type SequenceGroup4 record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
@@ -95,4 +111,8 @@ public type SequenceGroup4 record {|
     @xmldata:SequenceOrder {value: 3}
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup3 sequenceGroup3;
+    @xmldata:Namespace {uri: "http://namespace.org/"}
+    @xmldata:SequenceOrder {value: 4}
+    @xmldata:Choice {minOccurs: 1, maxOccurs: 1}
+    ChoiceOption1 choiceOption1;
 |};

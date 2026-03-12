@@ -756,7 +756,7 @@ public class XSDVisitorImpl implements XSDVisitor {
             stringBuilder.append(addNamespace(this, getTargetNamespace()));
             String orderAnnotation = XMLDATA_ORDER + WHITESPACE + OPEN_BRACES + VALUE + COLON + order + CLOSE_BRACES;
             stringBuilder.append(orderAnnotation);
-            if (component.get().getKind() != Kind.SEQUENCE) {
+            if (component.get().getKind() != Kind.SEQUENCE && component.get().getKind() != Kind.CHOICE) {
                 component.get().setSubType(true);
                 String minOccurs = childNode.getAttributes() != null
                         && childNode.getAttributes().getNamedItem(MIN_OCCURS) != null
