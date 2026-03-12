@@ -1103,6 +1103,9 @@ public class XSDVisitorImpl implements XSDVisitor {
             builder.append(QUESTION_MARK);
         }
         builder.append(WHITESPACE).append(ANY_ELEMENT);
+        if (minOccurs.equals(ZERO) || isArray) {
+            builder.append(QUESTION_MARK);
+        }
         builder.append(SEMICOLON);
         return builder.toString();
     }
