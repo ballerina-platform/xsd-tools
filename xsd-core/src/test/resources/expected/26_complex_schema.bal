@@ -772,7 +772,7 @@ public type SequenceGroup21 record {|
     @xmldata:SequenceOrder {value: 1}
     @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     @xmldata:Any
-    anydata? anyElement;
+    anydata? anyElement?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
@@ -793,5 +793,5 @@ public type SequenceGroup23 record {|
     @xmldata:SequenceOrder {value: 1}
     @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     @xmldata:Any
-    anydata? anyElement;
+    anydata? anyElement?;
 |};
