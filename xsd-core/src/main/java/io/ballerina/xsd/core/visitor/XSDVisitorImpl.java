@@ -22,6 +22,7 @@ import io.ballerina.compiler.syntax.tree.SyntaxInfo;
 import io.ballerina.compiler.syntax.tree.SyntaxKind;
 import io.ballerina.xsd.core.XSDFactory;
 import io.ballerina.xsd.core.component.Any;
+import io.ballerina.xsd.core.component.Choice;
 import io.ballerina.xsd.core.component.ComplexType;
 import io.ballerina.xsd.core.component.Element;
 import io.ballerina.xsd.core.component.Sequence;
@@ -265,7 +266,7 @@ public class XSDVisitorImpl implements XSDVisitor {
             }
             switch (childNode.getLocalName()) {
                 case SEQUENCE -> builder.append(visit(new Sequence(childNode)));
-                case CHOICE -> builder.append(visitChoice(childNode));
+                case CHOICE -> builder.append(visit(new Choice(childNode)));
                 case ATTRIBUTE -> builder.append(visitAttribute(childNode));
                 case ALL -> builder.append(visitAllContent(childNode, false));
                 case ATTRIBUTE_GROUP -> builder.append(visitAttributeGroupRef(childNode));
@@ -492,7 +493,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                 String localName = childNode.getLocalName();
                 switch (localName) {
                     case SEQUENCE -> builder.append(visit(new Sequence(childNode)));
-                    case CHOICE -> builder.append(visitChoice(childNode));
+                    case CHOICE -> builder.append(visit(new Choice(childNode)));
                     case ATTRIBUTE -> builder.append(visitAttribute(childNode));
                     case ALL -> builder.append(visitAllContent(childNode, false));
                     default -> builder.append(visitComplexContent(childNode));
@@ -500,6 +501,11 @@ public class XSDVisitorImpl implements XSDVisitor {
             }
         }
         return builder.toString();
+    }
+
+    @Override
+    public String visit(Choice choice) throws Exception {
+        return visitChoice(choice.getNode());
     }
 
     public String visitChoice(Node node) throws Exception {
@@ -681,6 +687,8 @@ public class XSDVisitorImpl implements XSDVisitor {
                 Sequence sequence = new Sequence(childNode);
                 sequence.setOptional(true);
                 stringBuilder.append(visit(sequence));
+            } else if (childNode.getLocalName().equals(CHOICE)) {
+                stringBuilder.append(visit(new Choice(childNode)));
             } else {
                 stringBuilder.append(addNamespace(this, getTargetNamespace()));
                 if (childNode.hasChildNodes()) {

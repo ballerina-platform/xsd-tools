@@ -20,6 +20,7 @@ package io.ballerina.xsd.core.visitor;
 
 import io.ballerina.xsd.core.component.Any;
 import io.ballerina.xsd.core.component.AttributeGroup;
+import io.ballerina.xsd.core.component.Choice;
 import io.ballerina.xsd.core.component.ComplexType;
 import io.ballerina.xsd.core.component.Element;
 import io.ballerina.xsd.core.component.Sequence;
@@ -46,6 +47,7 @@ public interface XSDVisitor {
     String visit(AttributeGroup attributeGroup) throws Exception;
     String visit(Any any) throws Exception;
     String visit(Sequence sequence) throws Exception;
+    String visit(Choice choice) throws Exception;
     void setTargetNamespace(String targetNamespace);
     String getTargetNamespace();
     ArrayList<String> getImports();
