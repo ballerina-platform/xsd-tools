@@ -94,7 +94,13 @@ public class XSDToRecordTest {
             new Object[] {new String[] {"46_sequence_with_required_choice_particle.xsd"},
                     "46_sequence_with_required_choice_particle.bal"},
             new Object[] {new String[] {"47_element_with_complex_content_restriction.xsd"},
-                    "47_element_with_complex_content_restriction.bal"}
+                    "47_element_with_complex_content_restriction.bal"},
+            new Object[] {new String[] {"48_sequence_with_nested_sequence.xsd"},
+                    "48_sequence_with_nested_sequence.bal"},
+            new Object[] {new String[] {"49_choice_with_nested_choice.xsd"},
+                    "49_choice_with_nested_choice.bal"},
+            new Object[] {new String[] {"50_nested_sequence_choice_complex_types.xsd"},
+                    "50_nested_sequence_choice_complex_types.bal"}
         );
     }
 
