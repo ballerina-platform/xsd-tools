@@ -100,7 +100,11 @@ public class XSDToRecordTest {
             new Object[] {new String[] {"49_choice_with_nested_choice.xsd"},
                     "49_choice_with_nested_choice.bal"},
             new Object[] {new String[] {"50_nested_sequence_choice_complex_types.xsd"},
-                    "50_nested_sequence_choice_complex_types.bal"}
+                    "50_nested_sequence_choice_complex_types.bal"},
+            new Object[] {new String[] {"51_sequence_with_unbounded_child_element.xsd"},
+                    "51_sequence_with_unbounded_child_element.bal"},
+            new Object[] {new String[] {"52_sequence_choice_with_min_occurs_zero.xsd"},
+                    "52_sequence_choice_with_min_occurs_zero.bal"}
         );
     }
 
