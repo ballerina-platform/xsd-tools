@@ -1,0 +1,42 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://namespace.org/">
+
+    <xs:complexType name="Address">
+        <xs:sequence>
+            <xs:element name="street" type="xs:string"/>
+            <xs:element name="city" type="xs:string"/>
+            <xs:element name="zipCode" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ContactInfo">
+        <xs:sequence>
+            <xs:sequence>
+                <xs:element name="email" type="xs:string"/>
+                <xs:element name="phone" type="xs:string"/>
+            </xs:sequence>
+            <xs:element name="address" type="Address"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Order">
+        <xs:sequence>
+            <xs:element name="orderId" type="xs:string"/>
+            <xs:element name="customer" type="ContactInfo"/>
+            <xs:sequence>
+                <xs:element name="itemName" type="xs:string"/>
+                <xs:element name="quantity" type="xs:int"/>
+                <xs:element name="price" type="xs:decimal"/>
+            </xs:sequence>
+            <xs:choice>
+                <xs:element name="creditCard" type="xs:string"/>
+                <xs:choice>
+                    <xs:element name="bankTransfer" type="xs:string"/>
+                    <xs:element name="paypal" type="xs:string"/>
+                </xs:choice>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Order" type="Order"/>
+
+</xs:schema>

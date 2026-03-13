@@ -20,8 +20,10 @@ package io.ballerina.xsd.core;
 
 import io.ballerina.xsd.core.component.Any;
 import io.ballerina.xsd.core.component.AttributeGroup;
+import io.ballerina.xsd.core.component.Choice;
 import io.ballerina.xsd.core.component.ComplexType;
 import io.ballerina.xsd.core.component.Element;
+import io.ballerina.xsd.core.component.Sequence;
 import io.ballerina.xsd.core.component.SimpleType;
 import io.ballerina.xsd.core.component.XSDComponent;
 import org.w3c.dom.Node;
@@ -30,8 +32,10 @@ import java.util.Optional;
 
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.ANY;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.ATTRIBUTE_GROUP;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.CHOICE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.COMPLEX_TYPE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.ELEMENT;
+import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.SEQUENCE;
 import static io.ballerina.xsd.core.visitor.XSDVisitorImpl.SIMPLE_TYPE;
 
 /**
@@ -59,6 +63,12 @@ public final class XSDFactory {
             }
             case ANY -> {
                 return Optional.of(new Any(node));
+            }
+            case SEQUENCE -> {
+                return Optional.of(new Sequence(node));
+            }
+            case CHOICE -> {
+                return Optional.of(new Choice(node));
             }
             default -> {
                 return Optional.empty();

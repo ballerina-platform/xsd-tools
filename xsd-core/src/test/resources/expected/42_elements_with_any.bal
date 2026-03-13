@@ -2,8 +2,8 @@ import ballerina/data.xmldata;
 
 @xmldata:Namespace {uri: "http://example.com/schema"}
 public type ExtensibleType record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup sequenceGroup;
+    @xmldata:Sequence {minOccurs: 1, maxOccurs: 65535}
+    SequenceGroup[] sequenceGroup;
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}
@@ -40,7 +40,7 @@ public type SequenceGroup record {|
     @xmldata:SequenceOrder {value: 2}
     @xmldata:Element {minOccurs: 0, maxOccurs: 65535}
     @xmldata:Any
-    anydata[]? anyElement;
+    anydata[]? anyElement?;
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}
@@ -53,7 +53,7 @@ public type SequenceGroup1 record {|
     @xmldata:SequenceOrder {value: 2}
     @xmldata:Element {minOccurs: 0, maxOccurs: 1}
     @xmldata:Any
-    Address|Person|ExtensibleType|MixedContent|OpenEnded? anyElement;
+    Address|Person|ExtensibleType|MixedContent|OpenEnded? anyElement?;
     @xmldata:Namespace {uri: "http://example.com/schema"}
     @xmldata:SequenceOrder {value: 3}
     @xmldata:Element {minOccurs: 1, maxOccurs: 1}
@@ -66,7 +66,7 @@ public type SequenceGroup2 record {|
     @xmldata:SequenceOrder {value: 1}
     @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     @xmldata:Any
-    anydata? anyElement;
+    anydata? anyElement?;
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}

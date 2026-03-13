@@ -55,8 +55,8 @@ public type ClearingSystemMemberIdentification2 record {|
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
 public type Contact13 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup5 sequenceGroup5?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup5[] sequenceGroup5?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
@@ -76,8 +76,8 @@ public type Document record {|
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
 public type DuplicateV07 record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup8 sequenceGroup8;
+    @xmldata:Sequence {minOccurs: 1, maxOccurs: 65535}
+    SequenceGroup8[] sequenceGroup8;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
@@ -174,8 +174,8 @@ public enum NamePrefix2Code {
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
 public type OrganisationIdentification39 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup14 sequenceGroup14?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup14[] sequenceGroup14?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
@@ -210,8 +210,8 @@ public type PartyIdentification272 record {|
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
 public type PersonIdentification18 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup17 sequenceGroup17?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup17[] sequenceGroup17?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
@@ -772,7 +772,7 @@ public type SequenceGroup21 record {|
     @xmldata:SequenceOrder {value: 1}
     @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     @xmldata:Any
-    anydata? anyElement;
+    anydata? anyElement?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.034.001.07"}
@@ -793,5 +793,5 @@ public type SequenceGroup23 record {|
     @xmldata:SequenceOrder {value: 1}
     @xmldata:Element {minOccurs: 1, maxOccurs: 1}
     @xmldata:Any
-    anydata? anyElement;
+    anydata? anyElement?;
 |};
