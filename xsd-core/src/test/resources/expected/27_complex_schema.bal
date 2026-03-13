@@ -127,8 +127,8 @@ public type ClearingSystemMemberIdentification2 record {|
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type Contact13 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup7 sequenceGroup7?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup7[] sequenceGroup7?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -234,8 +234,8 @@ public type DocumentLineIdentification1 record {|
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type DocumentLineInformation2 record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup19 sequenceGroup19;
+    @xmldata:Sequence {minOccurs: 1, maxOccurs: 65535}
+    SequenceGroup19[] sequenceGroup19;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -336,8 +336,8 @@ public type ExternalServiceLevel1Code string;
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type FIToFIPaymentCancellationRequestV11 record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup23 sequenceGroup23;
+    @xmldata:Sequence {minOccurs: 1, maxOccurs: 65535}
+    SequenceGroup23[] sequenceGroup23;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -534,8 +534,8 @@ public type Number decimal;
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type OrganisationIdentification39 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup36 sequenceGroup36?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup36[] sequenceGroup36?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -546,8 +546,8 @@ public type OrganisationIdentificationSchemeName1Choice record {|
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type OriginalGroupHeader21 record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup37 sequenceGroup37;
+    @xmldata:Sequence {minOccurs: 1, maxOccurs: 65535}
+    SequenceGroup37[] sequenceGroup37;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -588,8 +588,8 @@ public type PartyIdentification272 record {|
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type PaymentCancellationReason6 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup42 sequenceGroup42?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup42[] sequenceGroup42?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -599,14 +599,14 @@ public enum PaymentMethod4Code {
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type PaymentTransaction155 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup43 sequenceGroup43?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup43[] sequenceGroup43?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type PaymentTypeInformation27 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup44 sequenceGroup44?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup44[] sequenceGroup44?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -614,8 +614,8 @@ public type PercentageRate decimal;
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type PersonIdentification18 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup45 sequenceGroup45?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup45[] sequenceGroup45?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -663,20 +663,20 @@ public type Purpose2Choice record {|
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type ReferredDocumentInformation8 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup48 sequenceGroup48?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup48[] sequenceGroup48?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type RemittanceAmount4 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup49 sequenceGroup49?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup49[] sequenceGroup49?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type RemittanceInformation22 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup50 sequenceGroup50?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup50[] sequenceGroup50?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -703,8 +703,8 @@ public enum SettlementMethod1Code {
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type StructuredRemittanceInformation18 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup52 sequenceGroup52?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup52[] sequenceGroup52?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -721,8 +721,8 @@ public type SupplementaryDataEnvelope1 record {|
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type TaxAmount3 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup55 sequenceGroup55?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup55[] sequenceGroup55?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -733,8 +733,8 @@ public type TaxAuthorisation1 record {|
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type TaxData1 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup57 sequenceGroup57?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup57[] sequenceGroup57?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
@@ -780,8 +780,8 @@ public type UUIDv4Identifier string;
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}
 public type UnderlyingTransaction34 record {|
-    @xmldata:Sequence {minOccurs: 0, maxOccurs: 1}
-    SequenceGroup63 sequenceGroup63?;
+    @xmldata:Sequence {minOccurs: 0, maxOccurs: 65535}
+    SequenceGroup63[] sequenceGroup63?;
 |};
 
 @xmldata:Namespace {uri: "urn:iso:std:iso:20022:tech:xsd:camt.056.001.11"}

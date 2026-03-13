@@ -2,8 +2,8 @@ import ballerina/data.xmldata;
 
 @xmldata:Namespace {uri: "http://example.com/schema"}
 public type ExtensibleType record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup sequenceGroup;
+    @xmldata:Sequence {minOccurs: 1, maxOccurs: 65535}
+    SequenceGroup[] sequenceGroup;
 |};
 
 @xmldata:Namespace {uri: "http://example.com/schema"}
