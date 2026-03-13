@@ -731,7 +731,11 @@ public class XSDVisitorImpl implements XSDVisitor {
                 .append(UNBOUNDED.equalsIgnoreCase(maxOccurrence) ? INT_MAX_VALUE : maxOccurrence);
         builder.append(CLOSE_BRACES);
         builder.append(choiceName).append((maxOccurrence.equals(ONE)) ? EMPTY_STRING : EMPTY_ARRAY);
-        builder.append(WHITESPACE).append(convertToCamelCase(choiceName)).append(SEMICOLON);
+        builder.append(WHITESPACE).append(convertToCamelCase(choiceName));
+        if (ZERO.equals(minOccurrence)) {
+            builder.append(QUESTION_MARK);
+        }
+        builder.append(SEMICOLON);
         return choiceName;
     }
 
@@ -818,6 +822,8 @@ public class XSDVisitorImpl implements XSDVisitor {
                 if (childMaxOccurs != null) {
                     maxOccurrence = childMaxOccurs.getNodeValue();
                 }
+            } else if (hasAnyChildUnbounded(node)) {
+                maxOccurrence = UNBOUNDED;
             }
         }
         if (allChildrenOptional) {
@@ -834,7 +840,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         builder.append(CLOSE_BRACES);
         builder.append(sequenceName).append((maxOccurrence.equals(ONE)) ? EMPTY_STRING : EMPTY_ARRAY);
         builder.append(WHITESPACE).append(convertToCamelCase(sequenceName));
-        if (allChildrenOptional) {
+        if (allChildrenOptional || ZERO.equals(minOccurrence)) {
             builder.append(QUESTION_MARK);
         }
         builder.append(SEMICOLON);
@@ -855,6 +861,19 @@ public class XSDVisitorImpl implements XSDVisitor {
             }
         }
         return hasElement;
+    }
+
+    private boolean hasAnyChildUnbounded(Node node) {
+        for (Node child : asIterable(node.getChildNodes())) {
+            if (child.getNodeType() != Node.ELEMENT_NODE || ANNOTATION.equals(child.getLocalName())) {
+                continue;
+            }
+            Node childMaxOccurs = child.getAttributes().getNamedItem(MAX_OCCURS);
+            if (childMaxOccurs != null && UNBOUNDED.equalsIgnoreCase(childMaxOccurs.getNodeValue())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Node getSingleChildElement(Node node) {
