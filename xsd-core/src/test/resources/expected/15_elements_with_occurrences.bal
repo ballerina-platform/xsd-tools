@@ -2,8 +2,8 @@ import ballerina/data.xmldata;
 
 @xmldata:Namespace {uri: "http://tempuri.org/"}
 public type Add record {|
-    @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
-    SequenceGroup sequenceGroup;
+    @xmldata:Sequence {minOccurs: 1, maxOccurs: 65535}
+    SequenceGroup[] sequenceGroup;
 |};
 
 @xmldata:Namespace {uri: "http://tempuri.org/"}

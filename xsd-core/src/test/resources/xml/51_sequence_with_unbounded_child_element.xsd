@@ -1,0 +1,9 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://namespace.org/">
+    <xs:complexType name="Order">
+        <xs:sequence>
+            <xs:element name="item" type="xs:string" maxOccurs="unbounded"/>
+            <xs:element name="quantity" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Order" type="Order"/>
+</xs:schema>

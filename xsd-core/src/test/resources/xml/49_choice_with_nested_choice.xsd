@@ -1,0 +1,17 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://namespace.org/">
+    <xs:complexType name="Payment">
+        <xs:choice>
+            <xs:element name="creditCard" type="xs:string"/>
+            <xs:choice>
+                <xs:element name="bankTransfer" type="xs:string"/>
+                <xs:element name="paypal" type="xs:string"/>
+                <xs:choice>
+                    <xs:element name="applePay" type="xs:string"/>
+                    <xs:element name="googlePay" type="xs:string"/>
+                </xs:choice>
+            </xs:choice>
+            <xs:element name="cash" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:element name="Payment" type="Payment"/>
+</xs:schema>

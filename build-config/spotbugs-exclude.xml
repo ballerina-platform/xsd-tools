@@ -70,6 +70,14 @@
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
+        <Class name="io.ballerina.xsd.core.component.Sequence" />
+        <Bug pattern="EI_EXPOSE_REP" />
+    </Match>
+    <Match>
+        <Class name="io.ballerina.xsd.core.component.Choice" />
+        <Bug pattern="EI_EXPOSE_REP" />
+    </Match>
+    <Match>
         <Class name="io.ballerina.xsd.core.visitor.XSDVisitorImpl" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
@@ -119,6 +127,14 @@
     </Match>
     <Match>
         <Class name="io.ballerina.xsd.core.component.AttributeGroup" />
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+    <Match>
+        <Class name="io.ballerina.xsd.core.component.Sequence" />
+        <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+    <Match>
+        <Class name="io.ballerina.xsd.core.component.Choice" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
 </FindBugsFilter>
