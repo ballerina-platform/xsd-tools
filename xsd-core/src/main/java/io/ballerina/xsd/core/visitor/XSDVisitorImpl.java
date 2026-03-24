@@ -754,8 +754,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                     stringBuilder.append(addNamespace(this, getTargetNamespace()));
                 }
                 if (childNode.hasChildNodes()) {
-                    StringBuilder childNodeBuilder = new StringBuilder();
-                    processChildNode(childNode, childNodeBuilder);
+                    processChildNode(childNode);
                 }
                 Node nameNode = childNode.getAttributes().getNamedItem(NAME);
                 Node typeNode = childNode.getAttributes().getNamedItem(TYPE);
@@ -866,16 +865,12 @@ public class XSDVisitorImpl implements XSDVisitor {
         }
     }
 
-    private void processChildNode(Node childNode,
-                                  StringBuilder stringBuilder) throws Exception {
+    private void processChildNode(Node childNode) throws Exception {
         Optional<XSDComponent> component = XSDFactory.generateComponents(childNode);
         if (component.isPresent()) {
             component.get().setSubType(true);
             component.get().setOptional(false);
-            if (elementFormQualified) {
-                stringBuilder.append(addNamespace(this, getTargetNamespace()));
-            }
-            stringBuilder.append(component.get().accept(this));
+            component.get().accept(this);
         }
     }
 
