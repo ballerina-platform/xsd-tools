@@ -152,7 +152,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     private final ArrayList<String> complexTypeNames = new ArrayList<>();
     private final ArrayList<String> elementNames = new ArrayList<>();
     private String targetNamespace;
-    private boolean elementFormQualified = true;
+    private boolean elementFormQualified = false;
 
     // Metadata to keep resolved name to original name
     private final Map<String, String> resolvedNameMeta = new HashMap<>();
