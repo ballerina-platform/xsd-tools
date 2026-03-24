@@ -273,6 +273,7 @@ public final class XSDToRecord {
      */
     public static void generateNodes(Element rootElement, Map<String, MemberNode> nodes,
                                      XSDVisitor xsdVisitor) throws Exception {
+        xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
         xsdVisitor.setElementFormDefault(QUALIFIED.equals(rootElement.getAttribute(ELEMENT_FORM_DEFAULT)));
         xsdVisitor.setAttributeFormDefault(QUALIFIED.equals(rootElement.getAttribute(ATTRIBUTE_FORM_DEFAULT)));
         for (Node childNode : Utils.asIterable(rootElement.getChildNodes())) {

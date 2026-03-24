@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static io.ballerina.xsd.core.Utils.resolveNameConflicts;
+import static io.ballerina.xsd.core.XSDToRecord.QUALIFIED;
 import static io.ballerina.xsd.core.XSDToRecord.STRICT_ANY_PLACEHOLDER;
 import static io.ballerina.xsd.core.diagnostic.DiagnosticMessage.xsdToBallerinaError;
 import static io.ballerina.xsd.core.visitor.Utils.ANYDATA;
@@ -140,6 +141,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String PROCESS_CONTENTS = "processContents";
     public static final String ANY_ANNOTATION = "@xmldata:Any";
     public static final String COMPLEX_CONTENT = "complexContent";
+    public static final String FORM = "form";
     private final ArrayList<String> imports = new ArrayList<>();
     private final Map<String, XSDElement> extensions = new LinkedHashMap<>();
     private final Map<String, String> rootElements = new LinkedHashMap<>();
@@ -244,7 +246,14 @@ public class XSDVisitorImpl implements XSDVisitor {
         }
         Node node = element.getNode();
         StringBuilder builder = new StringBuilder();
-        builder.append(addNamespace(this, getTargetNamespace()));
+        Node parentElement = node.getParentNode();
+        Node formNode = parentElement != null && parentElement.getAttributes() != null
+                ? parentElement.getAttributes().getNamedItem(FORM) : null;
+        boolean qualified = !element.isNestedElement()
+                || (formNode != null ? QUALIFIED.equals(formNode.getNodeValue()) : elementFormQualified);
+        if (qualified) {
+            builder.append(addNamespace(this, getTargetNamespace()));
+        }
         builder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE);
         setTypeDefinition(element, node, builder);
         Node nameNode = node.getAttributes().getNamedItem(NAME);
@@ -420,6 +429,28 @@ public class XSDVisitorImpl implements XSDVisitor {
         return typeNode;
     }
 
+    private boolean isAttributeQualified(Node attributeNode) {
+        Node formNode = attributeNode.getAttributes() != null
+                ? attributeNode.getAttributes().getNamedItem(FORM) : null;
+        if (formNode != null) {
+            return QUALIFIED.equals(formNode.getNodeValue());
+        }
+        return attributeFormQualified;
+    }
+
+    private boolean isElementQualified(Node elementNode) {
+        if (elementNode.getAttributes() != null) {
+            if (elementNode.getAttributes().getNamedItem(REF) != null) {
+                return true;
+            }
+            Node formNode = elementNode.getAttributes().getNamedItem(FORM);
+            if (formNode != null) {
+                return QUALIFIED.equals(formNode.getNodeValue());
+            }
+        }
+        return elementFormQualified;
+    }
+
     public String visitAttribute(Node attribute) throws Exception {
         StringBuilder builder = new StringBuilder();
         this.addImports(BALLERINA_XML_DATA_MODULE);
@@ -428,7 +459,7 @@ public class XSDVisitorImpl implements XSDVisitor {
         if (nameNode == null) {
             throw new Exception(String.format(ATTRIBUTE_NOT_FOUND_ERROR, NAME));
         }
-        if (attributeFormQualified) {
+        if (isAttributeQualified(attribute)) {
             builder.append(addNamespace(this, getTargetNamespace()));
         }
         builder.append(ATTRIBUTE_ANNOTATION).append(WHITESPACE);
@@ -719,7 +750,7 @@ public class XSDVisitorImpl implements XSDVisitor {
             } else if (childNode.getLocalName().equals(CHOICE)) {
                 stringBuilder.append(visit(new Choice(childNode)));
             } else {
-                if (elementFormQualified) {
+                if (isElementQualified(childNode)) {
                     stringBuilder.append(addNamespace(this, getTargetNamespace()));
                 }
                 if (childNode.hasChildNodes()) {
@@ -788,7 +819,7 @@ public class XSDVisitorImpl implements XSDVisitor {
             }
             order++;
             component.get().setOptional(isOptional);
-            if (elementFormQualified) {
+            if (isElementQualified(childNode)) {
                 stringBuilder.append(addNamespace(this, getTargetNamespace()));
             }
             String orderAnnotation = XMLDATA_ORDER + WHITESPACE + OPEN_BRACES + VALUE + COLON + order + CLOSE_BRACES;
@@ -828,7 +859,7 @@ public class XSDVisitorImpl implements XSDVisitor {
             }
             component.get().setSubType(true);
             component.get().setOptional(isOptional);
-            if (elementFormQualified) {
+            if (isElementQualified(childNode)) {
                 stringBuilder.append(addNamespace(this, getTargetNamespace()));
             }
             stringBuilder.append(component.get().accept(this));
