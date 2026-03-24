@@ -104,7 +104,11 @@ public class XSDToRecordTest {
             new Object[] {new String[] {"51_sequence_with_unbounded_child_element.xsd"},
                     "51_sequence_with_unbounded_child_element.bal"},
             new Object[] {new String[] {"52_sequence_choice_with_min_occurs_zero.xsd"},
-                    "52_sequence_choice_with_min_occurs_zero.bal"}
+                    "52_sequence_choice_with_min_occurs_zero.bal"},
+            new Object[] {new String[] {"53_element_form_default_unqualified.xsd"},
+                    "53_element_form_default_unqualified.bal"},
+            new Object[] {new String[] {"54_complex_schema_unqualified.xsd"},
+                    "54_complex_schema_unqualified.bal"}
         );
     }
 
