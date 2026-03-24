@@ -1,0 +1,9 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://example.com/">
+    <xs:complexType name="Person">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="age" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="PersonElement" type="Person"/>
+</xs:schema>

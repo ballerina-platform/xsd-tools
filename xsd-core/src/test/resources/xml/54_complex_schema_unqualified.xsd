@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="unqualified" targetNamespace="http://test.example.com/">
+
+    <!-- Global simple type with enumeration -->
+    <xs:simpleType name="StatusCode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ACTIVE"/>
+            <xs:enumeration value="INACTIVE"/>
+            <xs:enumeration value="PENDING"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Global simple type with restriction -->
+    <xs:simpleType name="AgeType">
+        <xs:restriction base="xs:int"/>
+    </xs:simpleType>
+
+    <!-- Global complex type with sequence (local elements should have no namespace) -->
+    <xs:complexType name="AddressType">
+        <xs:sequence>
+            <xs:element name="street" type="xs:string"/>
+            <xs:element name="city" type="xs:string"/>
+            <xs:element name="zipCode" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Global complex type with choice (local elements should have no namespace) -->
+    <xs:complexType name="ContactType">
+        <xs:choice>
+            <xs:element name="email" type="xs:string"/>
+            <xs:element name="phone" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <!-- Global complex type with sequence, custom types, and attribute -->
+    <xs:complexType name="PersonType">
+        <xs:sequence>
+            <xs:element name="firstName" type="xs:string"/>
+            <xs:element name="lastName" type="xs:string"/>
+            <xs:element name="age" type="AgeType" minOccurs="0"/>
+            <xs:element name="status" type="StatusCode"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- Global elements -->
+    <xs:element name="Address" type="AddressType"/>
+    <xs:element name="Person" type="PersonType"/>
+
+</xs:schema>
