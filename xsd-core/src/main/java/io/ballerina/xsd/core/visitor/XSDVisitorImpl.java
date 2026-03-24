@@ -152,6 +152,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     private final ArrayList<String> complexTypeNames = new ArrayList<>();
     private final ArrayList<String> elementNames = new ArrayList<>();
     private String targetNamespace;
+    private boolean elementFormQualified = true;
 
     // Metadata to keep resolved name to original name
     private final Map<String, String> resolvedNameMeta = new HashMap<>();
@@ -357,6 +358,16 @@ public class XSDVisitorImpl implements XSDVisitor {
         return this.targetNamespace;
     }
 
+    @Override
+    public void setElementFormDefault(boolean qualified) {
+        this.elementFormQualified = qualified;
+    }
+
+    @Override
+    public boolean isElementFormQualified() {
+        return this.elementFormQualified;
+    }
+
     private Node visitNestedElements(Node node, Node nameNode, Node typeNode) throws Exception {
         if (typeNode == null && node.hasChildNodes()) {
             typeNode = nameNode;
@@ -515,7 +526,9 @@ public class XSDVisitorImpl implements XSDVisitor {
         StringBuilder childNodeBuilder = new StringBuilder();
         processChildChoiceNodes(childNodes, childNodeBuilder);
         this.addImports(BALLERINA_XML_DATA_MODULE);
-        stringBuilder.append(addNamespace(this, getTargetNamespace()));
+        if (elementFormQualified) {
+            stringBuilder.append(addNamespace(this, getTargetNamespace()));
+        }
         String choiceName = applyChoiceAnnotation(builder, node);
         stringBuilder.append(PUBLIC).append(WHITESPACE).append(TYPE).append(WHITESPACE).append(choiceName);
         stringBuilder.append(WHITESPACE).append(RECORD).append(WHITESPACE).append(OPEN_BRACES).append(VERTICAL_BAR);
@@ -541,7 +554,9 @@ public class XSDVisitorImpl implements XSDVisitor {
         StringBuilder childNodeBuilder = new StringBuilder();
         processChildNodes(isOptional, childNodes, childNodeBuilder);
         this.addImports(BALLERINA_XML_DATA_MODULE);
-        stringBuilder.append(addNamespace(this, getTargetNamespace()));
+        if (elementFormQualified) {
+            stringBuilder.append(addNamespace(this, getTargetNamespace()));
+        }
         boolean allChildrenOptional = areAllChildrenOptional(childNodes);
         String sequenceName = applySequenceAnnotation(node, builder, allChildrenOptional);
         generateSequenceType(stringBuilder, childNodeBuilder, sequenceName);
@@ -690,7 +705,9 @@ public class XSDVisitorImpl implements XSDVisitor {
             } else if (childNode.getLocalName().equals(CHOICE)) {
                 stringBuilder.append(visit(new Choice(childNode)));
             } else {
-                stringBuilder.append(addNamespace(this, getTargetNamespace()));
+                if (elementFormQualified) {
+                    stringBuilder.append(addNamespace(this, getTargetNamespace()));
+                }
                 if (childNode.hasChildNodes()) {
                     StringBuilder childNodeBuilder = new StringBuilder();
                     processChildNode(childNode, childNodeBuilder);
@@ -757,7 +774,9 @@ public class XSDVisitorImpl implements XSDVisitor {
             }
             order++;
             component.get().setOptional(isOptional);
-            stringBuilder.append(addNamespace(this, getTargetNamespace()));
+            if (elementFormQualified) {
+                stringBuilder.append(addNamespace(this, getTargetNamespace()));
+            }
             String orderAnnotation = XMLDATA_ORDER + WHITESPACE + OPEN_BRACES + VALUE + COLON + order + CLOSE_BRACES;
             stringBuilder.append(orderAnnotation);
             if (component.get().getKind() != Kind.SEQUENCE && component.get().getKind() != Kind.CHOICE) {
@@ -777,7 +796,9 @@ public class XSDVisitorImpl implements XSDVisitor {
             stringBuilder.append(component.get().accept(this));
         }
         if (order == 0) {
-            stringBuilder.append(addNamespace(this, getTargetNamespace()));
+            if (elementFormQualified) {
+                stringBuilder.append(addNamespace(this, getTargetNamespace()));
+            }
             stringBuilder.append(XMLDATA_ORDER + WHITESPACE + OPEN_BRACES + VALUE + COLON + ONE + CLOSE_BRACES);
             stringBuilder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD)
                 .append(QUESTION_MARK).append(SEMICOLON);
@@ -793,7 +814,9 @@ public class XSDVisitorImpl implements XSDVisitor {
             }
             component.get().setSubType(true);
             component.get().setOptional(isOptional);
-            stringBuilder.append(addNamespace(this, getTargetNamespace()));
+            if (elementFormQualified) {
+                stringBuilder.append(addNamespace(this, getTargetNamespace()));
+            }
             stringBuilder.append(component.get().accept(this));
         }
     }
@@ -804,7 +827,9 @@ public class XSDVisitorImpl implements XSDVisitor {
         if (component.isPresent()) {
             component.get().setSubType(true);
             component.get().setOptional(false);
-            stringBuilder.append(addNamespace(this, getTargetNamespace()));
+            if (elementFormQualified) {
+                stringBuilder.append(addNamespace(this, getTargetNamespace()));
+            }
             stringBuilder.append(component.get().accept(this));
         }
     }

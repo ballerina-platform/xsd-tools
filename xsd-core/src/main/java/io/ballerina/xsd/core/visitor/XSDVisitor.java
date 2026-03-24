@@ -50,6 +50,8 @@ public interface XSDVisitor {
     String visit(Choice choice) throws Exception;
     void setTargetNamespace(String targetNamespace);
     String getTargetNamespace();
+    void setElementFormDefault(boolean qualified);
+    boolean isElementFormQualified();
     ArrayList<String> getImports();
     Map<String, String> getRootElements();
     Map<String, XSDElement> getExtensions();

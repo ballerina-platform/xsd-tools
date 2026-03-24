@@ -86,6 +86,8 @@ public final class XSDToRecord {
     public static final String XMLDATA_NAME_ANNOTATION = "@xmldata:Name {value: \"%s\"}";
     public static final String EQUAL = "=";
     public static final String TARGET_NAMESPACE = "targetNamespace";
+    public static final String ELEMENT_FORM_DEFAULT = "elementFormDefault";
+    public static final String UNQUALIFIED = "unqualified";
 
     private static final String CONTENT_FIELD = "\\#content";
     public static final String FILE_EXTENSION = ".bal";
@@ -130,6 +132,7 @@ public final class XSDToRecord {
                     throw new Exception(INVALID_XSD_FORMAT_ERROR);
                 }
                 xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+                xsdVisitor.setElementFormDefault(!UNQUALIFIED.equals(rootElement.getAttribute(ELEMENT_FORM_DEFAULT)));
                 xsdVisitor.clearImports();
                 processNodeList(rootElement, nodes, xsdVisitor);
                 handleExistingTypes(documents, typesMap, xsdVisitor, existingTypes, document, nodes);
@@ -182,8 +185,8 @@ public final class XSDToRecord {
                     throw new Exception(INVALID_XSD_FORMAT_ERROR);
                 }
                 xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+                xsdVisitor.setElementFormDefault(!UNQUALIFIED.equals(rootElement.getAttribute(ELEMENT_FORM_DEFAULT)));
                 Map<String, MemberNode> nodes = new LinkedHashMap<>();
-                xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
                 xsdVisitor.clearImports();
                 processNodeList(rootElement, nodes, xsdVisitor);
                 handleExistingTypes(typesMap, xsdVisitor, existingTypes, nodes);
@@ -219,8 +222,8 @@ public final class XSDToRecord {
                     throw new Exception(INVALID_XSD_FORMAT_ERROR);
                 }
                 xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+                xsdVisitor.setElementFormDefault(!UNQUALIFIED.equals(rootElement.getAttribute(ELEMENT_FORM_DEFAULT)));
                 Map<String, MemberNode> nodes = new LinkedHashMap<>();
-                xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
                 xsdVisitor.clearImports();
                 processNodeList(rootElement, nodes, xsdVisitor);
                 handleExistingTypes(typesMap, xsdVisitor, existingTypes, nodes);
@@ -251,6 +254,7 @@ public final class XSDToRecord {
             throw new Exception(INVALID_XSD_FORMAT_ERROR);
         }
         xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
+        xsdVisitor.setElementFormDefault(!UNQUALIFIED.equals(rootElement.getAttribute(ELEMENT_FORM_DEFAULT)));
         Map<String, MemberNode> nodes = new LinkedHashMap<>();
         processNodeList(rootElement, nodes, xsdVisitor);
         return nodes;
@@ -266,6 +270,7 @@ public final class XSDToRecord {
      */
     public static void generateNodes(Element rootElement, Map<String, MemberNode> nodes,
                                      XSDVisitor xsdVisitor) throws Exception {
+        xsdVisitor.setElementFormDefault(!UNQUALIFIED.equals(rootElement.getAttribute(ELEMENT_FORM_DEFAULT)));
         for (Node childNode : Utils.asIterable(rootElement.getChildNodes())) {
             if (childNode.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
