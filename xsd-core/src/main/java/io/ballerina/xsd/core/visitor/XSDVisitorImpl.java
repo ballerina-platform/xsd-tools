@@ -153,6 +153,7 @@ public class XSDVisitorImpl implements XSDVisitor {
     private final ArrayList<String> elementNames = new ArrayList<>();
     private String targetNamespace;
     private boolean elementFormQualified = false;
+    private boolean attributeFormQualified = false;
 
     // Metadata to keep resolved name to original name
     private final Map<String, String> resolvedNameMeta = new HashMap<>();
@@ -368,6 +369,16 @@ public class XSDVisitorImpl implements XSDVisitor {
         return this.elementFormQualified;
     }
 
+    @Override
+    public void setAttributeFormDefault(boolean qualified) {
+        this.attributeFormQualified = qualified;
+    }
+
+    @Override
+    public boolean isAttributeFormQualified() {
+        return this.attributeFormQualified;
+    }
+
     private Node visitNestedElements(Node node, Node nameNode, Node typeNode) throws Exception {
         if (typeNode == null && node.hasChildNodes()) {
             typeNode = nameNode;
@@ -416,6 +427,9 @@ public class XSDVisitorImpl implements XSDVisitor {
         Node typeNode = attribute.getAttributes().getNamedItem(TYPE);
         if (nameNode == null) {
             throw new Exception(String.format(ATTRIBUTE_NOT_FOUND_ERROR, NAME));
+        }
+        if (attributeFormQualified) {
+            builder.append(addNamespace(this, getTargetNamespace()));
         }
         builder.append(ATTRIBUTE_ANNOTATION).append(WHITESPACE);
         Node fixedNode = attribute.getAttributes().getNamedItem(FIXED);

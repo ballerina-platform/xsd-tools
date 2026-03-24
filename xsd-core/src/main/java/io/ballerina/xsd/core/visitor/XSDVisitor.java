@@ -52,6 +52,8 @@ public interface XSDVisitor {
     String getTargetNamespace();
     void setElementFormDefault(boolean qualified);
     boolean isElementFormQualified();
+    void setAttributeFormDefault(boolean qualified);
+    boolean isAttributeFormQualified();
     ArrayList<String> getImports();
     Map<String, String> getRootElements();
     Map<String, XSDElement> getExtensions();
