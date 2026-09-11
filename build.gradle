@@ -66,10 +66,20 @@ subprojects {
     }
 }
 
-tasks.register('build') {
-    dependsOn(":xsd-cli:build")
-    dependsOn(":xsd-core:build")
-    dependsOn(":module-ballerina-xsd:build")
+if (tasks.names.contains('build')) {
+    tasks.named('build') {
+        dependsOn(":xsd-cli:build")
+        dependsOn(":xsd-core:build")
+        dependsOn(":module-ballerina-xsd:build")
+
+    }
+} else {
+    tasks.register('build') {
+        dependsOn(":xsd-cli:build")
+        dependsOn(":xsd-core:build")
+        dependsOn(":module-ballerina-xsd:build")
+
+    }
 }
 
 def moduleVersion = project.version.replace("-SNAPSHOT", "")
