@@ -16,24 +16,14 @@
  * under the License.
  */
 
-package io.ballerina.xsd.core.component;
-
-import io.ballerina.xsd.core.XSDValidationException;
-import io.ballerina.xsd.core.node.Kind;
-import io.ballerina.xsd.core.visitor.XSDVisitor;
+package io.ballerina.xsd.core;
 
 /**
- * Interface representing a component of an XSD schema.
- *
- * @since 0.1.0
+ * Signals that an XSD document is malformed or references an element/attribute
+ * that could not be resolved while converting it to Ballerina records.
  */
-public interface XSDComponent {
-    String accept(XSDVisitor xsdVisitor) throws XSDValidationException;
-    void setSubType(boolean subType);
-    boolean isSubType();
-    boolean isOptional();
-    boolean isNestedElement();
-    void setOptional(boolean isOptional);
-    void setNestedElement(boolean isOptional);
-    Kind getKind();
+public class XSDValidationException extends Exception {
+    public XSDValidationException(String message) {
+        super(message);
+    }
 }

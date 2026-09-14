@@ -59,7 +59,7 @@ public class Utils {
     }
 
     public static ModulePartNode generateModulePartNode(Map<String, MemberNode> nodes,
-                                                        XSDVisitor xsdVisitor) throws Exception {
+                                                        XSDVisitor xsdVisitor) throws XSDValidationException {
         NodeList<ModuleMemberDeclarationNode> moduleMembers = AbstractNodeFactory
                 .createNodeList(nodes.values().stream().map(MemberNode::node).toList());
         NodeList<ImportDeclarationNode> imports = getImportDeclarations(xsdVisitor);
@@ -104,12 +104,12 @@ public class Utils {
         return baseString.substring(startIndex, endIndex);
     }
 
-    static NodeList<ImportDeclarationNode> getImportDeclarations(XSDVisitor xsdVisitor) throws Exception {
+    static NodeList<ImportDeclarationNode> getImportDeclarations(XSDVisitor xsdVisitor) throws XSDValidationException {
         Collection<ImportDeclarationNode> imports = new ArrayList<>();
         for (String module : xsdVisitor.getImports()) {
             ImportDeclarationNode node = NodeParser.parseImportDeclaration(module);
             if (node.hasDiagnostics()) {
-                throw new Exception(XSDToRecord.INVALID_IMPORTS_ERROR);
+                throw new XSDValidationException(XSDToRecord.INVALID_IMPORTS_ERROR);
             }
             imports.add(node);
         }

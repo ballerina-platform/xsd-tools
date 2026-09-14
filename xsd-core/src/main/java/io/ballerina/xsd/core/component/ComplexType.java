@@ -18,6 +18,7 @@
 
 package io.ballerina.xsd.core.component;
 
+import io.ballerina.xsd.core.XSDValidationException;
 import io.ballerina.xsd.core.node.Kind;
 import io.ballerina.xsd.core.visitor.XSDVisitor;
 import org.w3c.dom.Node;
@@ -42,7 +43,7 @@ public class ComplexType implements XSDComponent {
     }
 
     @Override
-    public String accept(XSDVisitor xsdVisitor) throws Exception {
+    public String accept(XSDVisitor xsdVisitor) throws XSDValidationException {
         return xsdVisitor.visit(this);
     }
 
