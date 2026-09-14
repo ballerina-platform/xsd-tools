@@ -35,8 +35,10 @@ import org.ballerinalang.formatter.core.FormatterException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,6 +52,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import static io.ballerina.xsd.core.Utils.extractSubstring;
 import static io.ballerina.xsd.core.Utils.extractTypeName;
@@ -102,9 +105,10 @@ public final class XSDToRecord {
      *
      * @param document XSD content in the form of a DOM document
      * @return a record containing the generated types and associated diagnostics
-     * @throws Exception if an error occurs while parsing the XSD content
+     * @throws XSDValidationException if an error occurs while parsing the XSD content
+     * @throws FormatterException if an error occurs while formatting the generated source
      */
-    public static Response convert(Document document) throws Exception {
+    public static Response convert(Document document) throws XSDValidationException, FormatterException {
         XSDVisitor xsdVisitor = new XSDVisitorImpl();
         Map<String, MemberNode> nodes = generateNodes(document, xsdVisitor);
         NodeResponse response = generateTypes(xsdVisitor, nodes);
@@ -118,7 +122,7 @@ public final class XSDToRecord {
      * @param documents a map of XSD documents and their corresponding file names
      * @return a map of file names and their corresponding records
      */
-    public static Map<String, Response> convert(Map<Document, String> documents) throws Exception {
+    public static Map<String, Response> convert(Map<Document, String> documents) {
         Map<String, NodeResponse> typesMap = new LinkedHashMap<>();
         XSDVisitor xsdVisitor = new XSDVisitorImpl();
         ArrayList<String> existingTypes = new ArrayList<>();
@@ -130,7 +134,7 @@ public final class XSDToRecord {
                 Map<String, MemberNode> nodes = new LinkedHashMap<>();
                 Element rootElement = document.getDocumentElement();
                 if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
-                    throw new Exception(INVALID_XSD_FORMAT_ERROR);
+                    throw new XSDValidationException(INVALID_XSD_FORMAT_ERROR);
                 }
                 xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
                 xsdVisitor.setElementFormDefault(QUALIFIED.equals(rootElement.getAttribute(ELEMENT_FORM_DEFAULT)));
@@ -138,7 +142,7 @@ public final class XSDToRecord {
                 xsdVisitor.clearImports();
                 processNodeList(rootElement, nodes, xsdVisitor);
                 handleExistingTypes(documents, typesMap, xsdVisitor, existingTypes, document, nodes);
-            } catch (Exception e) {
+            } catch (XSDValidationException | RuntimeException e) {
                 typesMap.put(fileName, new NodeResponse(null, xsdVisitor.getDiagnostics(), null));
             }
         }
@@ -149,7 +153,7 @@ public final class XSDToRecord {
                     try {
                         generatedTypes = formatModuleParts(response.types());
                     } catch (FormatterException e) {
-                        throw new RuntimeException(e);
+                        throw new XSDFormattingRuntimeException(e);
                     }
                     return new Response(generatedTypes, response.diagnostics());
                 }));
@@ -160,9 +164,10 @@ public final class XSDToRecord {
      *
      * @param xsdContent XSD content as a string
      * @return a map of element names and their corresponding record nodes
-     * @throws Exception if an error occurs while parsing the XSD content
+     * @throws XSDValidationException if an error occurs while parsing the XSD content
      */
-    public static Map<String, MemberNode> generateNodes(String xsdContent) throws Exception {
+    public static Map<String, MemberNode> generateNodes(String xsdContent) throws XSDValidationException,
+            ParserConfigurationException, SAXException, IOException {
         Document document = parseXSD(xsdContent);
         XSDVisitor xsdVisitor = new XSDVisitorImpl();
         return generateNodes(document, xsdVisitor);
@@ -184,7 +189,7 @@ public final class XSDToRecord {
                 Document document = parseXSD(xsdContent);
                 Element rootElement = document.getDocumentElement();
                 if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
-                    throw new Exception(INVALID_XSD_FORMAT_ERROR);
+                    throw new XSDValidationException(INVALID_XSD_FORMAT_ERROR);
                 }
                 xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
                 xsdVisitor.setElementFormDefault(QUALIFIED.equals(rootElement.getAttribute(ELEMENT_FORM_DEFAULT)));
@@ -195,7 +200,8 @@ public final class XSDToRecord {
                 index++;
             }
             return generateTypes(xsdVisitor, typesMap);
-        } catch (Exception e) {
+        } catch (XSDValidationException | ParserConfigurationException | SAXException | IOException
+                | RuntimeException e) {
             String errorMessage = String.format(
                     "An error occurred while processing XSD content at index %d.%n Error: %s%n%n XSD Content: %n%s",
                     index, e.getMessage(), xsdContents[index]
@@ -221,7 +227,7 @@ public final class XSDToRecord {
                 Document document = parseXSD(xsdContent);
                 Element rootElement = document.getDocumentElement();
                 if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
-                    throw new Exception(INVALID_XSD_FORMAT_ERROR);
+                    throw new XSDValidationException(INVALID_XSD_FORMAT_ERROR);
                 }
                 xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
                 xsdVisitor.setElementFormDefault(QUALIFIED.equals(rootElement.getAttribute(ELEMENT_FORM_DEFAULT)));
@@ -232,7 +238,8 @@ public final class XSDToRecord {
             }
             index++;
             return generateTypes(xsdVisitor, typesMap);
-        } catch (Exception e) {
+        } catch (XSDValidationException | ParserConfigurationException | SAXException | IOException
+                | RuntimeException e) {
             String errorMessage = String.format(
                     "An error occurred while processing XSD content at index %d.%n Error: %s%n%n XSD Content: %n%s",
                     index, e.getMessage(), xsdContents.get(index)
@@ -248,12 +255,13 @@ public final class XSDToRecord {
      * @param document XSD content in the form of a DOM document
      * @param xsdVisitor The visitor interface to visit the XSD components
      * @return a map of element names and their corresponding record nodes
-     * @throws Exception if an error occurs while generating types from the XSD content
+     * @throws XSDValidationException if an error occurs while generating types from the XSD content
      */
-    public static Map<String, MemberNode> generateNodes(Document document, XSDVisitor xsdVisitor) throws Exception {
+    public static Map<String, MemberNode> generateNodes(Document document, XSDVisitor xsdVisitor)
+            throws XSDValidationException {
         Element rootElement = document.getDocumentElement();
         if (!Objects.equals(rootElement.getLocalName(), SCHEMA)) {
-            throw new Exception(INVALID_XSD_FORMAT_ERROR);
+            throw new XSDValidationException(INVALID_XSD_FORMAT_ERROR);
         }
         xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
         xsdVisitor.setElementFormDefault(QUALIFIED.equals(rootElement.getAttribute(ELEMENT_FORM_DEFAULT)));
@@ -269,10 +277,10 @@ public final class XSDToRecord {
      * @param rootElement The root element of the XSD content
      * @param nodes The map of element names and their corresponding record nodes
      * @param xsdVisitor The visitor interface to visit the XSD components
-     * @throws Exception if an error occurs while generating types from the XSD content
+     * @throws XSDValidationException if an error occurs while generating types from the XSD content
      */
     public static void generateNodes(Element rootElement, Map<String, MemberNode> nodes,
-                                     XSDVisitor xsdVisitor) throws Exception {
+                                     XSDVisitor xsdVisitor) throws XSDValidationException {
         xsdVisitor.setTargetNamespace(rootElement.getAttribute(TARGET_NAMESPACE));
         xsdVisitor.setElementFormDefault(QUALIFIED.equals(rootElement.getAttribute(ELEMENT_FORM_DEFAULT)));
         xsdVisitor.setAttributeFormDefault(QUALIFIED.equals(rootElement.getAttribute(ATTRIBUTE_FORM_DEFAULT)));
@@ -344,7 +352,7 @@ public final class XSDToRecord {
     }
 
     private static NodeResponse generateTypes(XSDVisitor xsdVisitor,
-                                              Map<String, MemberNode> nodes) throws Exception {
+                                              Map<String, MemberNode> nodes) throws XSDValidationException {
         ModulePartNode modulePartNode = io.ballerina.xsd.core.Utils.generateModulePartNode(nodes, xsdVisitor);
         List<XSDDiagnostic> diagnostics = xsdVisitor.getDiagnostics();
         XSDNodeContext xsdContext = new XSDNodeContext(nodes, xsdVisitor.getNameResolvers());
@@ -366,7 +374,7 @@ public final class XSDToRecord {
 
     private static void handleExistingTypes(Map<Document, String> documents, Map<String, NodeResponse> typesMap,
                                             XSDVisitor xsdVisitor, ArrayList<String> existingTypes, Document document,
-                                            Map<String, MemberNode> nodes) throws Exception {
+                                            Map<String, MemberNode> nodes) throws XSDValidationException {
         existingTypes.forEach(nodes.keySet()::remove);
         typesMap.put(documents.get(document) + FILE_EXTENSION, generateTypes(xsdVisitor, nodes));
         existingTypes.addAll(nodes.keySet());
@@ -376,7 +384,7 @@ public final class XSDToRecord {
     }
 
     private static void processNodeList(Element rootElement, Map<String, MemberNode> nodes,
-                                        XSDVisitor xsdVisitor) throws Exception {
+                                        XSDVisitor xsdVisitor) throws XSDValidationException {
         generateNodes(rootElement, nodes, xsdVisitor);
         generateResidualNodes(nodes, xsdVisitor);
     }
@@ -567,7 +575,7 @@ public final class XSDToRecord {
         return EMPTY_STRING;
     }
 
-    static Document parseXSD(String xsdData) throws Exception {
+    static Document parseXSD(String xsdData) throws ParserConfigurationException, SAXException, IOException {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xsdData.getBytes(StandardCharsets.UTF_8));
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         dbFactory.setNamespaceAware(true);

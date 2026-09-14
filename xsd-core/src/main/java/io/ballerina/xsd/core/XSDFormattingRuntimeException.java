@@ -16,24 +16,14 @@
  * under the License.
  */
 
-package io.ballerina.xsd.core.component;
-
-import io.ballerina.xsd.core.XSDValidationException;
-import io.ballerina.xsd.core.node.Kind;
-import io.ballerina.xsd.core.visitor.XSDVisitor;
+package io.ballerina.xsd.core;
 
 /**
- * Interface representing a component of an XSD schema.
- *
- * @since 0.1.0
+ * Unchecked wrapper for a formatting failure raised from inside a stream
+ * collector lambda that cannot itself declare a checked exception.
  */
-public interface XSDComponent {
-    String accept(XSDVisitor xsdVisitor) throws XSDValidationException;
-    void setSubType(boolean subType);
-    boolean isSubType();
-    boolean isOptional();
-    boolean isNestedElement();
-    void setOptional(boolean isOptional);
-    void setNestedElement(boolean isOptional);
-    Kind getKind();
+public class XSDFormattingRuntimeException extends RuntimeException {
+    public XSDFormattingRuntimeException(Throwable cause) {
+        super(cause);
+    }
 }

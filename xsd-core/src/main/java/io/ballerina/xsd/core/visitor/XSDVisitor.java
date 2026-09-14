@@ -18,6 +18,7 @@
 
 package io.ballerina.xsd.core.visitor;
 
+import io.ballerina.xsd.core.XSDValidationException;
 import io.ballerina.xsd.core.component.Any;
 import io.ballerina.xsd.core.component.AttributeGroup;
 import io.ballerina.xsd.core.component.Choice;
@@ -38,16 +39,16 @@ import java.util.Map;
  * @since 0.1.0
  */
 public interface XSDVisitor {
-    String visit(Element element) throws Exception;
-    String visit(Element element, boolean isSubType) throws Exception;
-    String visit(ComplexType element) throws Exception;
-    String visit(ComplexType element, boolean isSubType) throws Exception;
-    String visit(SimpleType element) throws Exception;
-    String visit(SimpleType element, boolean isSubType) throws Exception;
-    String visit(AttributeGroup attributeGroup) throws Exception;
-    String visit(Any any) throws Exception;
-    String visit(Sequence sequence) throws Exception;
-    String visit(Choice choice) throws Exception;
+    String visit(Element element) throws XSDValidationException;
+    String visit(Element element, boolean isSubType) throws XSDValidationException;
+    String visit(ComplexType element) throws XSDValidationException;
+    String visit(ComplexType element, boolean isSubType) throws XSDValidationException;
+    String visit(SimpleType element) throws XSDValidationException;
+    String visit(SimpleType element, boolean isSubType) throws XSDValidationException;
+    String visit(AttributeGroup attributeGroup) throws XSDValidationException;
+    String visit(Any any) throws XSDValidationException;
+    String visit(Sequence sequence) throws XSDValidationException;
+    String visit(Choice choice) throws XSDValidationException;
     void setTargetNamespace(String targetNamespace);
     String getTargetNamespace();
     void setElementFormDefault(boolean qualified);
