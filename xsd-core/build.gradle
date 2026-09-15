@@ -24,6 +24,7 @@ dependencies {
     implementation group: 'org.ballerinalang', name: 'ballerina-runtime', version: "${ballerinaLangVersion}"
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junitEngineVersion}"
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: "${junitParamVersion}"
+    testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher', version: "${junitPlatformLauncherVersion}"
     implementation group: 'org.apache.ws.commons.schema', name: 'XmlSchema', version: "${apacheXmlSchemaVersion}"
     testImplementation group: 'org.testng', name: 'testng', version: "${testngVersion}"
 }
@@ -62,7 +63,7 @@ spotbugsMain {
     def SpotBugsEffort = classLoader.findLoadedClass("com.github.spotbugs.snom.Effort")
     effort = SpotBugsEffort.MAX
     reportLevel = SpotBugsConfidence.LOW
-    reportsDir = file("$project.buildDir/reports/spotbugs")
+    reportsDir = layout.buildDirectory.dir("reports/spotbugs")
     reports {
         html.enabled true
         text.enabled = true

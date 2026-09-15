@@ -18,6 +18,7 @@
 
 package io.ballerina.xsd.core.component;
 
+import io.ballerina.xsd.core.XSDValidationException;
 import io.ballerina.xsd.core.node.Kind;
 import io.ballerina.xsd.core.visitor.XSDVisitor;
 
@@ -27,7 +28,7 @@ import io.ballerina.xsd.core.visitor.XSDVisitor;
  * @since 0.1.0
  */
 public interface XSDComponent {
-    String accept(XSDVisitor xsdVisitor) throws Exception;
+    String accept(XSDVisitor xsdVisitor) throws XSDValidationException;
     void setSubType(boolean subType);
     boolean isSubType();
     boolean isOptional();
