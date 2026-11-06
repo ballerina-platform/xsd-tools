@@ -1,0 +1,8 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://namespace.org/">
+    <xs:element name="Item" type="xs:string"/>
+    <xs:complexType name="Container">
+        <xs:sequence>
+            <xs:element ref="Item" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
