@@ -14,5 +14,5 @@ public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
     @xmldata:Element {minOccurs: 0, maxOccurs: 1}
-    TPA_Extensions TPA_Extensions;
+    TPA_Extensions TPA_Extensions?;
 |};

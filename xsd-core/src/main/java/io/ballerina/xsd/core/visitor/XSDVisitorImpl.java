@@ -216,6 +216,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                 builder.append(STRING).append(WHITESPACE).append(CONTENT_FIELD).append(QUESTION_MARK);
             } else {
                 builder.append(deriveType(typeNode)).append(WHITESPACE).append(extractType(typeNode));
+                handleMinOccurrences(element, builder);
             }
         } else if (typeNode != null && node.hasAttributes()) {
             handleFixedValues(node, builder, typeNode);
