@@ -117,7 +117,9 @@ public class XSDToRecordTest {
             new Object[] {new String[] {"57_attribute_with_ref.xsd"},
                     "57_attribute_with_ref.bal"},
             new Object[] {new String[] {"58_attribute_with_ref_int_type.xsd"},
-                    "58_attribute_with_ref_int_type.bal"}
+                    "58_attribute_with_ref_int_type.bal"},
+            new Object[] {new String[] {"60_elements_with_optional_default_values.xsd"},
+                    "60_elements_with_optional_default_values.bal"}
         );
     }
 
