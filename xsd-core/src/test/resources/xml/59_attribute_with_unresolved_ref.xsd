@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:ext="http://external.org/"
+           targetNamespace="http://namespace.org/"
+           elementFormDefault="qualified">
+
+    <xs:complexType name="Note">
+        <xs:sequence>
+            <xs:element name="text" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute ref="ext:lang" use="required"/>
+    </xs:complexType>
+</xs:schema>
