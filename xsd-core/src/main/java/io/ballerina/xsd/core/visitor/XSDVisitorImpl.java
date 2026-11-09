@@ -500,16 +500,23 @@ public class XSDVisitorImpl implements XSDVisitor {
             builder.append(addNamespace(this, getTargetNamespace()));
         }
         builder.append(ATTRIBUTE_ANNOTATION).append(WHITESPACE);
-        Node typeNode = attribute.getAttributes().getNamedItem(TYPE);
+        Node declaration = findGlobalAttribute(attribute, localName);
         Node fixedNode = attribute.getAttributes().getNamedItem(FIXED);
         Node defaultNode = attribute.getAttributes().getNamedItem(DEFAULT);
-        String type = deriveType(typeNode);
-        if (defaultNode != null) {
-            builder.append(type).append(WHITESPACE);
-        } else if (fixedNode != null) {
+        String type = STRING;
+        if (declaration != null) {
+            Node typeNode = declaration.getAttributes().getNamedItem(TYPE);
+            type = typeNode == null && declaration.hasChildNodes()
+                    ? visitAttributeChildNodes(declaration.getChildNodes()) : deriveType(typeNode);
+            if (fixedNode == null) {
+                fixedNode = declaration.getAttributes().getNamedItem(FIXED);
+            }
+            if (defaultNode == null && fixedNode == null) {
+                defaultNode = declaration.getAttributes().getNamedItem(DEFAULT);
+            }
+        }
+        if (fixedNode != null && defaultNode == null) {
             builder.append(generateFixedValue(type, fixedNode.getNodeValue())).append(WHITESPACE);
-        } else if (attribute.hasChildNodes()) {
-            builder.append(visitAttributeChildNodes(attribute.getChildNodes())).append(WHITESPACE);
         } else {
             builder.append(type).append(WHITESPACE);
         }
@@ -524,6 +531,22 @@ public class XSDVisitorImpl implements XSDVisitor {
         }
         builder.append(SEMICOLON);
         return builder.toString();
+    }
+
+    private Node findGlobalAttribute(Node attribute, String localName) {
+        if (attribute.getOwnerDocument() == null || attribute.getOwnerDocument().getDocumentElement() == null) {
+            return null;
+        }
+        for (Node childNode : asIterable(attribute.getOwnerDocument().getDocumentElement().getChildNodes())) {
+            if (childNode.getNodeType() != Node.ELEMENT_NODE || !ATTRIBUTE.equals(childNode.getLocalName())) {
+                continue;
+            }
+            Node nameNode = childNode.getAttributes().getNamedItem(NAME);
+            if (nameNode != null && localName.equals(nameNode.getNodeValue())) {
+                return childNode;
+            }
+        }
+        return null;
     }
 
     public String visitAttributeChildNodes(NodeList childNodes) {
