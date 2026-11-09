@@ -40,12 +40,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import static io.ballerina.xsd.core.Utils.resolveNameConflicts;
 import static io.ballerina.xsd.core.XSDToRecord.QUALIFIED;
 import static io.ballerina.xsd.core.XSDToRecord.STRICT_ANY_PLACEHOLDER;
 import static io.ballerina.xsd.core.diagnostic.DiagnosticMessage.xsdToBallerinaError;
+import static io.ballerina.xsd.core.diagnostic.DiagnosticMessage.xsdToBallerinaWarning;
 import static io.ballerina.xsd.core.visitor.Utils.ANYDATA;
 import static io.ballerina.xsd.core.visitor.Utils.MAX_OCCURS;
 import static io.ballerina.xsd.core.visitor.Utils.MIN_OCCURS;
@@ -116,6 +118,8 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String REQUIRED_FIELD_NOT_FOUND_ERROR = "Required field is not found in <complexType>: '%s'";
     public static final String ELEMENT_NAME_NOT_FOUND_ERROR = "Missing name attribute for the root element of '%s'";
     public static final String ATTRIBUTE_NOT_FOUND_ERROR = "Required attribute is not found: '%s'";
+    public static final String ATTRIBUTE_REF_NOT_RESOLVED_WARNING =
+            "Unable to resolve the attribute reference \"%s\". Defaulting its type to \"string\"";
     public static final String ONE = "1";
     public static final String XMLDATA_CHOICE = "@xmldata:Choice";
     public static final String CHOICE_NAME = "ChoiceOption";
@@ -493,18 +497,22 @@ public class XSDVisitorImpl implements XSDVisitor {
     private String visitAttributeRef(Node attribute, Node refNode) {
         StringBuilder builder = new StringBuilder();
         String refValue = refNode.getNodeValue();
+        String prefix = refValue.contains(COLON) ? refValue.substring(0, refValue.indexOf(COLON)) : null;
         String localName = refValue.contains(COLON)
                 ? refValue.substring(refValue.indexOf(COLON) + 1)
                 : refValue;
-        if (isAttributeQualified(attribute)) {
-            builder.append(addNamespace(this, getTargetNamespace()));
-        }
+        // Global attribute declarations are always qualified, so the ref keeps its declared namespace.
+        String refNamespace = Objects.requireNonNullElse(attribute.lookupNamespaceURI(prefix), EMPTY_STRING);
+        builder.append(addNamespace(this, refNamespace));
         builder.append(ATTRIBUTE_ANNOTATION).append(WHITESPACE);
-        Node declaration = findGlobalAttribute(attribute, localName);
+        Node declaration = refNamespace.equals(Objects.requireNonNullElse(getTargetNamespace(), EMPTY_STRING))
+                ? findGlobalAttribute(attribute, localName) : null;
         Node fixedNode = attribute.getAttributes().getNamedItem(FIXED);
         Node defaultNode = attribute.getAttributes().getNamedItem(DEFAULT);
         String type = STRING;
-        if (declaration != null) {
+        if (declaration == null) {
+            diagnostics.add(xsdToBallerinaWarning(String.format(ATTRIBUTE_REF_NOT_RESOLVED_WARNING, refValue)));
+        } else {
             Node typeNode = declaration.getAttributes().getNamedItem(TYPE);
             type = typeNode == null && declaration.hasChildNodes()
                     ? visitAttributeChildNodes(declaration.getChildNodes()) : deriveType(typeNode);

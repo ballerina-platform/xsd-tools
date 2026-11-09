@@ -60,4 +60,9 @@ public class DiagnosticMessage {
         return new XSDDiagnostic("XSD_TO_BALLERINA_100", message,
                                  DiagnosticSeverity.ERROR, null, new Object[]{});
     }
+
+    public static XSDDiagnostic xsdToBallerinaWarning(String message) {
+        return new XSDDiagnostic("XSD_TO_BALLERINA_101", message,
+                                 DiagnosticSeverity.WARNING, null, new Object[]{});
+    }
 }
