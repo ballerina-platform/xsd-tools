@@ -4,6 +4,7 @@ import ballerina/data.xmldata;
 public type Basket record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup sequenceGroup;
+    @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:Attribute
     int count?;
 |};
@@ -12,6 +13,7 @@ public type Basket record {|
 public type Order record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup1 sequenceGroup1;
+    @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:Attribute
     int count;
 |};

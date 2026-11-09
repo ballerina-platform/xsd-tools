@@ -4,6 +4,7 @@ import ballerina/data.xmldata;
 public type Greeting record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup sequenceGroup;
+    @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:Attribute
     string lang?;
 |};
@@ -12,6 +13,7 @@ public type Greeting record {|
 public type Document record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup1 sequenceGroup1;
+    @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:Attribute
     string lang;
 |};
