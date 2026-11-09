@@ -19,6 +19,7 @@
 package io.ballerina.xsd.core;
 
 import io.ballerina.xsd.core.response.NodeResponse;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testng.Assert;
@@ -124,6 +125,19 @@ public class XSDToRecordTest {
     @MethodSource("provideTestPaths")
     void testXsdToRecord(String[] xsdFiles, String balFilePath) throws Exception {
         validate(xsdFiles, RES_DIR.resolve(EXPECTED_DIR).resolve(balFilePath));
+    }
+
+    @Test
+    void testUnresolvedAttributeRefReportsWarning() throws Exception {
+        String xsdContent = Files.readString(RES_DIR.resolve(XML_DIR).resolve("59_attribute_with_unresolved_ref.xsd"));
+        NodeResponse result = XSDToRecord.generateNodes(new String[] {xsdContent});
+        Assert.assertEquals(result.diagnostics().size(), 1);
+        Assert.assertEquals(result.diagnostics().get(0).getSeverity(), "WARNING");
+        Assert.assertEquals(result.diagnostics().get(0).message(),
+                "Unable to resolve the attribute reference \"ext:lang\". Defaulting its type to \"string\"");
+        String generatedTypes = Utils.formatModuleParts(result.types());
+        Assert.assertTrue(generatedTypes.contains(
+                "@xmldata:Namespace {uri: \"http://external.org/\"}\n    @xmldata:Attribute\n    string lang;"));
     }
 
     private void validate(String[] xsdFiles, Path expected) throws Exception {
