@@ -136,8 +136,9 @@ public class XSDToRecordTest {
         Assert.assertEquals(result.diagnostics().get(0).message(),
                 "Unable to resolve the attribute reference \"ext:lang\". Defaulting its type to \"string\"");
         String generatedTypes = Utils.formatModuleParts(result.types());
-        Assert.assertTrue(generatedTypes.contains(
-                "@xmldata:Namespace {uri: \"http://external.org/\"}\n    @xmldata:Attribute\n    string lang;"));
+        String expectedValue = Files.readString(
+                RES_DIR.resolve(EXPECTED_DIR).resolve("59_attribute_with_unresolved_ref.bal"));
+        Assert.assertEquals(generatedTypes, expectedValue);
     }
 
     private void validate(String[] xsdFiles, Path expected) throws Exception {
