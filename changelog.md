@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Replace generic exceptions with dedicated XSD exceptions
+
+### Fixed
+
+- [Fix NPE when converting `xs:attribute` with `ref`](https://github.com/ballerina-platform/xsd-tools/pull/49)
+- [Generate array types for ref elements with `maxOccurs` greater than 1](https://github.com/ballerina-platform/xsd-tools/pull/50)
+- [Make ref fields optional when `minOccurs` is zero](https://github.com/ballerina-platform/xsd-tools/pull/51)
+- [Make error messages deterministic](https://github.com/ballerina-platform/xsd-tools/pull/52)
+- [Skip the optional marker for elements with default values](https://github.com/ballerina-platform/xsd-tools/pull/53)
+
+## [1.4.0] - 2026-03-24
+
+### Added
+
+- [Support nested elements in sequence and choice elements](https://github.com/ballerina-platform/xsd-tools/pull/44)
+- [Support `attributeFormDefault` and `elementFormDefault` attributes](https://github.com/ballerina-platform/xsd-tools/pull/45)
+
+## [1.3.0] - 2026-02-22
+
 ### Added
 
 - [Add element annotation to record fields](https://github.com/ballerina-platform/xsd-tools/pull/40)
