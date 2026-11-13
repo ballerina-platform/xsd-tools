@@ -160,11 +160,15 @@ public final class Utils {
     }
 
     public static void handleMinOccurrences(Element element, StringBuilder builder) {
+        Node node = element.getNode();
+        Node defaultNode = node.getAttributes().getNamedItem(DEFAULT);
+        if (defaultNode != null) {
+            return;
+        }
         if (element.isOptional()) {
             builder.append(QUESTION_MARK);
             return;
         }
-        Node node = element.getNode();
         Node minOccurrence = node.getAttributes().getNamedItem(MIN_OCCURS);
         if (minOccurrence != null) {
             if (minOccurrence.getNodeValue().equals(ZERO)) {
