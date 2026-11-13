@@ -218,6 +218,7 @@ public class XSDVisitorImpl implements XSDVisitor {
                 builder.append(deriveType(typeNode));
                 handleMaxOccurrences(node, builder);
                 builder.append(WHITESPACE).append(extractType(typeNode));
+                handleMinOccurrences(element, builder);
             }
         } else if (typeNode != null && node.hasAttributes()) {
             handleFixedValues(node, builder, typeNode);
