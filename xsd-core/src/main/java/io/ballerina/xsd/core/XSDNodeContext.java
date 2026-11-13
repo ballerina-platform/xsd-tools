@@ -26,7 +26,7 @@ import io.ballerina.xsd.core.node.XSDElement;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,8 +36,8 @@ import java.util.Objects;
  * This class provides methods to manage and retrieve syntax tree nodes and XSD elements.
  */
 final class XSDNodeContext implements NodeContext {
-     private final Map<String, MemberNode> nodes = new HashMap<>();
-     private final Map<String, XSDElement> nameResolvers = new HashMap<>();
+     private final Map<String, MemberNode> nodes = new LinkedHashMap<>();
+     private final Map<String, XSDElement> nameResolvers = new LinkedHashMap<>();
 
     public XSDNodeContext(Map<String, MemberNode> nodes, Map<String, XSDElement> nameResolvers) {
         this.nodes.putAll(nodes);
