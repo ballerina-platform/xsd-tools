@@ -64,6 +64,7 @@ import static io.ballerina.xsd.core.visitor.Utils.handleFixedValues;
 import static io.ballerina.xsd.core.visitor.Utils.handleKeywordNames;
 import static io.ballerina.xsd.core.visitor.Utils.handleMaxOccurrences;
 import static io.ballerina.xsd.core.visitor.Utils.handleMinOccurrences;
+import static io.ballerina.xsd.core.visitor.Utils.isOptionalElement;
 import static io.ballerina.xsd.core.visitor.Utils.isSimpleType;
 import static io.ballerina.xsd.core.visitor.Utils.convertToCamelCase;
 import static io.ballerina.xsd.core.visitor.Utils.resolveNames;
@@ -120,6 +121,9 @@ public class XSDVisitorImpl implements XSDVisitor {
     public static final String ATTRIBUTE_NOT_FOUND_ERROR = "Required attribute is not found: '%s'";
     public static final String ATTRIBUTE_REF_NOT_RESOLVED_WARNING =
             "Unable to resolve the attribute reference \"%s\". Defaulting its type to \"string\"";
+    public static final String OPTIONAL_ELEMENT_DEFAULT_IGNORED_WARNING =
+            "Ignoring the default value of the optional element \"%s\". " +
+                    "XSD element defaults apply only to present, empty elements";
     public static final String ONE = "1";
     public static final String XMLDATA_CHOICE = "@xmldata:Choice";
     public static final String CHOICE_NAME = "ChoiceOption";
@@ -225,7 +229,14 @@ public class XSDVisitorImpl implements XSDVisitor {
             handleMaxOccurrences(node, builder);
             builder.append(resolveNames(Utils.handleKeywordNames(nameNode)));
             handleMinOccurrences(element, builder);
-            handleDefaultValues(node, builder, typeNode);
+            if (isOptionalElement(element)) {
+                if (node.getAttributes().getNamedItem(DEFAULT) != null) {
+                    diagnostics.add(xsdToBallerinaWarning(String.format(OPTIONAL_ELEMENT_DEFAULT_IGNORED_WARNING,
+                            nameNode.getNodeValue())));
+                }
+            } else {
+                handleDefaultValues(node, builder, typeNode);
+            }
         }
         builder.append(SEMICOLON);
         return builder.toString();
