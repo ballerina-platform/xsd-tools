@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- Generate optional fields without record defaults for optional elements with default values
+
+## [1.4.1] - 2026-11-13
+
 ### Changed
 
 - Replace generic exceptions with dedicated XSD exceptions

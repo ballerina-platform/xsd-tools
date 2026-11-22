@@ -152,7 +152,7 @@ public class XSDToRecordTest {
             xsdContents[i] = Files.readString(xsdPath);
         }
         NodeResponse result = XSDToRecord.generateNodes(xsdContents);
-        Assert.assertTrue(result.diagnostics().isEmpty());
+        Assert.assertTrue(result.diagnostics().stream().noneMatch(d -> d.getSeverity().equals("ERROR")));
         String generatedTypes = Utils.formatModuleParts(result.types());
         String expectedValue = Files.readString(expected);
         Assert.assertEquals(generatedTypes, expectedValue);

@@ -160,21 +160,17 @@ public final class Utils {
     }
 
     public static void handleMinOccurrences(Element element, StringBuilder builder) {
-        Node node = element.getNode();
-        Node defaultNode = node.getAttributes().getNamedItem(DEFAULT);
-        if (defaultNode != null) {
-            return;
-        }
-        if (element.isOptional()) {
+        if (isOptionalElement(element)) {
             builder.append(QUESTION_MARK);
-            return;
         }
-        Node minOccurrence = node.getAttributes().getNamedItem(MIN_OCCURS);
-        if (minOccurrence != null) {
-            if (minOccurrence.getNodeValue().equals(ZERO)) {
-                builder.append(QUESTION_MARK);
-            }
+    }
+
+    public static boolean isOptionalElement(Element element) {
+        if (element.isOptional()) {
+            return true;
         }
+        Node minOccurrence = element.getNode().getAttributes().getNamedItem(MIN_OCCURS);
+        return minOccurrence != null && minOccurrence.getNodeValue().equals(ZERO);
     }
 
     public static void handleMaxOccurrences(Node node, StringBuilder builder) {
