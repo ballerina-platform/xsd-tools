@@ -105,6 +105,36 @@ modules/
         └── types.bal
 ```
 
+### Schema-strict binding with the generated types
+
+The generated record types are closed (`record {| ... |}`), but this does not make `data.xmldata` reject XML elements that are not defined in the schema. The `xmldata:parseString`, `xmldata:parseAsType`, and related functions enable data projection by default (`allowDataProjection: true`), so any element or attribute without a matching record field is dropped silently.
+
+```ballerina
+import ballerina/data.xmldata;
+
+public type Item record {|
+    string name;
+|};
+
+public function main() returns error? {
+    // Returns {"name":"X"}. The undefined `extra` element is dropped without an error.
+    Item item = check xmldata:parseString("<Item><name>X</name><extra>1</extra></Item>");
+}
+```
+
+To bind XML strictly against the schema, so that content not defined in the XSD (e.g., an element added by a sender whose schema has drifted) results in an error instead of being lost, disable data projection when parsing.
+
+```ballerina
+import ballerina/data.xmldata;
+
+final xmldata:SourceOptions strictOptions = {allowDataProjection: false};
+
+public function main() returns error? {
+    // Returns an error: undefined field 'extra' in record 'Item'.
+    Item item = check xmldata:parseString("<Item><name>X</name><extra>1</extra></Item>", strictOptions);
+}
+```
+
 ## Building from the Source
 
 ### Setting Up the Prerequisites
