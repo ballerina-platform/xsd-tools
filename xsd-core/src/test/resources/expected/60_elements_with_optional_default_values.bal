@@ -11,11 +11,11 @@ public type SequenceGroup record {|
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 1}
     @xmldata:Element {minOccurs: 0, maxOccurs: 1}
-    string operation = "add";
+    string operation?;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 2}
     @xmldata:Element {minOccurs: 0, maxOccurs: 1}
-    int priority = 5;
+    int priority?;
     @xmldata:Namespace {uri: "http://tempuri.org/"}
     @xmldata:SequenceOrder {value: 3}
     @xmldata:Element {minOccurs: 1, maxOccurs: 1}
