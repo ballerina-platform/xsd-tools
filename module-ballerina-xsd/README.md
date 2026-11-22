@@ -105,3 +105,17 @@ modules/
 └── custom/
         └── types.bal
 ```
+
+### Strict parsing with the generated types
+
+By default, `data.xmldata` parses XML into the generated record types with data projection enabled, which ignores any elements or attributes that are not defined in the record type. To reject XML content that is not defined in the XSD, set `allowDataProjection` to `false` when parsing.
+
+```ballerina
+import ballerina/data.xmldata;
+
+function parsePerson(xml payload) returns Person|error {
+    return xmldata:parseAsType(payload, {allowDataProjection: false});
+}
+```
+
+Here, `Person` is a record type generated from the XSD.

@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- Document strict parsing with the generated types
+
+## [1.4.1] - 2026-11-13
+
+### Changed
+
 - Replace generic exceptions with dedicated XSD exceptions
 
 ### Fixed
