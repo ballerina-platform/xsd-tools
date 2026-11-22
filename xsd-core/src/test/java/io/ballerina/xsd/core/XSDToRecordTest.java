@@ -118,8 +118,6 @@ public class XSDToRecordTest {
                     "57_attribute_with_ref.bal"},
             new Object[] {new String[] {"58_attribute_with_ref_int_type.xsd"},
                     "58_attribute_with_ref_int_type.bal"},
-            new Object[] {new String[] {"60_elements_with_optional_default_values.xsd"},
-                    "60_elements_with_optional_default_values.bal"},
             new Object[] {new String[] {"61_ref_element_with_max_occurs.xsd"},
                     "61_ref_element_with_max_occurs.bal"}
         );
@@ -142,6 +140,25 @@ public class XSDToRecordTest {
         String generatedTypes = Utils.formatModuleParts(result.types());
         String expectedValue = Files.readString(
                 RES_DIR.resolve(EXPECTED_DIR).resolve("59_attribute_with_unresolved_ref.bal"));
+        Assert.assertEquals(generatedTypes, expectedValue);
+    }
+
+    @Test
+    void testOptionalElementDefaultValueReportsWarning() throws Exception {
+        String xsdContent = Files.readString(
+                RES_DIR.resolve(XML_DIR).resolve("60_elements_with_optional_default_values.xsd"));
+        NodeResponse result = XSDToRecord.generateNodes(new String[] {xsdContent});
+        Assert.assertEquals(result.diagnostics().size(), 2);
+        Assert.assertEquals(result.diagnostics().get(0).getSeverity(), "WARNING");
+        Assert.assertEquals(result.diagnostics().get(0).message(),
+                "Ignoring the default value of the optional element \"operation\". " +
+                        "XSD element defaults apply only to present, empty elements");
+        Assert.assertEquals(result.diagnostics().get(1).message(),
+                "Ignoring the default value of the optional element \"priority\". " +
+                        "XSD element defaults apply only to present, empty elements");
+        String generatedTypes = Utils.formatModuleParts(result.types());
+        String expectedValue = Files.readString(
+                RES_DIR.resolve(EXPECTED_DIR).resolve("60_elements_with_optional_default_values.bal"));
         Assert.assertEquals(generatedTypes, expectedValue);
     }
 
