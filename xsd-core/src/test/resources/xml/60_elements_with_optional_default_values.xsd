@@ -1,11 +1,15 @@
-<s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema">
-    <s:element name="Add">
-        <s:complexType>
-            <s:sequence>
-                <s:element minOccurs="0" maxOccurs="1" name="operation" default="add" type="s:string"/>
-                <s:element minOccurs="0" maxOccurs="1" name="priority" default="5" type="s:int"/>
-                <s:element minOccurs="1" maxOccurs="1" name="requiredWithDefault" default="hello" type="s:string"/>
-            </s:sequence>
-        </s:complexType>
-    </s:element>
-</s:schema>
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://namespace.org/"
+           elementFormDefault="qualified">
+
+    <xs:element name="Item">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="label" type="xs:string" minOccurs="0" default="none"/>
+                <xs:element name="count" type="xs:int" minOccurs="0" default="1"/>
+                <xs:element name="status" type="xs:string" default="active"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

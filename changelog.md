@@ -23,7 +23,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - [Make ref fields optional when `minOccurs` is zero](https://github.com/ballerina-platform/xsd-tools/pull/51)
 - [Make error messages deterministic](https://github.com/ballerina-platform/xsd-tools/pull/52)
 - [Skip the optional marker for elements with default values](https://github.com/ballerina-platform/xsd-tools/pull/53)
-- Generate optional fields without record defaults for optional elements with default values
 
 ## [1.4.0] - 2026-03-24
 

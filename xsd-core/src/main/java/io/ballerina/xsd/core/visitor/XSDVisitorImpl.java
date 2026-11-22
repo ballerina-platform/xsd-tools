@@ -230,8 +230,6 @@ public class XSDVisitorImpl implements XSDVisitor {
             builder.append(resolveNames(Utils.handleKeywordNames(nameNode)));
             handleMinOccurrences(element, builder);
             if (isOptionalElement(element)) {
-                // An XSD element default applies only to a present, empty element, so it cannot be
-                // mapped to a record field default without filling in absent elements.
                 if (node.getAttributes().getNamedItem(DEFAULT) != null) {
                     diagnostics.add(xsdToBallerinaWarning(String.format(OPTIONAL_ELEMENT_DEFAULT_IGNORED_WARNING,
                             nameNode.getNodeValue())));

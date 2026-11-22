@@ -1,23 +1,23 @@
 import ballerina/data.xmldata;
 
-@xmldata:Namespace {uri: "http://tempuri.org/"}
-public type Add record {|
+@xmldata:Namespace {uri: "http://namespace.org/"}
+public type Item record {|
     @xmldata:Sequence {minOccurs: 1, maxOccurs: 1}
     SequenceGroup sequenceGroup;
 |};
 
-@xmldata:Namespace {uri: "http://tempuri.org/"}
+@xmldata:Namespace {uri: "http://namespace.org/"}
 public type SequenceGroup record {|
-    @xmldata:Namespace {uri: "http://tempuri.org/"}
+    @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 1}
     @xmldata:Element {minOccurs: 0, maxOccurs: 1}
-    string operation?;
-    @xmldata:Namespace {uri: "http://tempuri.org/"}
+    string label?;
+    @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 2}
     @xmldata:Element {minOccurs: 0, maxOccurs: 1}
-    int priority?;
-    @xmldata:Namespace {uri: "http://tempuri.org/"}
+    int count?;
+    @xmldata:Namespace {uri: "http://namespace.org/"}
     @xmldata:SequenceOrder {value: 3}
     @xmldata:Element {minOccurs: 1, maxOccurs: 1}
-    string requiredWithDefault = "hello";
+    string status = "active";
 |};

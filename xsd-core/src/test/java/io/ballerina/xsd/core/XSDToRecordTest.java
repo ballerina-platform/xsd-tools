@@ -151,10 +151,10 @@ public class XSDToRecordTest {
         Assert.assertEquals(result.diagnostics().size(), 2);
         Assert.assertEquals(result.diagnostics().get(0).getSeverity(), "WARNING");
         Assert.assertEquals(result.diagnostics().get(0).message(),
-                "Ignoring the default value of the optional element \"operation\". " +
+                "Ignoring the default value of the optional element \"label\". " +
                         "XSD element defaults apply only to present, empty elements");
         Assert.assertEquals(result.diagnostics().get(1).message(),
-                "Ignoring the default value of the optional element \"priority\". " +
+                "Ignoring the default value of the optional element \"count\". " +
                         "XSD element defaults apply only to present, empty elements");
         String generatedTypes = Utils.formatModuleParts(result.types());
         String expectedValue = Files.readString(
