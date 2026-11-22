@@ -8,8 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- Replace generic exceptions with dedicated XSD exceptions
 - Document schema-strict binding with `allowDataProjection: false` for the generated types
+
+## [1.4.1] - 2026-11-13
+
+### Changed
+
+- Replace generic exceptions with dedicated XSD exceptions
 
 ### Fixed
 
